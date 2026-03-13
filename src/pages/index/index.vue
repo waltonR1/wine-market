@@ -67,53 +67,48 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import ProductCard from '@/components/business/ProductCard.vue'
+import { getHomeCategoryList, getHomeProductList } from '@/api'
+import type { ProductItem } from '@/types/model/goods'
 
-const categories = [
-  { id: 1, name: '红酒', icon: '🍷' },
-  { id: 2, name: '白葡萄酒', icon: '🥂' },
-  { id: 3, name: '香槟', icon: '🍾' },
-  { id: 4, name: '烈酒', icon: '🥃' },
-]
+interface HomeCategoryItem {
+  id: number
+  name: string
+  icon: string
+}
 
-const productList = [
-  {
-    id: 1,
-    name: 'Château Bordeaux Rouge',
-    subtitle: '法国波尔多干红',
-    price: 199,
-    image: '/static/logo.png',
-    tag: '精选'
-  },
-  {
-    id: 2,
-    name: 'Champagne Brut Réserve',
-    subtitle: '香槟区起泡酒',
-    price: 399,
-    image: '/static/logo.png',
-    tag: '热门'
-  },
-  {
-    id: 3,
-    name: 'Bourgogne Chardonnay',
-    subtitle: '勃艮第霞多丽',
-    price: 268,
-    image: '/static/logo.png',
-    tag: '白葡萄酒'
-  },
-  {
-    id: 4,
-    name: 'Single Malt Whisky',
-    subtitle: '单一麦芽威士忌',
-    price: 528,
-    image: '/static/logo.png',
-    tag: '烈酒'
+const categories = ref<HomeCategoryItem[]>([])
+const productList = ref<ProductItem[]>([])
+
+onMounted(async () => {
+  const [categoryRes, productRes] = await Promise.all([
+    getHomeCategoryList(),
+    getHomeProductList(),
+  ])
+
+  if (categoryRes.code === 0) {
+    categories.value = categoryRes.data
+  } else {
+    await uni.showToast({
+      title: categoryRes.message || '分类加载失败',
+      icon: 'none',
+    })
   }
-]
 
-function goDetail(item: any) {
+  if (productRes.code === 0) {
+    productList.value = productRes.data
+  } else {
+    await uni.showToast({
+      title: productRes.message || '商品加载失败',
+      icon: 'none',
+    })
+  }
+})
+
+function goDetail(item: ProductItem) {
   uni.navigateTo({
-    url: `/pages/goods/detail?id=${item.id}`
+    url: `/pages/goods/detail?id=${item.id}`,
   })
 }
 </script>

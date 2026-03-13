@@ -118,48 +118,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { getGoodsList } from '@/api'
+import type { ProductItem } from '@/types/model/goods'
 
 const sortType = ref<'default' | 'price' | 'sales'>('default')
 const isGrid = ref(true)
+const productList = ref<ProductItem[]>([])
 
-const productList = ref([
-  {
-    id: 1,
-    name: '法国蓝孔雀干红 欧蓉 Pavo Cristatus',
-    price: 85,
-    comment: 13,
-    image: '/static/logo.png'
-  },
-  {
-    id: 2,
-    name: '西斯廷干红 celestine',
-    price: 98,
-    comment: 11,
-    image: '/static/logo.png'
-  },
-  {
-    id: 3,
-    name: '萨博公主干红葡萄酒',
-    price: 98,
-    comment: 13,
-    image: '/static/logo.png'
-  },
-  {
-    id: 4,
-    name: '乔梦干红 clementine',
-    price: 110,
-    comment: 9,
-    image: '/static/logo.png'
-  },
-  {
-    id: 5,
-    name: '乔梦干红 clementine',
-    price: 110,
-    comment: 9,
-    image: '/static/logo.png'
+onMounted(async () => {
+  const res = await getGoodsList()
+
+  if (res.code === 0) {
+    productList.value = res.data
+  } else {
+    await uni.showToast({
+      title: res.message || '商品加载失败',
+      icon: 'none',
+    })
   }
-])
+})
 
 function toggleViewMode() {
   isGrid.value = !isGrid.value
@@ -169,9 +147,9 @@ function changeSort(type: 'default' | 'price' | 'sales') {
   sortType.value = type
 }
 
-function goDetail(item: any) {
+function goDetail(item: ProductItem) {
   uni.navigateTo({
-    url: `/pages/goods/detail?id=${item.id}`
+    url: `/pages/goods/detail?id=${item.id}`,
   })
 }
 </script>

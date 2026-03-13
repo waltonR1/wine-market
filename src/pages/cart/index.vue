@@ -17,6 +17,14 @@
       </view>
     </view>
 
+    <!-- 游客提示 -->
+    <view
+        v-if="!isLogin"
+        class="mx-3 mt-3 bg-[#FFF7E8] text-[#8B6B2E] text-[12px] px-3 py-2 rounded-xl"
+    >
+      当前为游客购物车，登录后可同步购物车并继续结算
+    </view>
+
     <!-- 商品列表 -->
     <view class="px-3 pt-3">
       <view
@@ -64,6 +72,7 @@
             <view class="flex items-center">
               <view
                   class="w-[28px] h-[28px] rounded-full bg-[#F5F1EC] flex items-center justify-center text-[#6B0F1A] text-[16px]"
+                  @click="decreaseCount(item.id)"
               >
                 −
               </view>
@@ -74,12 +83,20 @@
 
               <view
                   class="w-[28px] h-[28px] rounded-full bg-[#F5F1EC] flex items-center justify-center text-[#6B0F1A] text-[16px]"
+                  @click="increaseCount(item.id)"
               >
                 +
               </view>
             </view>
           </view>
         </view>
+      </view>
+
+      <view
+          v-if="cartList.length === 0"
+          class="text-center text-[14px] text-[#8B7B6B] py-10"
+      >
+        购物车空空的
       </view>
     </view>
 
@@ -129,6 +146,7 @@
 
         <view
             class="bg-[#C9A96E] text-white px-6 py-3 rounded-full text-[14px]"
+            @click="deleteChecked"
         >
           删除
         </view>
@@ -139,27 +157,29 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { getCartList } from '@/api'
+import type { CartItem } from '@/types/model/cart'
+import { onShow } from '@dcloudio/uni-app'
+import { hasToken } from '@/utils/auth'
 
 const isEdit = ref(false)
+const isLogin = ref(false)
+const cartList = ref<CartItem[]>([])
 
-const cartList = ref([
-  {
-    id: 1,
-    name: '万泰城堡干红 — 圣爱米隆列级名庄 CHTEAU...',
-    price: 469,
-    count: 1,
-    checked: false,
-    image: '/static/logo.png'
-  },
-  {
-    id: 2,
-    name: 'Champagne Brut Réserve',
-    price: 399,
-    count: 1,
-    checked: true,
-    image: '/static/logo.png'
+onShow(async () => {
+  isLogin.value = hasToken()
+
+  const res = await getCartList()
+
+  if (res.code === 0) {
+    cartList.value = res.data
+  } else {
+    uni.showToast({
+      title: res.message || '购物车加载失败',
+      icon: 'none',
+    })
   }
-])
+})
 
 const checkedList = computed(() => {
   return cartList.value.filter(item => item.checked)
@@ -193,9 +213,62 @@ function toggleAll() {
   })
 }
 
+function decreaseCount(id: number) {
+  const target = cartList.value.find(item => item.id === id)
+  if (target && target.count > 1) {
+    target.count -= 1
+  }
+}
+
+function increaseCount(id: number) {
+  const target = cartList.value.find(item => item.id === id)
+  if (target) {
+    target.count += 1
+  }
+}
+
+function deleteChecked() {
+  if (checkedCount.value === 0) {
+    uni.showToast({
+      title: '请选择要删除的商品',
+      icon: 'none',
+    })
+    return
+  }
+
+  cartList.value = cartList.value.filter(item => !item.checked)
+
+  uni.showToast({
+    title: '删除成功',
+    icon: 'success',
+  })
+}
+
 function goConfirm() {
+  if (checkedCount.value === 0) {
+    uni.showToast({
+      title: '请选择要结算的商品',
+      icon: 'none',
+    })
+    return
+  }
+
+  if (!isLogin.value) {
+    uni.showToast({
+      title: '请先登录后结算',
+      icon: 'none',
+    })
+
+    setTimeout(() => {
+      uni.navigateTo({
+        url: '/pages/login/index?redirect=%2Fpages%2Forder%2Fconfirm',
+      })
+    }, 300)
+    return
+  }
+
   uni.navigateTo({
-    url: '/pages/order/confirm'
+    url: '/pages/order/confirm',
   })
 }
 </script>

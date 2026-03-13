@@ -36,83 +36,66 @@
           </view>
         </view>
       </view>
+
+      <view
+          v-if="currentSecondList.length === 0"
+          class="text-center text-[14px] text-[#8B7B6B] py-10"
+      >
+        暂无分类数据
+      </view>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { getFirstCategoryList, getSecondCategoryMap } from '@/api'
+import type { FirstCategoryItem, SecondCategoryItem } from '@/types/model/goods'
 
 const activeFirstId = ref(1)
-
-const firstCategoryList = [
-  { id: 1, name: '干红' },
-  { id: 2, name: '礼盒' },
-  { id: 3, name: '干白' },
-  { id: 4, name: '甜白' },
-  { id: 5, name: '烈酒' },
-  { id: 6, name: '无醇' },
-  { id: 7, name: '世界名庄' },
-  { id: 8, name: '促销活动' },
-  { id: 9, name: '香槟 起泡酒' }
-]
-
-const secondCategoryMap = {
-  1: [
-    { id: 101, name: '所有干红', image: '/static/logo.png' },
-    { id: 102, name: '波尔多产区', image: '/static/logo.png' },
-    { id: 103, name: '罗纳河谷', image: '/static/logo.png' },
-    { id: 104, name: '其他产区', image: '/static/logo.png' },
-    { id: 105, name: '勃艮第', image: '/static/logo.png' }
-  ],
-  2: [
-    { id: 201, name: '节日礼盒', image: '/static/logo.png' },
-    { id: 202, name: '商务送礼', image: '/static/logo.png' },
-    { id: 203, name: '双支礼盒', image: '/static/logo.png' }
-  ],
-  3: [
-    { id: 301, name: '所有干白', image: '/static/logo.png' },
-    { id: 302, name: '霞多丽', image: '/static/logo.png' },
-    { id: 303, name: '长相思', image: '/static/logo.png' }
-  ],
-  4: [
-    { id: 401, name: '贵腐', image: '/static/logo.png' },
-    { id: 402, name: '晚收甜白', image: '/static/logo.png' }
-  ],
-  5: [
-    { id: 501, name: '威士忌', image: '/static/logo.png' },
-    { id: 502, name: '白兰地', image: '/static/logo.png' },
-    { id: 503, name: 'XO', image: '/static/logo.png' }
-  ],
-  6: [
-    { id: 601, name: '无醇红', image: '/static/logo.png' },
-    { id: 602, name: '无醇起泡', image: '/static/logo.png' }
-  ],
-  7: [
-    { id: 701, name: '波尔多名庄', image: '/static/logo.png' },
-    { id: 702, name: '勃艮第名庄', image: '/static/logo.png' }
-  ],
-  8: [
-    { id: 801, name: '限时折扣', image: '/static/logo.png' },
-    { id: 802, name: '买赠专区', image: '/static/logo.png' }
-  ],
-  9: [
-    { id: 901, name: '香槟', image: '/static/logo.png' },
-    { id: 902, name: '起泡酒', image: '/static/logo.png' }
-  ]
-} as Record<number, { id: number; name: string; image: string }[]>
+const firstCategoryList = ref<FirstCategoryItem[]>([])
+const secondCategoryMap = ref<Record<number, SecondCategoryItem[]>>({})
 
 const currentSecondList = computed(() => {
-  return secondCategoryMap[activeFirstId.value] || []
+  return secondCategoryMap.value[activeFirstId.value] || []
+})
+
+onMounted(async () => {
+  const [firstRes, secondRes] = await Promise.all([
+    getFirstCategoryList(),
+    getSecondCategoryMap(),
+  ])
+
+  if (firstRes.code === 0) {
+    firstCategoryList.value = firstRes.data
+
+    if (firstCategoryList.value.length > 0) {
+      activeFirstId.value = firstCategoryList.value[0].id
+    }
+  } else {
+    await uni.showToast({
+      title: firstRes.message || '一级分类加载失败',
+      icon: 'none',
+    })
+  }
+
+  if (secondRes.code === 0) {
+    secondCategoryMap.value = secondRes.data
+  } else {
+    await uni.showToast({
+      title: secondRes.message || '二级分类加载失败',
+      icon: 'none',
+    })
+  }
 })
 
 function changeFirst(id: number) {
   activeFirstId.value = id
 }
 
-function goList(item: { id: number; name: string }) {
+function goList(item: SecondCategoryItem) {
   uni.navigateTo({
-    url: `/pages/goods/list?secondId=${item.id}&title=${encodeURIComponent(item.name)}`
+    url: `/pages/goods/list?secondId=${item.id}&title=${encodeURIComponent(item.name)}`,
   })
 }
 </script>

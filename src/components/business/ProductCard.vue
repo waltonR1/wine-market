@@ -9,7 +9,9 @@
           class="w-full h-[180px] bg-[#EFE7DE]"
           mode="aspectFill"
       />
+
       <view
+          v-if="product.tag"
           class="absolute left-3 top-3 rounded-full bg-[#6B0F1A] px-3 py-1 text-[11px] text-white"
       >
         {{ product.tag }}
@@ -39,19 +41,14 @@
 </template>
 
 <script setup lang="ts">
+import type { ProductItem } from '@/types/model/goods'
+
 const props = defineProps<{
-  product: {
-    id: number
-    name: string
-    subtitle: string
-    price: number
-    image: string
-    tag: string
-  }
+  product: ProductItem
 }>()
 
 const emit = defineEmits<{
-  (e: 'click', product: typeof props.product): void
+  (e: 'click', product: ProductItem): void
 }>()
 
 function handleClick() {
