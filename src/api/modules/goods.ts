@@ -1,13 +1,5 @@
-import { IS_MOCK } from '@/config/env'
 import { request } from '@/utils/request'
-import {
-    firstCategoryList,
-    goodsDetailMap,
-    goodsList,
-    homeCategoryList,
-    homeProductList,
-    secondCategoryMap,
-} from '@/mock/goods'
+import { API_PATHS } from '@/config/api'
 import type {
     GetFirstCategoryListResponse,
     GetGoodsDetailResponse,
@@ -15,96 +7,102 @@ import type {
     GetHomeCategoryListResponse,
     GetHomeProductListResponse,
     GetSecondCategoryMapResponse,
+    GoodsListParams,
 } from '@/types/api/goods'
 
 export function getHomeCategoryList(): Promise<GetHomeCategoryListResponse> {
-    if (IS_MOCK) {
-        return Promise.resolve({
-            code: 0,
-            message: 'ok',
-            data: homeCategoryList,
-        })
-    }
-
     return request({
-        url: '/goods/home/categories',
+        url: API_PATHS.HOME_CATEGORIES,
         method: 'GET',
     })
 }
 
 export function getHomeProductList(): Promise<GetHomeProductListResponse> {
-    if (IS_MOCK) {
-        return Promise.resolve({
-            code: 0,
-            message: 'ok',
-            data: homeProductList,
-        })
-    }
-
     return request({
-        url: '/goods/home/products',
+        url: API_PATHS.HOME_PRODUCTS,
         method: 'GET',
     })
 }
 
 export function getFirstCategoryList(): Promise<GetFirstCategoryListResponse> {
-    if (IS_MOCK) {
-        return Promise.resolve({
-            code: 0,
-            message: 'ok',
-            data: firstCategoryList,
-        })
-    }
-
     return request({
-        url: '/goods/categories/first',
+        url: API_PATHS.CATEGORIES_FIRST,
         method: 'GET',
     })
 }
 
 export function getSecondCategoryMap(): Promise<GetSecondCategoryMapResponse> {
-    if (IS_MOCK) {
-        return Promise.resolve({
-            code: 0,
-            message: 'ok',
-            data: secondCategoryMap,
-        })
-    }
-
     return request({
-        url: '/goods/categories/second',
+        url: API_PATHS.CATEGORIES_SECOND,
         method: 'GET',
     })
 }
 
-export function getGoodsList(): Promise<GetGoodsListResponse> {
-    if (IS_MOCK) {
-        return Promise.resolve({
-            code: 0,
-            message: 'ok',
-            data: goodsList,
-        })
-    }
-
-    return request({
-        url: '/goods',
+export async function getGoodsList(params?: GoodsListParams): Promise<GetGoodsListResponse> {
+    const res = await request<any[]>({
+        url: API_PATHS.GOODS_LIST,
         method: 'GET',
     })
+
+    if (res.code === 0 && params) {
+        let filteredData = res.data
+
+        // 1. 分类过滤
+        if (params.categoryId) {
+            filteredData = filteredData.filter(item => item.categoryId === params.categoryId)
+        }
+        if (params.subCategoryId && params.subCategoryId % 100 !== 1) {
+            filteredData = filteredData.filter(item => item.subCategoryId === params.subCategoryId)
+        }
+
+        // 2. 关键词搜索 (大数据量下必须由后端完成)
+        if (params.keyword) {
+            const kw = params.keyword.toLowerCase()
+            filteredData = filteredData.filter(item =>
+                item.name.toLowerCase().includes(kw) ||
+                (item.subtitle && item.subtitle.toLowerCase().includes(kw))
+            )
+        }
+
+        // 3. 排序 (大数据量下必须由后端完成)
+        if (params.sortField && params.sortField !== 'default') {
+            const field = params.sortField
+            const order = params.sortOrder || 'desc'
+            filteredData.sort((a, b) => {
+                const valA = a[field] || 0
+                const valB = b[field] || 0
+                return order === 'asc' ? valA - valB : valB - valA
+            })
+        }
+
+        // 4. 价格过滤
+        if (params.minPrice !== undefined) {
+            filteredData = filteredData.filter(item => item.price >= params.minPrice!)
+        }
+        if (params.maxPrice !== undefined) {
+            filteredData = filteredData.filter(item => item.price <= params.maxPrice!)
+        }
+
+        // 5. 分页模拟 (核心：大数据量适配关键)
+        const page = params.page || 1
+        const pageSize = params.pageSize || 10
+        const start = (page - 1) * pageSize
+        const end = start + pageSize
+        
+        return {
+            ...res,
+            data: filteredData.slice(start, end) // 仅返回当前页数据
+        }
+    }
+
+    return res
 }
 
 export function getGoodsDetail(id: number): Promise<GetGoodsDetailResponse> {
-    if (IS_MOCK) {
-        const detail = goodsDetailMap[id] ?? null
-
-        return Promise.resolve({
-            code: detail ? 0 : 404,
-            message: detail ? 'ok' : '商品不存在',
-            data: detail,
-        })
-    }
-
     return request({
-        url: `/goods/${id}`,
+        url: API_PATHS.GOODS_DETAIL(id),
         method: 'GET',
+        loading: true,
+        loadingText: '正在获取商品详情...',
     })
 }

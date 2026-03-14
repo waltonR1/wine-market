@@ -1,4 +1,4 @@
-import { BASE_URL, REQUEST_TIMEOUT } from '@/config/env'
+import { BASE_URL, REQUEST_TIMEOUT, API_PREFIX, APP_CONFIG } from '@/config/env'
 import type { ApiResponse } from '@/types/common'
 import { getToken, removeToken } from '@/utils/auth'
 
@@ -7,6 +7,8 @@ interface RequestOptions {
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
     data?: Record<string, any>
     header?: Record<string, string>
+    loading?: boolean // 是否显示加载动画
+    loadingText?: string // 加载动画文字
 }
 
 export function request<T>({
@@ -14,12 +16,26 @@ export function request<T>({
                                method = 'GET',
                                data,
                                header = {},
+                               loading = false,
+                               loadingText = '正在加载...',
                            }: RequestOptions): Promise<ApiResponse<T>> {
     return new Promise((resolve, reject) => {
         const token = getToken()
+        const fullUrl = `${BASE_URL}${API_PREFIX}${url}`
+
+        if (APP_CONFIG.ENABLE_LOG) {
+            console.log(`[Request] ${method} ${fullUrl}`, data)
+        }
+
+        if (loading) {
+            uni.showLoading({
+                title: loadingText,
+                mask: true,
+            })
+        }
 
         uni.request({
-            url: `${BASE_URL}${url}`,
+            url: fullUrl,
             method,
             data,
             header: {
@@ -29,7 +45,11 @@ export function request<T>({
             },
             timeout: REQUEST_TIMEOUT,
             success: (res) => {
-                const { statusCode, data: responseData } = res
+                const { statusCode, data: responseData } = res as { statusCode: number, data: any }
+
+                if (APP_CONFIG.ENABLE_LOG) {
+                    console.log(`[Response] ${fullUrl}`, responseData)
+                }
 
                 if (statusCode === 401) {
                     removeToken()
@@ -52,11 +72,13 @@ export function request<T>({
                 if (statusCode >= 200 && statusCode < 300) {
                     resolve(responseData as ApiResponse<T>)
                 } else {
+                    // 优先展示后端返回的错误信息
+                    const errorMsg = (responseData && responseData.message) || '网络请求失败'
                     uni.showToast({
-                        title: '网络请求失败',
+                        title: errorMsg,
                         icon: 'none',
                     })
-                    reject(new Error(`请求失败，状态码：${statusCode}`))
+                    reject(new Error(`请求失败，状态码：${statusCode}，信息：${errorMsg}`))
                 }
             },
             fail: (error) => {
@@ -65,6 +87,11 @@ export function request<T>({
                     icon: 'none',
                 })
                 reject(error)
+            },
+            complete: () => {
+                if (loading) {
+                    uni.hideLoading()
+                }
             },
         })
     })

@@ -95,7 +95,7 @@ function changeFirst(id: number) {
 
 function goList(item: SecondCategoryItem) {
   uni.navigateTo({
-    url: `/pages/goods/list?secondId=${item.id}&title=${encodeURIComponent(item.name)}`,
+    url: `/pages/goods/list?categoryId=${activeFirstId.value}&subCategoryId=${item.id}&title=${encodeURIComponent(item.name)}`,
   })
 }
 </script>

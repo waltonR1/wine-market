@@ -1,37 +1,47 @@
-import { IS_MOCK } from '@/config/env'
 import { request } from '@/utils/request'
-import { confirmOrderList, defaultAddress } from '@/mock/order'
+import { API_PATHS } from '@/config/api'
+import type { OrderItem } from '@/types/model/order'
 import type {
     GetConfirmOrderListResponse,
     GetDefaultAddressResponse,
+    GetAddressListResponse,
+    GetOrderListResponse,
 } from '@/types/api/order'
 
 export function getDefaultAddress(): Promise<GetDefaultAddressResponse> {
-    if (IS_MOCK) {
-        return Promise.resolve({
-            code: 0,
-            message: 'ok',
-            data: defaultAddress,
-        })
-    }
-
     return request({
-        url: '/order/default-address',
+        url: API_PATHS.ORDER_DEFAULT_ADDRESS,
+        method: 'GET',
+    })
+}
+
+export function getAddressList(): Promise<GetAddressListResponse> {
+    return request({
+        url: API_PATHS.ORDER_ADDRESS_LIST,
         method: 'GET',
     })
 }
 
 export function getConfirmOrderList(): Promise<GetConfirmOrderListResponse> {
-    if (IS_MOCK) {
-        return Promise.resolve({
-            code: 0,
-            message: 'ok',
-            data: confirmOrderList,
-        })
-    }
-
     return request({
-        url: '/order/confirm-list',
+        url: API_PATHS.ORDER_CONFIRM_LIST,
         method: 'GET',
     })
+}
+
+export async function getOrderList(status?: number): Promise<GetOrderListResponse> {
+    const res = await request<OrderItem[]>({
+        url: API_PATHS.ORDER_LIST,
+        method: 'GET',
+    })
+
+    // 模拟服务端根据 status 过滤
+    if (res.code === 0 && status && status !== 0) {
+        return {
+            ...res,
+            data: res.data.filter(item => item.status === status)
+        }
+    }
+
+    return res
 }

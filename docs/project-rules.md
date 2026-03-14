@@ -518,7 +518,69 @@ return request(...)
 
 ---
 
-## 七、什么时候该新建目录
+## 七、环境与配置规范
+
+### 1. 环境切换 (`config/env.ts`)
+
+* **禁止**在页面或业务代码中硬编码 `baseURL`。
+* 统一通过 `IS_MOCK` 开关切换后端环境。
+* `BASE_URL` 和 `API_PREFIX` 会根据 `IS_MOCK` 自动计算，无需手动修改。
+
+### 2. 全局配置项 (`APP_CONFIG`)
+
+* 通用业务参数（如客服电话、分页大小、日志开关）应统一维护在 `APP_CONFIG` 中。
+
+---
+
+## 八、网络请求规范
+
+### 1. 统一请求函数 (`utils/request.ts`)
+
+* 必须通过 `request` 函数发起网络请求，严禁直接调用 `uni.request`。
+* 自动处理 `401` 登录失效逻辑。
+* 支持 `loading` 参数自动管理页面加载状态。
+
+**代码示例：**
+
+```typescript
+// 简单调用
+const res = await request({ url: API_PATHS.GOODS_LIST })
+
+// 带有 Loading 的调用 (通常用于登录、提交订单等需要遮罩的操作)
+const loginRes = await request({
+    url: API_PATHS.USER_LOGIN,
+    method: 'POST',
+    data: { username, password },
+    loading: true,
+    loadingText: '正在登录...'
+})
+```
+
+* **日志功能**：在开发环境下开启 `APP_CONFIG.ENABLE_LOG` 后，所有的请求参数和响应数据都会在控制台打印，格式为 `[Request] ...` 和 `[Response] ...`。
+* **错误提示**：请求失败时，`request` 会优先寻找后端返回的 `message` 字段进行 Toast 提示。
+
+### 2. 接口路径定义 (`config/api.ts`)
+
+* 所有接口 URL 必须集中定义在 `API_PATHS` 对象中。
+* 适配 `json-server 1.x` 时，使用扁平化命名（如 `/goods_${id}`）。
+
+---
+
+## 九、性能优化规范
+
+### 1. 大数据量处理
+
+* **分页加载**：所有列表接口必须支持 `page` 和 `pageSize` 参数。
+* **无缝滚动**：列表页需在 `pages.json` 中配置 `onReachBottomDistance: 200`。
+* **图片加载**：所有列表图片必须开启 `lazy-load`。
+
+### 2. 视觉反馈
+
+* **骨架屏**：列表加载时优先展示骨架屏，而非简单的 Loading 动画。
+
+---
+
+## 十、什么时候该新建目录
 
 ### 需要新建 `pages/xxx/components/` 的情况
 

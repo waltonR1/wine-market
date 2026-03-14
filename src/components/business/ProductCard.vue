@@ -8,6 +8,7 @@
           :src="product.image"
           class="w-full h-[180px] bg-[#EFE7DE]"
           mode="aspectFill"
+          lazy-load
       />
 
       <view

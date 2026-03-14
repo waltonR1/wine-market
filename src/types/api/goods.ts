@@ -22,4 +22,16 @@ export type GetSecondCategoryMapResponse = ApiResponse<Record<number, SecondCate
 
 export type GetGoodsListResponse = ApiResponse<ProductItem[]>
 
+export interface GoodsListParams {
+    categoryId?: number
+    subCategoryId?: number
+    keyword?: string
+    sortField?: 'price' | 'sales' | 'default'
+    sortOrder?: 'asc' | 'desc'
+    minPrice?: number
+    maxPrice?: number
+    page?: number
+    pageSize?: number
+}
+
 export type GetGoodsDetailResponse = ApiResponse<ProductDetail | null>
