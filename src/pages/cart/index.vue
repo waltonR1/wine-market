@@ -28,6 +28,7 @@
     <!-- 商品列表 -->
     <view class="px-3 pt-3">
       <view
+          v-if="cartList.length > 0"
           v-for="item in cartList"
           :key="item.id"
           class="bg-white rounded-2xl p-3 mb-3 flex items-center"
@@ -92,12 +93,14 @@
         </view>
       </view>
 
-      <view
+      <Empty
           v-if="cartList.length === 0"
-          class="text-center text-[14px] text-[#8B7B6B] py-10"
-      >
-        购物车空空的
-      </view>
+          icon="🛒"
+          message="购物车空空的，快去选购吧"
+          button-text="去选购商品"
+          show-button
+          @click="goCategory"
+      />
     </view>
 
     <!-- 底部栏 -->
@@ -161,10 +164,17 @@ import { getCartList } from '@/api'
 import type { CartItem } from '@/types/model/cart'
 import { onShow } from '@dcloudio/uni-app'
 import { hasToken } from '@/utils/auth'
+import Empty from '@/components/common/Empty.vue'
 
 const isEdit = ref(false)
 const isLogin = ref(false)
 const cartList = ref<CartItem[]>([])
+
+function goCategory() {
+  uni.switchTab({
+    url: '/pages/goods/category',
+  })
+}
 
 onShow(async () => {
   isLogin.value = hasToken()
