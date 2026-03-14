@@ -20,11 +20,11 @@
     </view>
 
     <view class="p-3">
-      <view class="text-[14px] font-semibold text-[#2C2C2C] leading-5 line-clamp-2">
+      <view class="product-title text-[14px] font-semibold text-[#2C2C2C] leading-5">
         {{ product.name }}
       </view>
 
-      <view class="mt-1 text-[12px] text-[#8B7B6B]">
+      <view class="mt-1 product-subtitle text-[12px] text-[#8B7B6B]">
         {{ product.subtitle }}
       </view>
 
@@ -56,3 +56,31 @@ function handleClick() {
   emit('click', props.product)
 }
 </script>
+
+<style scoped>
+.product-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+
+  line-clamp: 2;          /* 标准属性 */
+  -webkit-line-clamp: 2;  /* WebKit */
+
+  overflow: hidden;
+
+  line-height: 20px;
+  height: 40px;           /* 2 × line-height */
+}
+
+.product-subtitle {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+
+  overflow: hidden;
+
+  line-height: 16px;
+  height: 16px;
+}
+</style>
