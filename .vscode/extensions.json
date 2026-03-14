@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "Vue.volar",
+    "dcloudio.uni-app-schemas",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint"
+  ]
+}
