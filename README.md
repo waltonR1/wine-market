@@ -20,11 +20,13 @@
 
 ## 技术栈
 
-- **框架**：uni-app (Vue 3 + Vite)
-- **语言**：TypeScript
-- **样式**：Tailwind CSS (Windi CSS)
-- **后端模拟**：json-server 1.x
-- **状态管理**：Pinia
+本项目基于以下核心技术构建：
+
+- **框架**：[uni-app](https://uniapp.dcloud.net.cn/) (Vue 3 + Vite) - 全端通用的开发框架。
+- **状态管理**：[Pinia](https://pinia.vuejs.org/) - 现代、轻量级的状态管理库。
+- **样式**：[Tailwind CSS](https://tailwindcss.com/) (针对 uni-app 优化的原子化 CSS)。
+- **语言**：[TypeScript](https://www.typescriptlang.org/) - 强类型约束，提升代码健壮性。
+- **后端模拟**：[json-server 1.x](https://github.com/typicode/json-server) - 快速搭建 RESTful API Mock。
 
 ---
 

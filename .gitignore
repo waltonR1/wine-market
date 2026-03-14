@@ -14,8 +14,19 @@ dist
 
 # Editor directories and files
 .idea
+.vscode
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# UniApp specific
+unpackage/
+.hbuilderx/
+dev/
+build/
+bin/
+
+# TypeScript
+*.tsbuildinfo
