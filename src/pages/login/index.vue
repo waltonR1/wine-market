@@ -1,11 +1,11 @@
 <template>
-  <view class="min-h-screen bg-[#F7F3EE] px-6 pt-16">
+  <view class="min-h-screen bg-background px-6 pt-16">
     <!-- 顶部品牌区 -->
     <view class="text-center">
-      <view class="text-[30px] font-bold text-[#4A0D12] tracking-wide">
+      <view class="text-[30px] font-bold text-primary tracking-wide">
         Wine Market
       </view>
-      <view class="mt-3 text-[13px] text-[#8B7B6B]">
+      <view class="mt-3 text-[13px] text-text-secondary">
         欢迎来到精品酒类商城
       </view>
     </view>
@@ -14,11 +14,11 @@
     <view class="mt-12 bg-white rounded-3xl px-5 py-6 shadow-sm">
       <!-- #ifdef H5 -->
       <view>
-        <view class="text-[20px] font-bold text-[#2C2C2C]">
+        <view class="text-[20px] font-bold text-text-main">
           账号登录
         </view>
 
-        <view class="mt-2 text-[12px] text-[#8B7B6B]">
+        <view class="mt-2 text-[12px] text-text-secondary">
           请输入账号和密码继续使用
         </view>
 
@@ -28,7 +28,7 @@
           </view>
           <input
               v-model="username"
-              class="w-full bg-[#F5F1EC] rounded-2xl px-4 py-3 text-[14px] text-[#2C2C2C]"
+              class="w-full bg-[#F5F1EC] rounded-2xl px-4 py-3 text-[14px] text-text-main"
               placeholder="请输入用户名"
           />
         </view>
@@ -39,20 +39,20 @@
           </view>
           <input
               v-model="password"
-              class="w-full bg-[#F5F1EC] rounded-2xl px-4 py-3 text-[14px] text-[#2C2C2C]"
+              class="w-full bg-[#F5F1EC] rounded-2xl px-4 py-3 text-[14px] text-text-main"
               placeholder="请输入密码"
               password
           />
         </view>
 
-        <view class="mt-4 text-[12px] text-[#8B7B6B] leading-5">
+        <view class="mt-4 text-[12px] text-text-secondary leading-5">
           mock 登录账号：admin
           <br>
           mock 登录密码：123456
         </view>
 
         <view
-            class="mt-6 bg-[#6B0F1A] text-white text-center py-3 rounded-2xl text-[15px] font-medium"
+            class="mt-6 bg-accent text-white text-center py-3 rounded-2xl text-[15px] font-medium"
             @click="handleAccountLogin"
         >
           {{ loading ? '登录中...' : '立即登录' }}
@@ -62,16 +62,16 @@
 
       <!-- #ifdef MP-WEIXIN -->
       <view>
-        <view class="text-[20px] font-bold text-[#2C2C2C]">
+        <view class="text-[20px] font-bold text-text-main">
           微信登录
         </view>
 
-        <view class="mt-2 text-[12px] text-[#8B7B6B] leading-5">
+        <view class="mt-2 text-[12px] text-text-secondary leading-5">
           登录后可同步购物车、订单与个人信息
         </view>
 
         <view
-            class="mt-8 bg-[#6B0F1A] text-white text-center py-3 rounded-2xl text-[15px] font-medium"
+            class="mt-8 bg-accent text-white text-center py-3 rounded-2xl text-[15px] font-medium"
             @click="handleWechatLogin"
         >
           {{ loading ? '登录中...' : '微信一键登录' }}

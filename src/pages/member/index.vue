@@ -1,8 +1,8 @@
 <template>
-  <view class="min-h-screen bg-[#F7F3EE] pb-8">
+  <view class="min-h-screen bg-background pb-8">
     <!-- 用户卡片区 -->
     <view class="px-4 pt-4">
-      <view class="rounded-3xl bg-[#4A0D12] px-5 py-6 text-white shadow-lg relative overflow-hidden">
+      <view class="rounded-3xl bg-primary px-5 py-6 text-white shadow-lg relative overflow-hidden">
         <!-- 装饰图 -->
         <view class="absolute right-[-20px] top-[-20px] opacity-10 text-[100px]">🍷</view>
 
@@ -14,9 +14,9 @@
             </view>
             <view class="ml-4 flex-1">
               <view class="text-[20px] font-bold">{{ profile.nickname }}</view>
-              <view class="mt-1 text-[12px] text-[#E7D9C7]">{{ profile.welcomeText }}</view>
+              <view class="mt-1 text-[12px] text-border">{{ profile.welcomeText }}</view>
             </view>
-            <view class="px-3 py-1 rounded-full border border-[#C9A96E] text-[#F8E7C8] text-[12px]">
+            <view class="px-3 py-1 rounded-full border border-[#C9A96E] text-secondary text-[12px]">
               会员中心
             </view>
           </view>
@@ -30,10 +30,10 @@
             </view>
             <view class="ml-4 flex-1">
               <view class="text-[20px] font-bold">欢迎来到 Wine Market</view>
-              <view class="mt-1 text-[12px] text-[#E7D9C7]">登录后查看订单、积分与会员权益</view>
+              <view class="mt-1 text-[12px] text-border">登录后查看订单、积分与会员权益</view>
             </view>
           </view>
-          <view class="mt-6 bg-[#6B0F1A] text-white text-center py-3 rounded-2xl text-[15px] font-medium shadow-inner" @click="goLogin">
+          <view class="mt-6 bg-accent text-white text-center py-3 rounded-2xl text-[15px] font-medium shadow-inner" @click="goLogin">
             立即登录
           </view>
         </template>
@@ -59,7 +59,7 @@
       <view class="bg-white rounded-3xl p-5 shadow-sm">
         <view class="flex items-center mb-5">
           <view class="w-1 h-4 bg-[#A6814C] rounded-full mr-2"></view>
-          <text class="text-[16px] font-bold text-[#2C2C2C]">常用功能</text>
+          <text class="text-[16px] font-bold text-text-main">常用功能</text>
           <text class="text-[10px] text-[#999] ml-2 italic">Common Functions</text>
         </view>
 
@@ -77,7 +77,7 @@
       <view class="bg-white rounded-3xl p-5 shadow-sm">
         <view class="flex items-center mb-5">
           <view class="w-1 h-4 bg-[#A6814C] rounded-full mr-2"></view>
-          <text class="text-[16px] font-bold text-[#2C2C2C]">功能选单</text>
+          <text class="text-[16px] font-bold text-text-main">功能选单</text>
           <text class="text-[10px] text-[#999] ml-2 italic">Function Menu</text>
         </view>
 
@@ -92,14 +92,14 @@
 
     <!-- 退出登录 -->
     <view v-if="isLogin" class="px-4 mt-6">
-      <view class="bg-white rounded-2xl p-4 shadow-sm text-center text-[15px] text-[#6B0F1A] font-medium active:opacity-70" @click="handleLogout">
+      <view class="bg-white rounded-2xl p-4 shadow-sm text-center text-[15px] text-accent font-medium active:opacity-70" @click="handleLogout">
         退出登录
       </view>
     </view>
 
     <!-- 版权信息 -->
     <view class="mt-10 text-center pb-6">
-      <view class="text-[11px] text-[#8B7B6B] opacity-60">© Wine Market 版权所有</view>
+      <view class="text-[11px] text-text-secondary opacity-60">© Wine Market 版权所有</view>
     </view>
   </view>
 </template>

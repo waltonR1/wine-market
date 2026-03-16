@@ -1,17 +1,17 @@
 <template>
-  <view class="min-h-screen bg-[#F7F3EE] pb-8">
+  <view class="min-h-screen bg-background pb-8">
     <!-- 顶部品牌区 -->
     <view class="px-4 pt-4">
-      <view class="rounded-3xl bg-[#4A0D12] px-5 py-6 text-white shadow-lg">
+      <view class="rounded-3xl bg-primary px-5 py-6 text-white shadow-lg">
         <view class="text-[24px] font-bold tracking-wide">
           Wine Market
         </view>
-        <view class="mt-2 text-[13px] text-[#E7D9C7] leading-5">
+        <view class="mt-2 text-[13px] text-border leading-5">
           精选红酒 · 白葡萄酒 · 香槟 · 烈酒
         </view>
 
-        <view class="mt-5 rounded-2xl bg-[#6B0F1A] px-4 py-4">
-          <view class="text-[18px] font-semibold text-[#F8E7C8]">
+        <view class="mt-5 rounded-2xl bg-accent px-4 py-4">
+          <view class="text-[18px] font-semibold text-secondary">
             今日推荐
           </view>
           <view class="mt-1 text-[13px] text-[#F5EBDD]">
@@ -42,14 +42,14 @@
     <!-- 标题 -->
     <view class="px-4 mt-6 flex items-center justify-between">
       <view>
-        <view class="text-[20px] font-bold text-[#2C2C2C]">
+        <view class="text-[20px] font-bold text-text-main">
           精选推荐
         </view>
-        <view class="text-[12px] text-[#8B7B6B] mt-1">
+        <view class="text-[12px] text-text-secondary mt-1">
           Boutique Selection
         </view>
       </view>
-      <view class="text-[13px] text-[#6B0F1A] font-medium">
+      <view class="text-[13px] text-accent font-medium">
         查看全部
       </view>
     </view>

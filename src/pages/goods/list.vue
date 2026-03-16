@@ -1,5 +1,5 @@
 <template>
-  <view class="min-h-screen bg-[#F5F5F5]">
+  <view class="min-h-screen bg-background">
     <!-- 搜索框 -->
     <view class="px-4 pt-3">
       <view class="bg-[#EEEEEE] rounded-full px-4 py-2 flex items-center justify-between">
@@ -18,29 +18,29 @@
     <!-- 筛选栏 -->
     <view class="bg-white mt-3 px-4 py-3 flex items-center justify-between text-[14px] text-[#333]">
       <view class="flex items-center" @click="changeSort('default')">
-        <text :class="sortField === 'default' ? 'text-[#C40000]' : ''">综合</text>
+        <text :class="sortField === 'default' ? 'text-accent' : ''">综合</text>
         <text class="ml-1 text-[10px]" v-if="sortField === 'default'">▼</text>
       </view>
 
       <view class="flex items-center" @click="changeSort('price')">
-        <text :class="sortField === 'price' ? 'text-[#C40000]' : ''">价格</text>
+        <text :class="sortField === 'price' ? 'text-accent' : ''">价格</text>
         <view class="ml-1 flex flex-col leading-none text-[8px]">
-          <text :class="sortField === 'price' && sortOrder === 'asc' ? 'text-[#C40000]' : 'text-[#999]'">▲</text>
-          <text :class="sortField === 'price' && sortOrder === 'desc' ? 'text-[#C40000]' : 'text-[#999]'">▼</text>
+          <text :class="sortField === 'price' && sortOrder === 'asc' ? 'text-accent' : 'text-[#999]'">▲</text>
+          <text :class="sortField === 'price' && sortOrder === 'desc' ? 'text-accent' : 'text-[#999]'">▼</text>
         </view>
       </view>
 
       <view class="flex items-center" @click="changeSort('sales')">
-        <text :class="sortField === 'sales' ? 'text-[#C40000]' : ''">销量</text>
+        <text :class="sortField === 'sales' ? 'text-accent' : ''">销量</text>
         <view class="ml-1 flex flex-col leading-none text-[8px]">
-          <text :class="sortField === 'sales' && sortOrder === 'asc' ? 'text-[#C40000]' : 'text-[#999]'">▲</text>
-          <text :class="sortField === 'sales' && sortOrder === 'desc' ? 'text-[#C40000]' : 'text-[#999]'">▼</text>
+          <text :class="sortField === 'sales' && sortOrder === 'asc' ? 'text-accent' : 'text-[#999]'">▲</text>
+          <text :class="sortField === 'sales' && sortOrder === 'desc' ? 'text-accent' : 'text-[#999]'">▼</text>
         </view>
       </view>
 
       <view class="flex items-center" @click="toggleFilter">
-        <text :class="isFiltered ? 'text-[#C40000]' : ''">筛选</text>
-        <text class="ml-1 text-[10px]" :class="isFiltered ? 'text-[#C40000]' : ''">▼</text>
+        <text :class="isFiltered ? 'text-accent' : ''">筛选</text>
+        <text class="ml-1 text-[10px]" :class="isFiltered ? 'text-accent' : ''">▼</text>
       </view>
 
       <view class="flex items-center" @click="toggleViewMode">
@@ -78,7 +78,7 @@
           重置
         </view>
         <view
-            class="flex-1 py-2 text-center text-[13px] bg-[#6B0F1A] text-white rounded-full active:opacity-90"
+            class="flex-1 py-2 text-center text-[13px] bg-accent text-white rounded-full active:opacity-90"
             @click="applyFilter"
         >
           确定
@@ -144,7 +144,7 @@
           />
           <view
               v-if="item.tag"
-              class="absolute left-1 top-1 rounded-full bg-[#6B0F1A] px-2 py-0.5 text-[10px] text-white"
+              class="absolute left-1 top-1 rounded-full bg-accent px-2 py-0.5 text-[10px] text-white"
           >
             {{ item.tag }}
           </view>
@@ -152,16 +152,16 @@
 
         <view class="flex-1 flex flex-col justify-between py-1">
           <view>
-            <view class="text-[14px] font-semibold text-[#2C2C2C] leading-5 line-clamp-2">
+            <view class="text-[14px] font-semibold text-text-main leading-5 line-clamp-2">
               {{ item.name }}
             </view>
-            <view class="mt-1 text-[12px] text-[#8B7B6B]">
+            <view class="mt-1 text-[12px] text-text-secondary">
               {{ item.subtitle }}
             </view>
           </view>
 
           <view class="flex items-center justify-between">
-            <view class="text-[18px] font-bold text-[#6B0F1A]">
+            <view class="text-[18px] font-bold text-accent">
               ¥{{ item.price }}
             </view>
             <view class="rounded-full bg-[#C9A96E] px-4 py-1.5 text-[12px] text-white">
@@ -175,7 +175,7 @@
     <!-- 加载状态提示 -->
     <view class="py-10 flex justify-center items-center">
       <view v-if="loading" class="text-[12px] text-[#999] flex items-center">
-        <view class="w-4 h-4 border-2 border-[#6B0F1A] border-t-transparent rounded-full animate-spin mr-2"></view>
+        <view class="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin mr-2"></view>
         正在加载更多...
       </view>
       <view v-else-if="finished" class="text-[12px] text-[#CCC]">

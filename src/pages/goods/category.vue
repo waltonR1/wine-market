@@ -6,12 +6,12 @@
           v-for="item in firstCategoryList"
           :key="item.id"
           class="px-3 py-5 text-[14px] text-center relative"
-          :class="activeFirstId === item.id ? 'bg-white text-[#6B0F1A] font-medium' : 'text-[#555]'"
+          :class="activeFirstId === item.id ? 'bg-white text-accent font-medium' : 'text-[#555]'"
           @click="changeFirst(item.id)"
       >
         <view
             v-if="activeFirstId === item.id"
-            class="absolute left-0 top-0 bottom-0 w-[3px] bg-[#6B0F1A]"
+            class="absolute left-0 top-0 bottom-0 w-[3px] bg-accent"
         ></view>
         {{ item.name }}
       </view>
@@ -28,7 +28,7 @@
         >
           <image
               :src="item.image"
-              class="w-[72px] h-[72px] rounded-full bg-[#F7F3EE]"
+              class="w-[72px] h-[72px] rounded-full bg-background"
               mode="aspectFill"
           />
           <view class="mt-2 text-[13px] text-[#333] text-center leading-4">
@@ -39,7 +39,7 @@
 
       <view
           v-if="currentSecondList.length === 0"
-          class="text-center text-[14px] text-[#8B7B6B] py-10"
+          class="text-center text-[14px] text-text-secondary py-10"
       >
         暂无分类数据
       </view>

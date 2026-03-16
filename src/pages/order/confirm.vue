@@ -1,5 +1,5 @@
 <template>
-  <view class="min-h-screen bg-[#F7F3EE] pb-[120px]">
+  <view class="min-h-screen bg-background pb-[120px]">
     <!-- 收货地址 -->
     <view class="bg-white px-4 py-4 flex items-center justify-between">
       <view v-if="address">
@@ -44,7 +44,7 @@
           </view>
 
           <view class="flex items-center justify-between">
-            <view class="text-[#C40000] text-[16px] font-medium">
+            <view class="text-accent text-[16px] font-medium">
               ¥{{ item.price }}
             </view>
 
@@ -57,7 +57,7 @@
 
       <view
           v-if="orderList.length === 0"
-          class="text-center text-[14px] text-[#8B7B6B] py-10"
+          class="text-center text-[14px] text-text-secondary py-10"
       >
         暂无确认订单商品
       </view>
@@ -105,13 +105,13 @@
   <view class="fixed bottom-0 left-0 right-0 bg-white border-t border-[#eee] px-4 py-3 flex items-center justify-between">
     <view class="text-[14px]">
       合计：
-      <text class="text-[#C40000] text-[18px] font-bold">
+      <text class="text-accent text-[18px] font-bold">
         ¥{{ totalPrice.toFixed(2) }}
       </text>
     </view>
 
     <view
-        class="bg-[#6B0F1A] text-white px-6 py-2 rounded-full text-[14px]"
+        class="bg-accent text-white px-6 py-2 rounded-full text-[14px]"
         @click="submitOrder"
     >
       提交订单

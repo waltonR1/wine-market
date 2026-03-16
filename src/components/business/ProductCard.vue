@@ -13,23 +13,23 @@
 
       <view
           v-if="product.tag"
-          class="absolute left-3 top-3 rounded-full bg-[#6B0F1A] px-3 py-1 text-[11px] text-white"
+          class="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-[11px] text-white"
       >
         {{ product.tag }}
       </view>
     </view>
 
     <view class="p-3">
-      <view class="product-title text-[14px] font-semibold text-[#2C2C2C] leading-5">
+      <view class="product-title text-[14px] font-semibold text-text-main leading-5">
         {{ product.name }}
       </view>
 
-      <view class="mt-1 product-subtitle text-[12px] text-[#8B7B6B]">
+      <view class="mt-1 product-subtitle text-[12px] text-text-secondary">
         {{ product.subtitle }}
       </view>
 
       <view class="mt-3 flex items-center justify-between">
-        <view class="text-[18px] font-bold text-[#6B0F1A]">
+        <view class="text-[18px] font-bold text-accent">
           ¥{{ product.price }}
         </view>
 

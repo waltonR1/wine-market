@@ -1,14 +1,14 @@
 <template>
-  <view class="min-h-screen bg-[#F8F8F8]">
+  <view class="min-h-screen bg-background">
     <!-- 余额卡片 -->
     <view class="p-4">
-      <view class="bg-[#4A0D12] rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+      <view class="bg-primary rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
         <view class="absolute right-[-20px] top-[-20px] opacity-10 text-[120px]">💰</view>
         <view class="text-[14px] opacity-80 mb-2">账户可用余额 (元)</view>
         <view class="text-[36px] font-bold mb-6">¥ {{ walletInfo.balance.toFixed(2) }}</view>
         <view class="flex gap-4">
           <view
-              class="flex-1 bg-[#C9A96E] text-[#4A0D12] text-center py-2.5 rounded-xl text-[14px] font-bold active:opacity-90"
+              class="flex-1 bg-[#C9A96E] text-primary text-center py-2.5 rounded-xl text-[14px] font-bold active:opacity-90"
               @click="handleRecharge"
           >
             立即充值
@@ -60,7 +60,7 @@
             </view>
             <view
                 class="text-[16px] font-bold"
-                :class="record.amount > 0 ? 'text-[#4A0D12]' : 'text-[#333]'"
+                :class="record.amount > 0 ? 'text-primary' : 'text-[#333]'"
             >
               {{ record.amount > 0 ? '+' : '' }}{{ record.amount.toFixed(2) }}
             </view>

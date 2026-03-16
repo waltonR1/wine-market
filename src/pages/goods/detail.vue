@@ -1,7 +1,7 @@
 <template>
   <view
       v-if="product"
-      class="min-h-screen bg-[#F7F3EE] pb-[100px]"
+      class="min-h-screen bg-background pb-[100px]"
   >
     <image
         :src="product.image"
@@ -10,15 +10,15 @@
     />
 
     <view class="bg-white rounded-t-3xl -mt-6 p-5">
-      <view class="text-[20px] font-bold text-[#2C2C2C] leading-6">
+      <view class="text-[20px] font-bold text-text-main leading-6">
         {{ product.name }}
       </view>
 
-      <view class="mt-2 text-[13px] text-[#8B7B6B]">
+      <view class="mt-2 text-[13px] text-text-secondary">
         {{ product.subtitle }}
       </view>
 
-      <view class="mt-4 text-[26px] font-bold text-[#6B0F1A]">
+      <view class="mt-4 text-[26px] font-bold text-accent">
         ¥{{ product.price }}
       </view>
 
@@ -26,35 +26,35 @@
 
       <view class="grid grid-cols-3 gap-3 text-center">
         <view class="bg-[#F8F5F2] rounded-xl py-3">
-          <view class="text-[11px] text-[#8B7B6B]">
+          <view class="text-[11px] text-text-secondary">
             产区
           </view>
-          <view class="mt-1 text-[13px] font-medium text-[#2C2C2C]">
+          <view class="mt-1 text-[13px] font-medium text-text-main">
             {{ product.region }}
           </view>
         </view>
 
         <view class="bg-[#F8F5F2] rounded-xl py-3">
-          <view class="text-[11px] text-[#8B7B6B]">
+          <view class="text-[11px] text-text-secondary">
             类型
           </view>
-          <view class="mt-1 text-[13px] font-medium text-[#2C2C2C]">
+          <view class="mt-1 text-[13px] font-medium text-text-main">
             {{ product.type }}
           </view>
         </view>
 
         <view class="bg-[#F8F5F2] rounded-xl py-3">
-          <view class="text-[11px] text-[#8B7B6B]">
+          <view class="text-[11px] text-text-secondary">
             酒精度
           </view>
-          <view class="mt-1 text-[13px] font-medium text-[#2C2C2C]">
+          <view class="mt-1 text-[13px] font-medium text-text-main">
             {{ product.alcohol }}
           </view>
         </view>
       </view>
 
       <view class="mt-6">
-        <view class="text-[16px] font-bold text-[#2C2C2C]">
+        <view class="text-[16px] font-bold text-text-main">
           酒品介绍
         </view>
 
@@ -67,20 +67,20 @@
     <view
         class="fixed bottom-0 left-0 right-0 bg-white border-t border-[#eee] px-4 py-3 flex items-center justify-between"
     >
-      <view class="text-[20px] font-bold text-[#6B0F1A]">
+      <view class="text-[20px] font-bold text-accent">
         ¥{{ product.price }}
       </view>
 
       <view class="flex gap-3">
         <view
-            class="px-4 py-2 rounded-full border border-[#6B0F1A] text-[#6B0F1A] text-[13px]"
+            class="px-4 py-2 rounded-full border border-accent text-accent text-[13px]"
             @click="addCart"
         >
           加入购物车
         </view>
 
         <view
-            class="px-5 py-2 rounded-full bg-[#6B0F1A] text-white text-[13px]"
+            class="px-5 py-2 rounded-full bg-accent text-white text-[13px]"
         >
           立即购买
         </view>
@@ -90,7 +90,7 @@
 
   <view
       v-else
-      class="min-h-screen flex items-center justify-center text-[#8B7B6B]"
+      class="min-h-screen flex items-center justify-center text-text-secondary"
   >
     商品加载中...
   </view>

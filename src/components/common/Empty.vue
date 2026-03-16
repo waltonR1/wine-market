@@ -30,7 +30,7 @@ function handleClick() {
     </view>
     <view
         v-if="showButton"
-        class="px-8 py-2.5 rounded-full border border-[#6B0F1A] text-[#6B0F1A] text-[14px] active:opacity-70 transition-opacity"
+        class="px-8 py-2.5 rounded-full border border-accent text-accent text-[14px] active:opacity-70 transition-opacity"
         @click="handleClick"
     >
       {{ buttonText }}
