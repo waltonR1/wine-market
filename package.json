@@ -54,7 +54,7 @@
     "@dcloudio/uni-mp-weixin": "3.0.0-alpha-5000320260310001",
     "@dcloudio/uni-mp-xhs": "3.0.0-alpha-5000320260310001",
     "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-5000320260310001",
-    "pinia": "^2.3.1",
+    "pinia": "2.0.36",
     "vue": "^3.4.21",
     "vue-i18n": "^9.1.9"
   },
