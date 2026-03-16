@@ -48,50 +48,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { getFirstCategoryList, getSecondCategoryMap } from '@/api'
-import type { FirstCategoryItem, SecondCategoryItem } from '@/types/model/goods'
+import { onMounted } from 'vue'
+import type { SecondCategoryItem } from '@/types/model/goods'
+import { useGoodsCategory } from '@/hooks/useGoodsCategory'
 
-const activeFirstId = ref(1)
-const firstCategoryList = ref<FirstCategoryItem[]>([])
-const secondCategoryMap = ref<Record<number, SecondCategoryItem[]>>({})
+const {
+  activeFirstId,
+  firstCategoryList,
+  currentSecondList,
+  fetchCategories,
+  changeFirst,
+} = useGoodsCategory()
 
-const currentSecondList = computed(() => {
-  return secondCategoryMap.value[activeFirstId.value] || []
+onMounted(() => {
+  fetchCategories()
 })
-
-onMounted(async () => {
-  const [firstRes, secondRes] = await Promise.all([
-    getFirstCategoryList(),
-    getSecondCategoryMap(),
-  ])
-
-  if (firstRes.code === 0) {
-    firstCategoryList.value = firstRes.data
-
-    if (firstCategoryList.value.length > 0) {
-      activeFirstId.value = firstCategoryList.value[0].id
-    }
-  } else {
-    await uni.showToast({
-      title: firstRes.message || '一级分类加载失败',
-      icon: 'none',
-    })
-  }
-
-  if (secondRes.code === 0) {
-    secondCategoryMap.value = secondRes.data
-  } else {
-    await uni.showToast({
-      title: secondRes.message || '二级分类加载失败',
-      icon: 'none',
-    })
-  }
-})
-
-function changeFirst(id: number) {
-  activeFirstId.value = id
-}
 
 function goList(item: SecondCategoryItem) {
   uni.navigateTo({

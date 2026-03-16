@@ -98,41 +98,19 @@
 
 <script setup lang="ts">
 import { onLoad } from '@dcloudio/uni-app'
-import { ref } from 'vue'
-import { getGoodsDetail } from '@/api'
-import type { ProductDetail } from '@/types/model/goods'
+import { useGoodsDetail } from '@/hooks/useGoodsDetail'
+import { useCart } from '@/hooks/useCart'
 
-const product = ref<ProductDetail | null>(null)
+const { product, fetchProductDetail } = useGoodsDetail()
+const { addProductToCart } = useCart()
 
 onLoad(async (options) => {
   const id = Number(options?.id)
-
-  if (Number.isNaN(id)) {
-    await uni.showToast({
-      title: '商品参数错误',
-      icon: 'none',
-    })
-    return
-  }
-
-  const res = await getGoodsDetail(id)
-
-  if (res.code === 0 && res.data) {
-    product.value = res.data
-  } else {
-    await uni.showToast({
-      title: res.message || '商品不存在',
-      icon: 'none',
-    })
-  }
+  await fetchProductDetail(id)
 })
 
 function addCart() {
   if (!product.value) return
-
-  uni.showToast({
-    title: '已加入购物车',
-    icon: 'success',
-  })
+  addProductToCart(product.value)
 }
 </script>

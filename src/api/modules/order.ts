@@ -29,19 +29,9 @@ export function getConfirmOrderList(): Promise<GetConfirmOrderListResponse> {
     })
 }
 
-export async function getOrderList(status?: number): Promise<GetOrderListResponse> {
-    const res = await request<OrderItem[]>({
+export function getOrderList(): Promise<GetOrderListResponse> {
+    return request<OrderItem[]>({
         url: API_PATHS.ORDER_LIST,
         method: 'GET',
     })
-
-    // 模拟服务端根据 status 过滤
-    if (res.code === 0 && status && status !== 0) {
-        return {
-            ...res,
-            data: res.data.filter(item => item.status === status)
-        }
-    }
-
-    return res
 }

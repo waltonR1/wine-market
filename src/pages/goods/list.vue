@@ -192,22 +192,17 @@
 <script setup lang="ts">
 import { onLoad, onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app'
 import { ref, computed } from 'vue'
-import { getGoodsList } from '@/api'
 import type { ProductItem } from '@/types/model/goods'
 import type { GoodsListParams } from '@/types/api/goods'
 import ProductCard from '@/components/business/ProductCard.vue'
+import { useGoods } from '@/hooks/useGoods'
 
 const sortField = ref<'default' | 'price' | 'sales'>('default')
 const sortOrder = ref<'asc' | 'desc'>('desc')
 const isGrid = ref(true)
-const productList = ref<ProductItem[]>([]) // 现在直接存储显示的数据
 const keyword = ref('')
 
-// 分页相关
-const page = ref(1)
-const pageSize = 10
-const loading = ref(false)
-const finished = ref(false)
+const { loading, finished, productList, page, getGoodsList } = useGoods()
 
 // 筛选相关
 const showFilterPanel = ref(false)
@@ -229,14 +224,6 @@ function handleInput() {
 async function fetchProductList(isRefresh = false) {
   if (loading.value || (finished.value && !isRefresh)) return
   
-  loading.value = true
-  if (isRefresh) {
-    page.value = 1
-    finished.value = false
-    // 刷新时先清空，触发骨架屏
-    productList.value = []
-  }
-
   const params: GoodsListParams = {
     categoryId: pageOptions.categoryId ? Number(pageOptions.categoryId) : undefined,
     subCategoryId: pageOptions.subCategoryId ? Number(pageOptions.subCategoryId) : undefined,
@@ -245,33 +232,12 @@ async function fetchProductList(isRefresh = false) {
     sortOrder: sortOrder.value,
     minPrice: minPrice.value,
     maxPrice: maxPrice.value,
-    page: page.value,
-    pageSize: pageSize
   }
 
   try {
-    const res = await getGoodsList(params)
-    if (res.code === 0) {
-      const newData = res.data
-      if (isRefresh) {
-        productList.value = newData
-        uni.stopPullDownRefresh()
-      } else {
-        productList.value = [...productList.value, ...newData]
-      }
-      
-      // 判断是否加载完成
-      if (newData.length < pageSize) {
-        finished.value = true
-      } else {
-        page.value++
-      }
-    }
-  } catch (error) {
-    uni.showToast({ title: '加载失败', icon: 'none' })
-    if (isRefresh) uni.stopPullDownRefresh()
+    await getGoodsList(params, isRefresh)
   } finally {
-    loading.value = false
+    if (isRefresh) uni.stopPullDownRefresh()
   }
 }
 

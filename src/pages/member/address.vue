@@ -53,26 +53,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
-import { getAddressList } from '@/api'
 import type { AddressInfo } from '@/types/model/order'
+import { useOrder } from '@/hooks/useOrder'
 
-const addressList = ref<AddressInfo[]>([])
-
-const fetchAddressList = async () => {
-  try {
-    const res = await getAddressList()
-    if (res.code === 0) {
-      addressList.value = res.data
-    }
-  } catch (error) {
-    uni.showToast({
-      title: '获取地址列表失败',
-      icon: 'none'
-    })
-  }
-}
+const { addressList, fetchAddressList } = useOrder()
 
 onShow(() => {
   fetchAddressList()

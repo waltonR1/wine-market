@@ -77,34 +77,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
-import { getWalletInfo } from '@/api'
-import type { WalletInfo } from '@/types/model/member'
+import { useMember } from '@/hooks/useMember'
 
-const walletInfo = ref<WalletInfo>({
-  balance: 0,
-  points: 0,
-  couponCount: 0
-})
+const { walletInfo, fetchWalletInfo } = useMember()
 
 const records = ref([
   { title: '充值金额', time: '2026-03-13 09:30', amount: 1000.00 },
   { title: '购买商品', time: '2026-03-12 15:45', amount: -199.00 },
   { title: '积分兑换余额', time: '2026-03-10 11:20', amount: 50.00 },
 ])
-
-const fetchWalletInfo = async () => {
-  try {
-    const res = await getWalletInfo()
-    if (res.code === 0) {
-      walletInfo.value = res.data
-    }
-  } catch (error) {
-    uni.showToast({
-      title: '获取钱包信息失败',
-      icon: 'none'
-    })
-  }
-}
 
 onShow(() => {
   fetchWalletInfo()

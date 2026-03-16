@@ -85,13 +85,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-import { login, wechatLogin } from '@/api'
-import { setToken } from '@/utils/auth'
+import { useUser } from '@/hooks/useUser'
 
 const username = ref('')
 const password = ref('')
 const loading = ref(false)
 const redirectUrl = ref('')
+
+const { login: accountLogin, wechatLogin: wxLogin } = useUser()
 
 onLoad((options) => {
   redirectUrl.value = decodeURIComponent(options?.redirect || '')
@@ -135,33 +136,15 @@ async function handleAccountLogin() {
   loading.value = true
 
   try {
-    const res = await login({
+    const ok = await accountLogin({
       username: username.value.trim(),
       password: password.value.trim(),
     })
-
-    if (res.code === 0) {
-      setToken(res.data.token)
-
-      uni.showToast({
-        title: '登录成功',
-        icon: 'success',
-      })
-
+    if (ok) {
       setTimeout(() => {
         goAfterLogin()
       }, 300)
-    } else {
-      uni.showToast({
-        title: res.message || '登录失败',
-        icon: 'none',
-      })
     }
-  } catch (error) {
-    uni.showToast({
-      title: '登录请求失败',
-      icon: 'none',
-    })
   } finally {
     loading.value = false
   }
@@ -189,30 +172,12 @@ async function handleWechatLogin() {
       return
     }
 
-    const res = await wechatLogin(code)
-
-    if (res.code === 0) {
-      setToken(res.data.token)
-
-      uni.showToast({
-        title: '登录成功',
-        icon: 'success',
-      })
-
+    const ok = await wxLogin(code)
+    if (ok) {
       setTimeout(() => {
         goAfterLogin()
       }, 300)
-    } else {
-      uni.showToast({
-        title: res.message || '登录失败',
-        icon: 'none',
-      })
     }
-  } catch (error) {
-    uni.showToast({
-      title: '微信登录失败',
-      icon: 'none',
-    })
   } finally {
     loading.value = false
   }

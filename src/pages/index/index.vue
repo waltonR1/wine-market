@@ -69,41 +69,19 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import ProductCard from '@/components/business/ProductCard.vue'
-import { getHomeCategoryList, getHomeProductList } from '@/api'
 import type { ProductItem } from '@/types/model/goods'
-
-interface HomeCategoryItem {
-  id: number
-  name: string
-  icon: string
-}
+import type { HomeCategoryItem } from '@/types/api/goods'
+import { useGoods } from '@/hooks/useGoods'
 
 const categories = ref<HomeCategoryItem[]>([])
 const productList = ref<ProductItem[]>([])
 
+const { getHomeCategories, getHomeProducts } = useGoods()
+
 onMounted(async () => {
-  const [categoryRes, productRes] = await Promise.all([
-    getHomeCategoryList(),
-    getHomeProductList(),
-  ])
-
-  if (categoryRes.code === 0) {
-    categories.value = categoryRes.data
-  } else {
-    await uni.showToast({
-      title: categoryRes.message || '分类加载失败',
-      icon: 'none',
-    })
-  }
-
-  if (productRes.code === 0) {
-    productList.value = productRes.data
-  } else {
-    await uni.showToast({
-      title: productRes.message || '商品加载失败',
-      icon: 'none',
-    })
-  }
+  const [cats, products] = await Promise.all([getHomeCategories(), getHomeProducts()])
+  categories.value = cats
+  productList.value = products
 })
 
 function goDetail(item: ProductItem) {

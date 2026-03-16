@@ -160,15 +160,25 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { getCartList } from '@/api'
-import type { CartItem } from '@/types/model/cart'
 import { onShow } from '@dcloudio/uni-app'
-import { hasToken } from '@/utils/auth'
 import Empty from '@/components/common/Empty.vue'
+import { useCart } from '@/hooks/useCart'
+import { useUser } from '@/hooks/useUser'
 
 const isEdit = ref(false)
-const isLogin = ref(false)
-const cartList = ref<CartItem[]>([])
+const { isLogin } = useUser()
+const {
+  cartList,
+  checkedList,
+  isAllChecked,
+  totalPrice,
+  getCartList,
+  toggleChecked,
+  toggleAllChecked,
+  increaseCount,
+  decreaseCount,
+  clearChecked,
+} = useCart()
 
 function goCategory() {
   uni.switchTab({
@@ -177,64 +187,19 @@ function goCategory() {
 }
 
 onShow(async () => {
-  isLogin.value = hasToken()
-
-  const res = await getCartList()
-
-  if (res.code === 0) {
-    cartList.value = res.data
-  } else {
-    uni.showToast({
-      title: res.message || '购物车加载失败',
-      icon: 'none',
-    })
-  }
-})
-
-const checkedList = computed(() => {
-  return cartList.value.filter(item => item.checked)
+  await getCartList()
 })
 
 const checkedCount = computed(() => {
   return checkedList.value.length
 })
 
-const totalPrice = computed(() => {
-  return checkedList.value.reduce((sum, item) => {
-    return sum + item.price * item.count
-  }, 0)
-})
-
-const isAllChecked = computed(() => {
-  return cartList.value.length > 0 && cartList.value.every(item => item.checked)
-})
-
 function toggleItem(id: number) {
-  const target = cartList.value.find(item => item.id === id)
-  if (target) {
-    target.checked = !target.checked
-  }
+  toggleChecked(id)
 }
 
 function toggleAll() {
-  const next = !isAllChecked.value
-  cartList.value.forEach(item => {
-    item.checked = next
-  })
-}
-
-function decreaseCount(id: number) {
-  const target = cartList.value.find(item => item.id === id)
-  if (target && target.count > 1) {
-    target.count -= 1
-  }
-}
-
-function increaseCount(id: number) {
-  const target = cartList.value.find(item => item.id === id)
-  if (target) {
-    target.count += 1
-  }
+  toggleAllChecked()
 }
 
 function deleteChecked() {
@@ -245,13 +210,8 @@ function deleteChecked() {
     })
     return
   }
-
-  cartList.value = cartList.value.filter(item => !item.checked)
-
-  uni.showToast({
-    title: '删除成功',
-    icon: 'success',
-  })
+  clearChecked()
+  uni.showToast({ title: '删除成功', icon: 'success' })
 }
 
 function goConfirm() {

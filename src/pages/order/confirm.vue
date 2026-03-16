@@ -121,41 +121,24 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { getConfirmOrderList, getDefaultAddress } from '@/api'
-import type { AddressInfo, OrderConfirmItem } from '@/types/model/order'
 import { onShow } from '@dcloudio/uni-app'
 import { checkLogin } from '@/utils/permission'
+import { useOrder } from '@/hooks/useOrder'
 
-const address = ref<AddressInfo | null>(null)
-const orderList = ref<OrderConfirmItem[]>([])
 const remark = ref('')
+
+const {
+  defaultAddress: address,
+  confirmOrderList: orderList,
+  fetchDefaultAddress,
+  fetchConfirmOrderList,
+} = useOrder()
 
 onShow(async () => {
   const ok = checkLogin('/pages/order/confirm')
   if (!ok) return
 
-  const [addressRes, orderRes] = await Promise.all([
-    getDefaultAddress(),
-    getConfirmOrderList(),
-  ])
-
-  if (addressRes.code === 0) {
-    address.value = addressRes.data
-  } else {
-    uni.showToast({
-      title: addressRes.message || '地址加载失败',
-      icon: 'none',
-    })
-  }
-
-  if (orderRes.code === 0) {
-    orderList.value = orderRes.data
-  } else {
-    uni.showToast({
-      title: orderRes.message || '订单商品加载失败',
-      icon: 'none',
-    })
-  }
+  await Promise.all([fetchDefaultAddress(), fetchConfirmOrderList()])
 })
 
 const totalPrice = computed(() => {

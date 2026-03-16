@@ -41,11 +41,11 @@
 import { ref } from 'vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
 import OrderCard from '@/components/business/OrderCard.vue'
-import { getOrderList } from '@/api'
 import type { OrderItem } from '@/types/model/order'
+import { useOrder } from '@/hooks/useOrder'
 
 const activeStatus = ref(0)
-const orderList = ref<OrderItem[]>([])
+const { orderList, fetchOrderList } = useOrder()
 
 const tabs = [
   { label: '全部', status: 0 },
@@ -55,18 +55,8 @@ const tabs = [
   { label: '待评价', status: 4 },
 ]
 
-const fetchOrderList = async () => {
-  const res = await getOrderList(activeStatus.value)
-
-  if (res.code === 0) {
-    orderList.value = res.data
-  } else {
-    orderList.value = []
-    uni.showToast({
-      title: res.message || '订单加载失败',
-      icon: 'none'
-    })
-  }
+const fetchList = async () => {
+  await fetchOrderList(activeStatus.value)
 }
 
 onLoad((options) => {
@@ -76,12 +66,12 @@ onLoad((options) => {
 })
 
 onShow(() => {
-  fetchOrderList()
+  fetchList()
 })
 
 const changeTab = (status: number) => {
   activeStatus.value = status
-  fetchOrderList()
+  fetchList()
 }
 
 const handleOrderAction = (type: string, order: OrderItem) => {

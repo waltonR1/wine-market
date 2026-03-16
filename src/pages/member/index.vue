@@ -105,25 +105,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
-import { getMemberProfile } from '@/api'
-import type { MemberProfile } from '@/types/model/member'
-import { hasToken, removeToken } from '@/utils/auth'
+import { useMember } from '@/hooks/useMember'
+import { useUser } from '@/hooks/useUser'
 
-const isLogin = ref(false)
-
-const profile = ref<MemberProfile>({
-  nickname: '',
-  welcomeText: '',
-  favoriteCount: 0,
-  pendingPayCount: 0,
-  pendingShipCount: 0,
-  pendingReceiveCount: 0,
-  pendingRateCount: 0,
-  returnCount: 0,
-  points: 0,
-})
+const { isLogin, logout } = useUser()
+const { profile, fetchProfile, reset } = useMember()
 
 const orderStatusList = computed(() => [
   { label: '待付款', icon: '💳', status: 1, count: profile.value.pendingPayCount },
@@ -152,22 +140,10 @@ const menuFunctions = [
 ]
 
 onShow(async () => {
-  isLogin.value = hasToken()
-
   if (!isLogin.value) {
     return
   }
-
-  const res = await getMemberProfile()
-
-  if (res.code === 0) {
-    profile.value = res.data
-  } else {
-    uni.showToast({
-      title: res.message || '个人信息加载失败',
-      icon: 'none',
-    })
-  }
+  await fetchProfile()
 })
 
 function goLogin() {
@@ -221,23 +197,8 @@ function handleLogout() {
     content: '确定要退出登录吗？',
     success: (res) => {
       if (res.confirm) {
-        removeToken()
-        isLogin.value = false
-        profile.value = {
-          nickname: '',
-          welcomeText: '',
-          favoriteCount: 0,
-          pendingPayCount: 0,
-          pendingShipCount: 0,
-          pendingReceiveCount: 0,
-          pendingRateCount: 0,
-          returnCount: 0,
-          points: 0,
-        }
-        uni.showToast({
-          title: '已退出登录',
-          icon: 'success',
-        })
+        logout({ reLaunch: false })
+        reset()
       }
     }
   })

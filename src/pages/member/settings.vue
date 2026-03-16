@@ -25,14 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { hasToken, removeToken } from '@/utils/auth'
+import { useUser } from '@/hooks/useUser'
 
-const isLogin = ref(false)
-
-onMounted(() => {
-  isLogin.value = hasToken()
-})
+const { isLogin, logout } = useUser()
 
 const handleLogout = () => {
   uni.showModal({
@@ -40,11 +35,7 @@ const handleLogout = () => {
     content: '确定要退出登录吗？',
     success: (res) => {
       if (res.confirm) {
-        removeToken()
-        uni.showToast({
-          title: '已退出登录',
-          icon: 'success'
-        })
+        logout({ reLaunch: false })
         setTimeout(() => {
           uni.reLaunch({ url: '/pages/index/index' })
         }, 1000)
