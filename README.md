@@ -78,18 +78,114 @@ export const IS_MOCK = true
 ## 项目目录结构
 
 ```text
-src/
-├─ api/             # 接口层
-│  ├─ modules/      # 按业务拆分的接口模块 (goods, order, user...)
-│  └─ index.ts      # 统一导出
-├─ config/          # 配置层 (env.ts 环境配置, api.ts 路径配置)
-├─ components/      # 组件层
-│  ├─ business/     # 业务组件 (ProductCard, OrderCard...)
-│  └─ common/       # 公共组件 (Empty, Loading...)
-├─ pages/           # 页面层
-├─ types/           # 类型定义 (api 请求响应, model 业务模型)
-├─ utils/           # 工具类 (request.ts 网络封装, auth.ts 权限...)
-└─ db.json          # Mock 数据库文件 (json-server 使用)
+.
+├── LICENSE
+├── README.md
+├── db.json         # Mock 数据库文件 (json-server 使用)
+├── docs
+│   └── project-rules.md
+├── index.html
+├── package-lock.json
+├── package.json
+├── shims-uni.d.ts
+├── src
+│   ├── App.vue
+│   ├── api                      # 接口层
+│   │   ├── index.ts             # 统一导出
+│   │   └── modules              # 按业务拆分的接口模块 (goods, order, user...)
+│   │       ├── cart.ts
+│   │       ├── goods.ts
+│   │       ├── index.ts
+│   │       ├── member.ts
+│   │       ├── order.ts
+│   │       └── user.ts
+│   ├── assets
+│   │   └── logo.png
+│   ├── components                # 组件层
+│   │   ├── business              # 业务组件 (ProductCard, OrderCard...)
+│   │   │   ├── OrderCard.vue
+│   │   │   ├── ProductCard.vue
+│   │   │   └── ProductList.vue
+│   │   └── common                # 公共组件 (Empty, Loading...)
+│   │       ├── Empty.vue
+│   │       ├── Loading.vue
+│   │       ├── Navbar.vue
+│   │       └── Tabbar.vue
+│   ├── config                    # 配置层 (env.ts 环境配置, api.ts 路径配置)
+│   │   ├── api.ts
+│   │   ├── app.ts
+│   │   └── env.ts
+│   ├── constants
+│   │   ├── colors.json
+│   │   ├── colors.ts
+│   │   ├── index.ts
+│   │   └── routes.ts
+│   ├── hooks
+│   │   ├── useCart.ts
+│   │   ├── useGoods.ts
+│   │   └── useUser.ts
+│   ├── main.ts
+│   ├── manifest.json
+│   ├── pages                      # 页面层
+│   │   ├── cart
+│   │   │   └── index.vue
+│   │   ├── goods
+│   │   │   ├── category.vue
+│   │   │   ├── detail.vue
+│   │   │   └── list.vue
+│   │   ├── index
+│   │   │   └── index.vue
+│   │   ├── login
+│   │   │   └── index.vue
+│   │   ├── member
+│   │   │   ├── address.vue
+│   │   │   ├── collection.vue
+│   │   │   ├── coupons.vue
+│   │   │   ├── footprints.vue
+│   │   │   ├── index.vue
+│   │   │   ├── info.vue
+│   │   │   ├── invoice.vue
+│   │   │   ├── points.vue
+│   │   │   ├── promotion.vue
+│   │   │   ├── realname.vue
+│   │   │   ├── settings.vue
+│   │   │   ├── share.vue
+│   │   │   └── wallet.vue
+│   │   └── order
+│   │       ├── confirm.vue
+│   │       └── list.vue
+│   ├── pages.json
+│   ├── shime-uni.d.ts
+│   ├── store
+│   │   ├── cart.ts
+│   │   ├── index.ts
+│   │   ├── order.ts
+│   │   └── user.ts
+│   ├── types                   # 类型定义 (api 请求响应, model 业务模型)
+│   │   ├── api
+│   │   │   ├── cart.ts
+│   │   │   ├── goods.ts
+│   │   │   ├── member.ts
+│   │   │   ├── order.ts
+│   │   │   └── user.ts
+│   │   ├── common.ts
+│   │   └── model
+│   │       ├── cart.ts
+│   │       ├── goods.ts
+│   │       ├── member.ts
+│   │       ├── order.ts
+│   │       └── user.ts
+│   ├── uni.scss
+│   └── utils                 # 工具类 (request.ts 网络封装, auth.ts 权限...)
+│       ├── auth.ts
+│       ├── format.ts
+│       ├── permission.ts
+│       ├── request.ts
+│       ├── storage.ts
+│       └── validate.ts
+├── tailwind.config.js
+├── tsconfig.json
+└── vite.config.js
 ```
 
 ---
