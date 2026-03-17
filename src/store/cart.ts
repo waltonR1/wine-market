@@ -25,6 +25,11 @@ export const useCartStore = defineStore('cart', () => {
     return checkedList.value.reduce((total, item) => total + item.count, 0)
   })
 
+  // 设置商品列表
+  function setCartList(list: CartItem[]) {
+    cartList.value = list
+  }
+
   // 添加商品
   function addToCart(goods: CartItem) {
     const index = cartList.value.findIndex(item => item.id === goods.id)
@@ -72,12 +77,18 @@ export const useCartStore = defineStore('cart', () => {
     cartList.value = cartList.value.filter(item => !item.checked)
   }
 
+  function resetCart() {
+    cartList.value = []
+  }
+
   return {
     cartList,
     isAllChecked,
     checkedList,
     totalPrice,
     totalCount,
+    setCartList,
+    resetCart,
     addToCart,
     updateCount,
     toggleChecked,

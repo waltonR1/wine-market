@@ -37,7 +37,7 @@
         <view
             class="w-[22px] h-[22px] rounded-full border flex items-center justify-center mr-3"
             :class="item.checked ? 'border-accent bg-accent' : 'border-[#d9d9d9] bg-white'"
-            @click="toggleItem(item.id)"
+            @click="toggleChecked(item.id)"
         >
           <view
               v-if="item.checked"
@@ -107,7 +107,7 @@
     <view
         class="fixed bottom-0 left-0 right-0 bg-white border-t border-[#eee] px-4 py-3 flex items-center justify-between"
     >
-      <view class="flex items-center" @click="toggleAll">
+      <view class="flex items-center" @click="toggleAllChecked">
         <view
             class="w-[22px] h-[22px] rounded-full border flex items-center justify-center mr-2"
             :class="isAllChecked ? 'border-accent bg-accent' : 'border-[#d9d9d9] bg-white'"
@@ -186,23 +186,15 @@ function goCategory() {
   })
 }
 
-onShow(async () => {
-  await getCartList()
+onShow(() => {
+  getCartList()
 })
 
 const checkedCount = computed(() => {
   return checkedList.value.length
 })
 
-function toggleItem(id: number) {
-  toggleChecked(id)
-}
-
-function toggleAll() {
-  toggleAllChecked()
-}
-
-function deleteChecked() {
+async function deleteChecked() {
   if (checkedCount.value === 0) {
     uni.showToast({
       title: '请选择要删除的商品',
@@ -210,7 +202,14 @@ function deleteChecked() {
     })
     return
   }
-  clearChecked()
+
+  const success = await clearChecked()
+  if (!success) return
+
+  if (cartList.value.length === 0) {
+    isEdit.value = false
+  }
+
   uni.showToast({ title: '删除成功', icon: 'success' })
 }
 
