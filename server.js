@@ -94,26 +94,6 @@ server.get('/goods/:id', (req, res) => {
   res.status(200).jsonp(ok(buildGoodsDetail(goods)))
 })
 
-// server.get('/goods_:id', (req, res) => {
-//   const id = Number(req.params.id)
-//   if (!Number.isFinite(id)) {
-//     res.status(200).jsonp(fail('参数错误'))
-//     return
-//   }
-//   const db = router.db
-//   const goods = db.get('goods').find({ id }).value()
-//   if (!goods) {
-//     res.status(200).jsonp(fail('商品不存在'))
-//     return
-//   }
-//   res.status(200).jsonp(ok(buildGoodsDetail(goods)))
-// })
-
-server.get('/order_list', (req, res) => {
-  req.url = '/orders'
-  router(req, res)
-})
-
 server.get('/member_coupons', (req, res) => {
   req.url = '/coupons'
   router(req, res)
@@ -141,11 +121,6 @@ server.get('/member_invoices', (req, res) => {
 
 server.get('/member_realname', (req, res) => {
   req.url = '/realname'
-  router(req, res)
-})
-
-server.get('/cart_list', (req, res) => {
-  req.url = '/cart'
   router(req, res)
 })
 
@@ -214,7 +189,6 @@ function handleDeleteCartItem(req, res, cartId) {
 }
 
 server.post('/cart', handleAddToCart)
-server.post('/cart_add', handleAddToCart)
 
 server.post('/cart/:id', (req, res) => {
   const cartId = Number(req.params.id)
@@ -239,43 +213,6 @@ server.delete('/cart', (req, res) => {
   const db = router.db
   db.set('cart', []).write()
   res.status(200).jsonp(ok(null, '购物车已清空'))
-})
-
-server.post('/cart_update_count', (req, res) => {
-  const { id, count } = req.body || {}
-  handleUpdateCartCount(req, res, Number(id), Number(count))
-})
-
-server.post('/cart_delete', (req, res) => {
-  const { id } = req.body || {}
-  handleDeleteCartItem(req, res, Number(id))
-})
-
-server.post('/cart_batch_delete', (req, res) => {
-  const { ids } = req.body || {}
-  const db = router.db
-  if (!Array.isArray(ids) || ids.length === 0) {
-    res.status(200).jsonp(fail('参数错误'))
-    return
-  }
-  ids.map(Number).filter(Number.isFinite).forEach((id) => {
-    db.get('cart').remove({ id }).write()
-  })
-  res.status(200).jsonp(ok(db.get('cart').value(), '批量删除成功'))
-})
-
-server.post('/cart_clear', (req, res) => {
-  const db = router.db
-  db.set('cart', []).write()
-  res.status(200).jsonp(ok(null, '购物车已清空'))
-})
-
-server.post('/cart_update_checked', (req, res) => {
-  res.status(200).jsonp(ok(router.db.get('cart').value(), '已忽略 checked'))
-})
-
-server.post('/cart_update_all_checked', (req, res) => {
-  res.status(200).jsonp(ok(router.db.get('cart').value(), '已忽略 checked'))
 })
 
 server.get('/addresses/default', (req, res) => {
@@ -305,17 +242,6 @@ function validateAddressPayload(address) {
   if (!address.district) return '请填写区县'
   if (!address.detail) return '请填写详细地址'
   return ''
-}
-
-function clearAllDefault(db) {
-  const list = db.get('addresses').value() || []
-  db.set(
-    'addresses',
-    list.map(item => ({
-      ...item,
-      isDefault: false,
-    }))
-  ).write()
 }
 
 function ensureSingleDefault(db, preferredId) {
