@@ -6,16 +6,8 @@ import type {
   AddCartItemResponse,
   UpdateCartItemCountRequest,
   UpdateCartItemCountResponse,
-  UpdateCartItemCheckedRequest,
-  UpdateCartItemCheckedResponse,
-  UpdateCartAllCheckedRequest,
-  UpdateCartAllCheckedResponse,
-  DeleteCartItemRequest,
   DeleteCartItemResponse,
-  BatchDeleteCartItemsRequest,
-  BatchDeleteCartItemsResponse,
   ClearCartResponse,
-  GetCartSummaryResponse,
 } from '@/types/api/cart'
 
 /**
@@ -46,61 +38,19 @@ export function updateCartItemCount(
   data: UpdateCartItemCountRequest
 ): Promise<UpdateCartItemCountResponse> {
   return request({
-    url: API_PATHS.CART_UPDATE_COUNT,
+    url: API_PATHS.CART_ITEM(data.id),
     method: 'POST',
-    data,
-  })
-}
-
-/**
- * 更新单个商品选中状态
- */
-export function updateCartItemChecked(
-  data: UpdateCartItemCheckedRequest
-): Promise<UpdateCartItemCheckedResponse> {
-  return request({
-    url: API_PATHS.CART_UPDATE_CHECKED,
-    method: 'POST',
-    data,
-  })
-}
-
-/**
- * 更新全选状态
- */
-export function updateCartAllChecked(
-  data: UpdateCartAllCheckedRequest
-): Promise<UpdateCartAllCheckedResponse> {
-  return request({
-    url: API_PATHS.CART_UPDATE_ALL_CHECKED,
-    method: 'POST',
-    data,
+    data: { count: data.count },
   })
 }
 
 /**
  * 删除单个购物车商品
  */
-export function deleteCartItem(
-  data: DeleteCartItemRequest
-): Promise<DeleteCartItemResponse> {
+export function deleteCartItem(id: number): Promise<DeleteCartItemResponse> {
   return request({
-    url: API_PATHS.CART_DELETE,
-    method: 'POST',
-    data,
-  })
-}
-
-/**
- * 批量删除购物车商品
- */
-export function batchDeleteCartItems(
-  data: BatchDeleteCartItemsRequest
-): Promise<BatchDeleteCartItemsResponse> {
-  return request({
-    url: API_PATHS.CART_BATCH_DELETE,
-    method: 'POST',
-    data,
+    url: API_PATHS.CART_ITEM(id),
+    method: 'DELETE',
   })
 }
 
@@ -110,17 +60,6 @@ export function batchDeleteCartItems(
 export function clearCart(): Promise<ClearCartResponse> {
   return request({
     url: API_PATHS.CART_CLEAR,
-    method: 'POST',
-  })
-}
-
-/**
- * 获取购物车摘要
- * 比如总数量、已选数量、总价等
- */
-export function getCartSummary(): Promise<GetCartSummaryResponse> {
-  return request({
-    url: API_PATHS.CART_SUMMARY,
-    method: 'GET',
+    method: 'DELETE',
   })
 }

@@ -1,211 +1,1024 @@
 {
-  "member_profile": {"code": 0, "message": "ok", "data": {"nickname": "Walton", "welcomeText": "欢迎来到 Wine Market 精品酒馆", "favoriteCount": 12, "pendingPayCount": 2, "pendingShipCount": 1, "pendingReceiveCount": 3, "pendingRateCount": 1, "returnCount": 0, "points": 2680}},
-  "member_wallet": {"code": 0, "message": "ok", "data": {"balance": 1258.5, "points": 2680, "couponCount": 5}},
-  "member_coupons": {"code": 0, "message": "ok",
-    "data": [
-      {"id": 1, "title": "全场通用券", "discount": 20, "minAmount": 200, "startTime": "2026-03-01", "endTime": "2026-03-31", "status": 1},
-      {"id": 2, "title": "红酒分类券", "discount": 50, "minAmount": 500, "startTime": "2026-03-10", "endTime": "2026-04-10", "status": 1},
-      {"id": 3, "title": "新人礼包券", "discount": 10, "minAmount": 0, "startTime": "2026-01-01", "endTime": "2026-12-31", "status": 1}
-    ]},
-  "member_points_history": {"code": 0, "message": "ok",
-    "data": [
-      {"id": 1, "title": "购物获得", "points": 199, "time": "2026-03-13 10:00"},
-      {"id": 2, "title": "每日签到", "points": 5, "time": "2026-03-13 08:30"}
-    ]},
-  "home_categories": {"code": 0, "message": "ok",
-    "data": [
-      {"id": 1, "name": "红酒", "icon": "🍷"},
-      {"id": 2, "name": "白酒", "icon": "🥂"},
-      {"id": 3, "name": "香槟", "icon": "🍾"},
-      {"id": 4, "name": "烈酒", "icon": "🥃"}
-    ]},
-  "home_products": {"code": 0, "message": "ok",
-    "data": [
-      {"id": 1, "name": "拉菲罗斯柴尔德古堡干红", "subtitle": "波尔多一级庄 2015", "price": 8888, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015", "tag": "一级庄", "comment": 15, "categoryId": 1, "subCategoryId": 102},
-      {"id": 22, "name": "限时特惠波尔多干红", "subtitle": "第2件半价", "price": 99, "image": "https://placehold.co/400x400/6B0F1A/FFFFFF.png?text=Bordeaux+Sale", "tag": "超值", "comment": 500, "categoryId": 8, "subCategoryId": 802},
-      {"id": 15, "name": "麦卡伦 12 年雪莉桶", "subtitle": "经典苏格兰威士忌", "price": 650, "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Macallan+12", "tag": "经典", "comment": 120, "categoryId": 5, "subCategoryId": 502}
-    ]},
-  "categories_first": {"code": 0, "message": "ok",
-    "data": [
-      {"id": 1, "name": "干红"},
-      {"id": 2, "name": "礼盒"},
-      {"id": 3, "name": "干白"},
-      {"id": 4, "name": "甜白"},
-      {"id": 5, "name": "烈酒"},
-      {"id": 6, "name": "无醇"},
-      {"id": 7, "name": "世界名庄"},
-      {"id": 8, "name": "促销活动"},
-      {"id": 9, "name": "香槟 起泡酒"}
-    ]},
-  "categories_sefacond": {"code": 0, "message": "ok",
-    "data": {
-      "1": [
-        {"id": 101, "name": "所有干红", "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Red+Wine"},
-        {"id": 102, "name": "波尔多产区", "image": "https://placehold.co/200x200/6B0F1A/FFFFFF.png?text=Bordeaux"},
-        {"id": 103, "name": "罗纳河谷", "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Rhone"},
-        {"id": 104, "name": "勃艮第", "image": "https://placehold.co/200x200/6B0F1A/FFFFFF.png?text=Burgundy"},
-        {"id": 105, "name": "意大利", "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Italy"}],
-      "2": [
-        {"id": 201, "name": "所有礼盒", "image": "https://placehold.co/200x200/8B7B6B/FFFFFF.png?text=Gifts"},
-        {"id": 202, "name": "节日礼盒", "image": "https://placehold.co/200x200/8B7B6B/FFFFFF.png?text=Holiday"},
-        {"id": 203, "name": "商务送礼", "image": "https://placehold.co/200x200/8B7B6B/FFFFFF.png?text=Business"},
-        {"id": 204, "name": "双支礼盒", "image": "https://placehold.co/200x200/8B7B6B/FFFFFF.png?text=Duo+Box"}],
-      "3": [
-        {"id": 301, "name": "所有干白", "image": "https://placehold.co/200x200/F8E7C8/4A0D12.png?text=White+Wine"},
-        {"id": 302, "name": "霞多丽", "image": "https://placehold.co/200x200/F8E7C8/4A0D12.png?text=Chardonnay"},
-        {"id": 303, "name": "长相思", "image": "https://placehold.co/200x200/F8E7C8/4A0D12.png?text=Sauvignon"},
-        {"id": 304, "name": "雷司令", "image": "https://placehold.co/200x200/F8E7C8/4A0D12.png?text=Riesling"}],
-      "4": [
-        {"id": 401, "name": "所有甜白", "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Sweet+White"},
-        {"id": 402, "name": "贵腐", "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Noble+Rot"},
-        {"id": 403, "name": "晚收甜白", "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Late+Harvest"},
-        {"id": 404, "name": "冰酒", "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Ice+Wine"}],
-      "5": [
-        {"id": 501, "name": "所有烈酒", "image": "https://placehold.co/200x200/8B4513/FFFFFF.png?text=Spirits"},
-        {"id": 502, "name": "威士忌", "image": "https://placehold.co/200x200/8B4513/FFFFFF.png?text=Whisky"},
-        {"id": 503, "name": "白兰地", "image": "https://placehold.co/200x200/8B4513/FFFFFF.png?text=Brandy"},
-        {"id": 504, "name": "XO", "image": "https://placehold.co/200x200/8B4513/FFFFFF.png?text=XO"}],
-      "6": [
-        {"id": 601, "name": "所有无醇", "image": "https://placehold.co/200x200/F7F3EE/4A0D12.png?text=Alcohol+Free"},
-        {"id": 602, "name": "无醇红", "image": "https://placehold.co/200x200/F7F3EE/4A0D12.png?text=AF+Red"},
-        {"id": 603, "name": "无醇起泡", "image": "https://placehold.co/200x200/F7F3EE/4A0D12.png?text=AF+Sparkling"}],
-      "7": [
-        {"id": 701, "name": "所有名庄", "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Grand+Cru"},
-        {"id": 702, "name": "波尔多名庄", "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Bordeaux+GC"},
-        {"id": 703, "name": "勃艮第名庄", "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Burgundy+GC"}],
-      "8": [
-        {"id": 801, "name": "所有促销", "image": "https://placehold.co/200x200/FF0000/FFFFFF.png?text=Promo"},
-        {"id": 802, "name": "限时折扣", "image": "https://placehold.co/200x200/FF0000/FFFFFF.png?text=Sale"},
-        {"id": 803, "name": "买赠专区", "image": "https://placehold.co/200x200/FF0000/FFFFFF.png?text=Gift"}],
-      "9": [
-        {"id": 901, "name": "所有起泡", "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Sparkling"},
-        {"id": 902, "name": "香槟", "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Champagne"},
-        {"id": 903, "name": "起泡酒", "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Cava"}]
-    }},
-  "goods": {"code": 0, "message": "ok",
-    "data": [
-      {"id": 1, "name": "拉菲罗斯柴尔德古堡干红", "subtitle": "波尔多一级庄 2015", "price": 8888, "sales": 150, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015", "tag": "一级庄", "comment": 15, "categoryId": 1, "subCategoryId": 102},
-      {"id": 2, "name": "玛歌红亭干红葡萄酒", "subtitle": "玛歌庄园副牌", "price": 2580, "sales": 320, "image": "https://placehold.co/400x400/6B0F1A/FFFFFF.png?text=Margaux", "tag": "名庄", "comment": 8, "categoryId": 1, "subCategoryId": 102},
-      {"id": 3, "name": "教皇新堡精品干红", "subtitle": "罗纳河谷核心产区", "price": 568, "sales": 850, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Chateauneuf", "tag": "高分", "comment": 20, "categoryId": 1, "subCategoryId": 103},
-      {"id": 4, "name": "勃艮第夜丘村级干红", "subtitle": "经典黑皮诺口感", "price": 458, "sales": 1200, "image": "https://placehold.co/400x400/6B0F1A/FFFFFF.png?text=Pinot+Noir", "tag": "经典", "comment": 12, "categoryId": 1, "subCategoryId": 104},
-      {"id": 5, "name": "意大利巴罗洛红葡萄酒", "subtitle": "内比奥罗之王", "price": 680, "sales": 450, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Barolo", "tag": "酒王", "comment": 5, "categoryId": 1, "subCategoryId": 105},
-      {"id": 6, "name": "尊享礼遇双支礼盒", "subtitle": "精选红酒两支装", "price": 398, "sales": 2500, "image": "https://placehold.co/400x400/8B7B6B/FFFFFF.png?text=Gift+Box", "tag": "热销", "comment": 45, "categoryId": 2, "subCategoryId": 202},
-      {"id": 7, "name": "高端商务皮盒套装", "subtitle": "送礼体面过人", "price": 1280, "sales": 600, "image": "https://placehold.co/400x400/8B7B6B/FFFFFF.png?text=Leather+Box", "tag": "奢华", "comment": 10, "categoryId": 2, "subCategoryId": 203},
-      {"id": 8, "name": "节日定制木盒礼包", "subtitle": "含开瓶器及配件", "price": 588, "sales": 1800, "image": "https://placehold.co/400x400/8B7B6B/FFFFFF.png?text=Wood+Box", "tag": "定制", "comment": 22, "categoryId": 2, "subCategoryId": 204},
-      {"id": 9, "name": "蒙哈榭特级园霞多丽", "subtitle": "白葡萄酒之巅", "price": 3200, "sales": 120, "image": "https://placehold.co/400x400/F8E7C8/4A0D12.png?text=Montrachet", "tag": "极品", "comment": 3, "categoryId": 3, "subCategoryId": 302},
-      {"id": 10, "name": "新西兰云雾之湾长相思", "subtitle": "纯净果香体验", "price": 298, "sales": 5200, "image": "https://placehold.co/400x400/F8E7C8/4A0D12.png?text=Sauvignon+Blanc", "tag": "人气", "comment": 88, "categoryId": 3, "subCategoryId": 303},
-      {"id": 11, "name": "德国伊贡米勒雷司令", "subtitle": "雷司令中的拉菲", "price": 1500, "sales": 80, "image": "https://placehold.co/400x400/F8E7C8/4A0D12.png?text=Riesling", "tag": "顶级", "comment": 6, "categoryId": 3, "subCategoryId": 304},
-      {"id": 12, "name": "滴金庄园贵腐甜白", "subtitle": "液体黄金 375ml", "price": 2800, "sales": 45, "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Yquem", "tag": "稀缺", "comment": 4, "categoryId": 4, "subCategoryId": 40},
-      {"id": 13, "name": "苏玳产区晚收甜白", "subtitle": "性价比之选", "price": 198, "sales": 3200, "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Sweet+White", "tag": "推荐", "comment": 34, "categoryId": 4, "subCategoryId": 403},
-      {"id": 14, "name": "加拿大云岭冰酒", "subtitle": "极寒淬炼精华", "price": 688, "sales": 450, "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Ice+Wine", "tag": "冰酒", "comment": 18, "categoryId": 4, "subCategoryId": 404},
-      {"id": 15, "name": "麦卡伦 12 年雪莉桶", "subtitle": "经典苏格兰威士忌", "price": 650, "sales": 8500, "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Macallan+12", "tag": "经典", "comment": 120, "categoryId": 5, "subCategoryId": 502},
-      {"id": 16, "name": "人头马 VSOP 干邑", "subtitle": "法国原装进口", "price": 420, "sales": 12000, "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Remy+Martin", "tag": "大牌", "comment": 200, "categoryId": 5, "subCategoryId": 503},
-      {"id": 17, "name": "轩尼诗 XO 700ml", "subtitle": "干邑的代名词", "price": 1850, "sales": 3500, "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Hennessy+XO", "tag": "旗舰", "comment": 95, "categoryId": 5, "subCategoryId": 504},
-      {"id": 18, "name": "无醇脱醇红葡萄酒", "subtitle": "健康不伤身", "price": 128, "sales": 1500, "image": "https://placehold.co/400x400/F7F3EE/4A0D12.png?text=AF+Red", "tag": "健康", "comment": 15, "categoryId": 6, "subCategoryId": 602},
-      {"id": 19, "name": "无醇起泡葡萄汁", "subtitle": "全家共享欢乐", "price": 88, "sales": 2800, "image": "https://placehold.co/400x400/F7F3EE/4A0D12.png?text=AF+Sparkling", "tag": "聚会", "comment": 40, "categoryId": 6, "subCategoryId": 603},
-      {"id": 20, "name": "柏图斯庄园红葡萄酒", "subtitle": "波尔多右岸之王", "price": 28000, "sales": 5, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Petrus", "tag": "至尊", "comment": 1, "categoryId": 7, "subCategoryId": 702},
-      {"id": 21, "name": "罗曼尼康帝特级园", "subtitle": "勃艮第神话", "price": 150000, "sales": 1, "image": "https://placehold.co/400x400/6B0F1A/FFFFFF.png?text=DRC", "tag": "神级", "comment": 0, "categoryId": 7, "subCategoryId": 703},
-      {"id": 22, "name": "限时特惠波尔多干红", "subtitle": "第2件半价", "price": 99, "sales": 50000, "image": "https://placehold.co/400x400/FF0000/FFFFFF.png?text=Special+Offer", "tag": "超值", "comment": 500, "categoryId": 8, "subCategoryId": 802},
-      {"id": 23, "name": "买红酒送海马刀", "subtitle": "酒具大放送", "price": 158, "sales": 8500, "image": "https://placehold.co/400x400/FF0000/FFFFFF.png?text=Gift+Included", "tag": "买赠", "comment": 120, "categoryId": 8, "subCategoryId": 803},
-      {"id": 24, "name": "唐培里侬香槟王 2012", "subtitle": "年份香槟精品", "price": 1680, "sales": 450, "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Dom+Perignon", "tag": "顶级", "comment": 15, "categoryId": 9, "subCategoryId": 902},
-      {"id": 25, "name": "库克陈年香槟", "subtitle": "极致酿造艺术", "price": 1880, "sales": 280, "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Krug", "tag": "奢华", "comment": 9, "categoryId": 9, "subCategoryId": 902},
-      {"id": 26, "name": "西班牙卡瓦起泡酒", "subtitle": "清爽高性价比", "price": 118, "sales": 6500, "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Cava", "tag": "畅销", "comment": 210, "categoryId": 9, "subCategoryId": 903},
-      {"id": 27, "name": "澳洲奔富 Bin 389", "subtitle": "小葛兰许 2019", "price": 699, "sales": 4500, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Penfolds+389", "tag": "名庄", "comment": 450, "categoryId": 1, "subCategoryId": 105},
-      {"id": 28, "name": "智利活魂 2018", "subtitle": "智利酒王 跨界力作", "price": 1280, "sales": 850, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Almaviva", "tag": "至尊", "comment": 60, "categoryId": 1, "subCategoryId": 105},
-      {"id": 29, "name": "拉图庄园干红 2011", "subtitle": "波尔多一级庄", "price": 6800, "sales": 15, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Latour+2011", "tag": "稀缺", "comment": 5, "categoryId": 7, "subCategoryId": 702},
-      {"id": 30, "name": "酩悦香槟 750ml", "subtitle": "欢庆时刻首选", "price": 428, "sales": 15000, "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Moet+Chandon", "tag": "热门", "comment": 800, "categoryId": 9, "subCategoryId": 902},
-      {"id": 31, "name": "白州 12 年威士忌", "subtitle": "东方森林气息", "price": 1680, "sales": 120, "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Hakushu+12", "tag": "收藏", "comment": 30, "categoryId": 5, "subCategoryId": 502},
-      {"id": 32, "name": "山崎 12 年威士忌", "subtitle": "三得利旗舰之作", "price": 1880, "sales": 95, "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Yamazaki+12", "tag": "旗舰", "comment": 25, "categoryId": 5, "subCategoryId": 502},
-      {"id": 33, "name": "大摩 15 年威士忌", "subtitle": "雪莉桶熟成精品", "price": 850, "sales": 450, "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Dalmore+15", "tag": "经典", "comment": 40, "categoryId": 5, "subCategoryId": 502},
-      {"id": 34, "name": "杰克丹尼田纳西威士忌", "subtitle": "美式自由风情", "price": 188, "sales": 25000, "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Jack+Daniels", "tag": "畅销", "comment": 1200, "categoryId": 5, "subCategoryId": 502},
-      {"id": 35, "name": "芝华士 12 年威士忌", "subtitle": "苏格兰调配经典", "price": 228, "sales": 32000, "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Chivas+12", "tag": "大牌", "comment": 1500, "categoryId": 5, "subCategoryId": 502},
-      {"id": 36, "name": "酩悦粉红香槟", "subtitle": "浪漫唯美体验", "price": 528, "sales": 5500, "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Moet+Rose", "tag": "推荐", "comment": 320, "categoryId": 9, "subCategoryId": 902}
-    ]},
-  "goods_1": {"code": 0, "message": "ok", "data": {"id": 1, "name": "拉菲罗斯柴尔德古堡干红", "subtitle": "波尔多一级庄 2015", "price": 8888, "sales": 150, "region": "波尔多", "type": "红葡萄酒", "alcohol": "13.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "一级庄", "comment": 15, "description": "拉菲古堡（Chateau Lafite Rothschild）是享誉世界的波尔多五大一级名庄之一。2015年份表现卓越，单宁丝滑，带有精致的黑香醋、烟草及矿物质香气，陈年潜力巨大。"}},
-  "goods_2": {"code": 0, "message": "ok", "data": {"id": 2, "name": "玛歌红亭干红葡萄酒", "subtitle": "玛歌庄园副牌", "price": 2580, "sales": 320, "region": "波尔多", "type": "红葡萄酒", "alcohol": "13.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "名庄", "comment": 8, "description": "玛歌红亭（Pavillon Rouge du Chateau Margaux）是顶级名庄玛歌庄园的副牌酒。它完美继承了玛歌庄园的高雅与细腻，口感柔美，充满红果与花香。"}},
-  "goods_3": {"code": 0, "message": "ok", "data": {"id": 3, "name": "教皇新堡精品干红", "subtitle": "罗纳河谷核心产区", "price": 568, "sales": 850, "region": "罗纳河谷", "type": "红葡萄酒", "alcohol": "14.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "高分", "comment": 20, "description": "产自罗纳河谷教皇新堡（Chateauneuf du Pape）核心地块。混合了歌海娜、西拉等多种品种，香气浓郁，带有成熟红果、黑胡椒及地中海香料气息。"}},
-  "goods_4": {"code": 0, "message": "ok", "data": {"id": 4, "name": "勃艮第夜丘村级干红", "subtitle": "经典黑皮诺口感", "price": 458, "sales": 1200, "region": "勃艮第", "type": "红葡萄酒", "alcohol": "13%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "经典", "comment": 12, "description": "精选勃艮第夜丘（Cote de Nuits）优质地块黑皮诺。呈现迷人的宝石红色，带有樱桃、覆盆子等新鲜果香，单宁细腻，口感优雅且充满活力。"}},
-  "goods_5": {"code": 0, "message": "ok", "data": {"id": 5, "name": "意大利巴罗洛红葡萄酒", "subtitle": "内比奥罗之王", "price": 680, "sales": 450, "region": "皮埃蒙特", "type": "红葡萄酒", "alcohol": "14%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "酒王", "comment": 5, "description": "巴罗洛（Barolo）被誉为“酒中之王”。采用100%内比奥罗葡萄酿造，具有标志性的玫瑰、干香草及松露香气，酒体雄厚，单宁强劲，具有极佳的陈年能力。"}},
-  "goods_6": {"code": 0, "message": "ok", "data": {"id": 6, "name": "尊享礼遇双支礼盒", "subtitle": "精选红酒两支装", "price": 398, "sales": 2500, "region": "多产区", "type": "礼盒", "alcohol": "13.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "热销", "comment": 45, "description": "精选两款热销干红葡萄酒，配以高档礼盒包装，是您节日送礼、走亲访友的超值之选。"}},
-  "goods_7": {"code": 0, "message": "ok", "data": {"id": 7, "name": "高端商务皮盒套装", "subtitle": "送礼体面过人", "price": 1280, "sales": 600, "region": "法国", "type": "礼盒", "alcohol": "14%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "奢华", "comment": 10, "description": "专为商务场景设计，采用进口皮质礼盒，内含两支精品波尔多干红及整套专业酒具，尽显尊贵身份。"}},
-  "goods_8": {"code": 0, "message": "ok", "data": {"id": 8, "name": "节日定制木盒礼包", "subtitle": "含开瓶器及配件", "price": 588, "sales": 1800, "region": "智利", "type": "礼盒", "alcohol": "13.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "定制", "comment": 22, "description": "天然原木礼盒，内含智利精品干红一支及海马刀、倒酒器等实用配件，简约而不失格调。"}},
-  "goods_9": {"code": 0, "message": "ok", "data": {"id": 9, "name": "蒙哈榭特级园霞多丽", "subtitle": "白葡萄酒之巅", "price": 3200, "sales": 120, "region": "勃艮第", "type": "干白", "alcohol": "13.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "极品", "comment": 3, "description": "产自勃艮第蒙哈榭（Montrachet）特级园，世界上最顶级的霞多丽产区。酒体丰腴，香气极其复杂，具有无与伦比的优雅感。"}},
-  "goods_10": {"code": 0, "message": "ok", "data": {"id": 10, "name": "新西兰云雾之湾长相思", "subtitle": "纯净果香体验", "price": 298, "sales": 5200, "region": "马尔堡", "type": "干白", "alcohol": "13%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "人气", "comment": 88, "description": "新西兰长相思的标杆之作。充满热带水果、柑橘及百香果的清爽香气，酸度活泼，令人一试难忘。"}},
-  "goods_11": {"code": 0, "message": "ok", "data": {"id": 11, "name": "德国伊贡米勒雷司令", "subtitle": "雷司令中的拉菲", "price": 1500, "sales": 80, "region": "摩泽尔", "type": "干白", "alcohol": "8.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "顶级", "comment": 6, "description": "德国摩泽尔产区的顶级名庄。这款雷司令展现了极致的纯净感和矿物质味，陈年潜力巨大。"}},
-  "goods_12": {"code": 0, "message": "ok", "data": {"id": 12, "name": "滴金庄园贵腐甜白", "subtitle": "液体黄金 375ml", "price": 2800, "sales": 45, "region": "苏玳", "type": "甜白", "alcohol": "14%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "稀缺", "comment": 4, "description": "苏玳产区唯一的超一级名庄。酒液呈深金色，具有复杂的蜂蜜、杏干和花香，被誉为“液体黄金”。"}},
-  "goods_13": {"code": 0, "message": "ok", "data": {"id": 13, "name": "苏玳产区晚收甜白", "subtitle": "性价比之选", "price": 198, "sales": 3200, "region": "苏玳", "type": "甜白", "alcohol": "13.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "推荐", "comment": 34, "description": "精选苏玳产区晚收葡萄酿制，香气甜美，口感圆润，是搭配甜点、下午茶的绝佳选择。"}},
-  "goods_14": {"code": 0, "message": "ok", "data": {"id": 14, "name": "加拿大云岭冰酒", "subtitle": "极寒淬炼精华", "price": 688, "sales": 450, "region": "尼亚加拉", "type": "冰酒", "alcohol": "10.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "冰酒", "comment": 18, "description": "产自加拿大尼亚加拉半岛，在零下8度的极寒中手工采摘冰冻葡萄酿制。口感极其浓郁甜美。"}},
-  "goods_15": {"code": 0, "message": "ok", "data": {"id": 15, "name": "麦卡伦 12 年雪莉桶", "subtitle": "经典苏格兰威士忌", "price": 650, "sales": 8500, "region": "斯佩塞", "type": "单一麦芽威士忌", "alcohol": "40%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "经典", "comment": 120, "description": "麦卡伦（Macallan）雪莉桶系列的代表作。在精选的西班牙雪莉橡木桶中陈酿至少12年，呈现深邃的金色，带有干果、生姜及甜香草的香气，余韵持久。"}},
-  "goods_16": {"code": 0, "message": "ok", "data": {"id": 16, "name": "人头马 VSOP 干邑", "subtitle": "法国原装进口", "price": 420, "sales": 12000, "region": "干邑区", "type": "白兰地", "alcohol": "40%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "大牌", "comment": 200, "description": "经典的人头马VSOP。采用大小香槟区的葡萄酿制，具有优雅的花香和香草香气，口感平衡。"}},
-  "goods_17": {"code": 0, "message": "ok", "data": {"id": 17, "name": "轩尼诗 XO 700ml", "subtitle": "干邑的代名词", "price": 1850, "sales": 3500, "region": "干邑区", "type": "白兰地", "alcohol": "40%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "旗舰", "comment": 95, "description": "轩尼诗XO是干邑等级的开创者。由百余种陈年生命之水调配而成，展现了极佳的复杂度和深度。"}},
-  "goods_18": {"code": 0, "message": "ok", "data": {"id": 18, "name": "无醇脱醇红葡萄酒", "subtitle": "健康不伤身", "price": 128, "sales": 1500, "region": "德国", "type": "无醇", "alcohol": "0.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "健康", "comment": 15, "description": "采用特殊脱醇工艺，保留了红葡萄酒的香气和单宁，但不含酒精，适合开车或不胜酒力的人士。"}},
-  "goods_19": {"code": 0, "message": "ok", "data": {"id": 19, "name": "无醇起泡葡萄汁", "subtitle": "全家共享欢乐", "price": 88, "sales": 2800, "region": "法国", "type": "无醇", "alcohol": "0%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "聚会", "comment": 40, "description": "天然葡萄原汁酿造，气泡丰富，口感清爽甜美，是聚会时全家老少皆宜的健康饮品。"}},
-  "goods_20": {"code": 0, "message": "ok", "data": {"id": 20, "name": "柏图斯庄园红葡萄酒", "subtitle": "波尔多右岸之王", "price": 28000, "sales": 5, "region": "波美侯", "type": "红葡萄酒", "alcohol": "14.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "至尊", "comment": 1, "description": "波尔多右岸皇冠上的明珠。100%美乐酿造，产量极其稀少，口感丰满如丝绒，极具传奇色彩。"}},
-  "goods_21": {"code": 0, "message": "ok", "data": {"id": 21, "name": "罗曼尼康帝特级园", "subtitle": "勃艮第神话", "price": 150000, "sales": 1, "region": "沃恩-罗曼尼", "type": "红葡萄酒", "alcohol": "13.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "神级", "comment": 0, "description": "世界上最昂贵、最受追捧的葡萄酒。它是平衡与纯粹的化身，每一滴都是勃艮第风土的终极表达。"}},
-  "goods_22": {"code": 0, "message": "ok", "data": {"id": 22, "name": "限时特惠波尔多干红", "subtitle": "第2件半价", "price": 99, "sales": 50000, "region": "波尔多", "type": "红葡萄酒", "alcohol": "13.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "超值", "comment": 500, "description": "精选波尔多大区级优质干红。果香浓郁，口感易饮，目前限时特惠，是日常佐餐的高性价比选择。"}},
-  "goods_23": {"code": 0, "message": "ok", "data": {"id": 23, "name": "买红酒送海马刀", "subtitle": "酒具大放送", "price": 158, "sales": 8500, "region": "西班牙", "type": "红葡萄酒", "alcohol": "14%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "买赠", "comment": 120, "description": "西班牙拉曼恰产区精品干红。现在购买即赠送专业海马型开瓶器一把，数量有限，送完为止。"}},
-  "goods_24": {"code": 0, "message": "ok", "data": {"id": 24, "name": "唐培里侬香槟王 2012", "subtitle": "年份香槟精品", "price": 1680, "sales": 450, "region": "香槟区", "type": "起泡酒", "alcohol": "12.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "顶级", "comment": 15, "description": "唐培里侬（Dom Perignon）仅在优秀的年份酿制年份香槟。2012年份口感饱满且精准，融合了花香、柑橘及烘烤面包的香气，气泡细腻，充满力量感。"}},
-  "goods_25": {"code": 0, "message": "ok", "data": {"id": 25, "name": "库克陈年香槟", "subtitle": "极致酿造艺术", "price": 1880, "sales": 280, "region": "香槟区", "type": "起泡酒", "alcohol": "12.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "奢华", "comment": 9, "description": "库克（Krug）以其独特的调配工艺 and 橡木桶发酵闻名。这款香槟极其复杂，带有坚果和烘焙香气。"}},
-  "goods_26": {"code": 0, "message": "ok", "data": {"id": 26, "name": "西班牙卡瓦起泡酒", "subtitle": "清爽高性价比", "price": 118, "sales": 6500, "region": "加泰罗尼亚", "type": "起泡酒", "alcohol": "11.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "畅销", "comment": 210, "description": "采用传统法酿造的西班牙卡瓦（Cava）。气泡细腻，口感清新，带有青苹果 and 花香，非常适合餐前开胃。"}},
-  "goods_27": {"code": 0, "message": "ok", "data": {"id": 27, "name": "澳洲奔富 Bin 389", "subtitle": "小葛兰许 2019", "price": 699, "sales": 4500, "region": "南澳", "type": "红葡萄酒", "alcohol": "14.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "名庄", "comment": 450, "description": "奔富Bin 389被誉为“小葛兰许”。它在葛兰许使用过的橡木桶中陈酿，集合了赤霞珠的结构感 and 西拉的丰满感。"}},
-  "goods_28": {"code": 0, "message": "ok", "data": {"id": 28, "name": "智利活魂 2018", "subtitle": "智利酒王 跨界力作", "price": 1280, "sales": 850, "region": "迈坡谷", "type": "红葡萄酒", "alcohol": "14.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "至尊", "comment": 60, "description": "活魂（Almaviva）是罗斯柴尔德男爵集团与干露酒庄的合资项目。它融合了法国酿酒技术与智利风土，口感极其浓郁。"}},
-  "goods_29": {"code": 0, "message": "ok", "data": {"id": 29, "name": "拉图庄园干红 2011", "subtitle": "波尔多一级庄", "price": 6800, "sales": 15, "region": "波尔多", "type": "红葡萄酒", "alcohol": "13.5%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "稀缺", "comment": 5, "description": "拉图庄园（Chateau Latour）以其酒体强劲、陈年潜力巨大而著称。2011年份表现稳健，具有典型的黑醋栗 and 雪松香气。"}},
-  "goods_30": {"code": 0, "message": "ok", "data": {"id": 30, "name": "酩悦香槟 750ml", "subtitle": "欢庆时刻首选", "price": 428, "sales": 15000, "region": "香槟区", "type": "起泡酒", "alcohol": "12%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "热门", "comment": 800, "description": "酩悦（Moet & Chandon）是世界上最著名的香槟品牌之一。口感清新活泼，是各类欢庆活动的绝佳伴侣。"}},
-  "goods_31": {"code": 0, "message": "ok", "data": {"id": 31, "name": "白州 12 年威士忌", "subtitle": "东方森林气息", "price": 1680, "sales": 120, "region": "山梨县", "type": "威士忌", "alcohol": "43%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "收藏", "comment": 30, "description": "产自白州蒸馏所，具有独特的森林清新感。带有清爽的泥煤味 and 嫩叶、果实香气。"}},
-  "goods_32": {"code": 0, "message": "ok", "data": {"id": 32, "name": "山崎 12 年威士忌", "subtitle": "三得利旗舰之作", "price": 1880, "sales": 95, "region": "大阪府", "type": "威士忌", "alcohol": "43%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "旗舰", "comment": 25, "description": "山崎（Yamazaki）是日本威士忌的鼻祖。在水楢桶中陈酿，带有独特的东方禅意香气，口感醇厚丰富。"}},
-  "goods_33": {"code": 0, "message": "ok", "data": {"id": 33, "name": "大摩 15 年威士忌", "subtitle": "雪莉桶熟成精品", "price": 850, "sales": 450, "region": "高地", "type": "威士忌", "alcohol": "40%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "经典", "comment": 40, "description": "大摩（Dalmore）15年威士忌在三种不同的雪莉桶中陈酿。具有标志性的巧克力、柑橘 and 香料风味。"}},
-  "goods_34": {"code": 0, "message": "ok", "data": {"id": 34, "name": "杰克丹尼田纳西威士忌", "subtitle": "美式自由风情", "price": 188, "sales": 25000, "region": "田纳西", "type": "威士忌", "alcohol": "40%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "畅销", "comment": 1200, "description": "全球最畅销的美式威士忌。经过糖枫木炭过滤，具有独特的柔滑口感 and 焦糖香气。"}},
-  "goods_35": {"code": 0, "message": "ok", "data": {"id": 35, "name": "芝华士 12 年威士忌", "subtitle": "苏格兰调配经典", "price": 228, "sales": 32000, "region": "苏格兰", "type": "威士忌", "alcohol": "40%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "大牌", "comment": 1500, "description": "经典的调配型威士忌。口感顺滑，带有蜂蜜、草本 and 水果的香气，是全球最受欢迎的调配威士忌之一。"}},
-  "goods_36": {"code": 0, "message": "ok", "data": {"id": 36, "name": "酩悦粉红香槟", "subtitle": "浪漫唯美体验", "price": 528, "sales": 5500, "region": "香槟区", "type": "起泡酒", "alcohol": "12%", "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine", "tag": "推荐", "comment": 320, "description": "呈现迷人的粉红色泽，充满草莓、覆盆子等红色水果的香气，口感浪漫且富有层次感。"}},
-  "order_default_address": {"code": 0, "message": "ok", "data": {"id": 1, "name": "张三", "phone": "13800138000", "province": "广东省", "city": "深圳市", "district": "南山区", "detail": "某某街道某某小区", "isDefault": true}},
-  "order_address_list": {"code": 0, "message": "ok",
-    "data": [
-      {"id": 1, "name": "张三", "phone": "13800138000", "province": "广东省", "city": "深圳市", "district": "南山区", "detail": "某某街道某某小区", "isDefault": true},
-      {"id": 2, "name": "李四", "phone": "13900139000", "province": "北京市", "city": "北京市", "district": "朝阳区", "detail": "某某路某某号院", "isDefault": false}
-    ]},
-  "order_confirm_list": {"code": 0, "message": "ok", "data": [{"id": 1, "name": "拉菲罗斯柴尔德古堡干红", "price": 8888, "count": 1, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"}]},
-  "order_list": {
-    "code": 0,
-    "message": "ok",
-    "data": [
-      {"id": "1", "orderNum": "ORD202603130001", "status": 1, "statusLabel": "待付款", "createTime": "2026-03-13 10:00", "totalPrice": 8888, "totalCount": 1,
-        "goods": [
-          {"id": 1, "name": "拉菲罗斯柴尔德古堡干红", "price": 8888, "count": 1, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"}
-        ]},
-      {"id": "2", "orderNum": "ORD202603130002", "status": 2, "statusLabel": "待发货", "createTime": "2026-03-12 15:30", "totalPrice": 5160, "totalCount": 2,
-        "goods": [
-          {"id": 2, "name": "玛歌红亭干红葡萄酒", "price": 2580, "count": 2, "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"}
-        ]}
-    ]},
-  "user_login": {"code": 0, "message": "ok", "data": {"token": "mock_token_123456", "userInfo": {"id": 1, "nickname": "Walton", "avatar": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"}}},
-  "user_info": {"code": 0, "message": "ok", "data": {"id": 1, "nickname": "Walton", "avatar": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"}},
-  "cart_list": {"code": 0, "message": "ok",
-    "data": [
-      {"id": 1, "name": "拉菲罗斯柴尔德古堡干红", "price": 8888, "count": 1, "checked": true, "image": "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03"},
-      {"id": 2, "name": "奔富 BIN 389", "price": 598, "count": 2, "checked": false, "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb"}
-    ]},
-  "cart_add": {"code": 0, "message": "加入购物车成功",
-    "data": [
-      {"id": 1, "name": "拉菲罗斯柴尔德古堡干红", "price": 8888, "count": 1, "checked": true, "image": "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03"},
-      {"id": 2, "name": "奔富 BIN 389", "price": 598, "count": 2, "checked": false, "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb"},
-      {"id": 3, "name": "麦卡伦 12 年雪莉桶", "price": 699, "count": 1, "checked": true, "image": "https://images.unsplash.com/photo-1569529465841-dfecdab7503b"}
-    ]},
-  "cart_update_count": {"code": 0, "message": "数量更新成功",
-    "data": [
-      {"id": 1, "name": "拉菲罗斯柴尔德古堡干红", "price": 8888, "count": 2, "checked": true, "image": "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03"},
-      {"id": 2, "name": "奔富 BIN 389", "price": 598, "count": 2, "checked": false, "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb"}
-    ]},
-  "cart_update_checked": {"code": 0, "message": "选中状态更新成功",
-    "data": [
-      {"id": 1, "name": "拉菲罗斯柴尔德古堡干红", "price": 8888, "count": 1, "checked": true, "image": "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03"},
-      {"id": 2, "name": "奔富 BIN 389", "price": 598, "count": 2, "checked": true, "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb"}
-    ]},
-  "cart_update_all_checked": {"code": 0, "message": "全选状态更新成功",
-    "data": [
-      {"id": 1, "name": "拉菲罗斯柴尔德古堡干红", "price": 8888, "count": 1, "checked": true, "image": "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03"},
-      {"id": 2, "name": "奔富 BIN 389", "price": 598, "count": 2, "checked": true, "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb"}
-    ]},
-  "cart_delete": {"code": 0, "message": "删除成功", "data": [{"id": 2, "name": "奔富 BIN 389", "price": 598, "count": 2, "checked": false, "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb"}]},
-  "cart_batch_delete": {"code": 0, "message": "批量删除成功", "data": [{"id": 2, "name": "奔富 BIN 389", "price": 598, "count": 2, "checked": false, "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb"}]},
-  "cart_clear": {"code": 0, "message": "购物车已清空", "data": null},
-  "cart_summary": {"code": 0, "message": "ok", "data": {"totalCount": 3, "checkedCount": 1, "totalPrice": 8888}}}
+  "member_profile": {
+    "nickname": "Walton",
+    "welcomeText": "欢迎来到 Wine Market 精品酒馆",
+    "favoriteCount": 12,
+    "pendingPayCount": 2,
+    "pendingShipCount": 1,
+    "pendingReceiveCount": 3,
+    "pendingRateCount": 1,
+    "returnCount": 0,
+    "points": 2680
+  },
+  "member_wallet": {
+    "balance": 1258.5,
+    "points": 2680,
+    "couponCount": 5
+  },
+  "home_categories": [
+    {
+      "id": 1,
+      "name": "红酒",
+      "icon": "🍷"
+    },
+    {
+      "id": 2,
+      "name": "白酒",
+      "icon": "🥂"
+    },
+    {
+      "id": 3,
+      "name": "香槟",
+      "icon": "🍾"
+    },
+    {
+      "id": 4,
+      "name": "烈酒",
+      "icon": "🥃"
+    }
+  ],
+  "home_products": [
+    {
+      "id": 1,
+      "name": "拉菲罗斯柴尔德古堡干红",
+      "subtitle": "波尔多一级庄 2015",
+      "price": 8888,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
+      "tag": "一级庄",
+      "comment": 15,
+      "categoryId": 1,
+      "subCategoryId": 102
+    },
+    {
+      "id": 22,
+      "name": "限时特惠波尔多干红",
+      "subtitle": "第2件半价",
+      "price": 99,
+      "image": "https://placehold.co/400x400/6B0F1A/FFFFFF.png?text=Bordeaux+Sale",
+      "tag": "超值",
+      "comment": 500,
+      "categoryId": 8,
+      "subCategoryId": 802
+    },
+    {
+      "id": 15,
+      "name": "麦卡伦 12 年雪莉桶",
+      "subtitle": "经典苏格兰威士忌",
+      "price": 650,
+      "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Macallan+12",
+      "tag": "经典",
+      "comment": 120,
+      "categoryId": 5,
+      "subCategoryId": 502
+    }
+  ],
+  "categories_first": [
+    {
+      "id": 1,
+      "name": "干红"
+    },
+    {
+      "id": 2,
+      "name": "礼盒"
+    },
+    {
+      "id": 3,
+      "name": "干白"
+    },
+    {
+      "id": 4,
+      "name": "甜白"
+    },
+    {
+      "id": 5,
+      "name": "烈酒"
+    },
+    {
+      "id": 6,
+      "name": "无醇"
+    },
+    {
+      "id": 7,
+      "name": "世界名庄"
+    },
+    {
+      "id": 8,
+      "name": "促销活动"
+    },
+    {
+      "id": 9,
+      "name": "香槟 起泡酒"
+    }
+  ],
+  "categories_second": {
+    "1": [
+      {
+        "id": 101,
+        "name": "所有干红",
+        "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Red+Wine"
+      },
+      {
+        "id": 102,
+        "name": "波尔多产区",
+        "image": "https://placehold.co/200x200/6B0F1A/FFFFFF.png?text=Bordeaux"
+      },
+      {
+        "id": 103,
+        "name": "罗纳河谷",
+        "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Rhone"
+      },
+      {
+        "id": 104,
+        "name": "勃艮第",
+        "image": "https://placehold.co/200x200/6B0F1A/FFFFFF.png?text=Burgundy"
+      },
+      {
+        "id": 105,
+        "name": "意大利",
+        "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Italy"
+      }
+    ],
+    "2": [
+      {
+        "id": 201,
+        "name": "所有礼盒",
+        "image": "https://placehold.co/200x200/8B7B6B/FFFFFF.png?text=Gifts"
+      },
+      {
+        "id": 202,
+        "name": "节日礼盒",
+        "image": "https://placehold.co/200x200/8B7B6B/FFFFFF.png?text=Holiday"
+      },
+      {
+        "id": 203,
+        "name": "商务送礼",
+        "image": "https://placehold.co/200x200/8B7B6B/FFFFFF.png?text=Business"
+      },
+      {
+        "id": 204,
+        "name": "双支礼盒",
+        "image": "https://placehold.co/200x200/8B7B6B/FFFFFF.png?text=Duo+Box"
+      }
+    ],
+    "3": [
+      {
+        "id": 301,
+        "name": "所有干白",
+        "image": "https://placehold.co/200x200/F8E7C8/4A0D12.png?text=White+Wine"
+      },
+      {
+        "id": 302,
+        "name": "霞多丽",
+        "image": "https://placehold.co/200x200/F8E7C8/4A0D12.png?text=Chardonnay"
+      },
+      {
+        "id": 303,
+        "name": "长相思",
+        "image": "https://placehold.co/200x200/F8E7C8/4A0D12.png?text=Sauvignon"
+      },
+      {
+        "id": 304,
+        "name": "雷司令",
+        "image": "https://placehold.co/200x200/F8E7C8/4A0D12.png?text=Riesling"
+      }
+    ],
+    "4": [
+      {
+        "id": 401,
+        "name": "所有甜白",
+        "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Sweet+White"
+      },
+      {
+        "id": 402,
+        "name": "贵腐",
+        "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Noble+Rot"
+      },
+      {
+        "id": 403,
+        "name": "晚收甜白",
+        "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Late+Harvest"
+      },
+      {
+        "id": 404,
+        "name": "冰酒",
+        "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Ice+Wine"
+      }
+    ],
+    "5": [
+      {
+        "id": 501,
+        "name": "所有烈酒",
+        "image": "https://placehold.co/200x200/8B4513/FFFFFF.png?text=Spirits"
+      },
+      {
+        "id": 502,
+        "name": "威士忌",
+        "image": "https://placehold.co/200x200/8B4513/FFFFFF.png?text=Whisky"
+      },
+      {
+        "id": 503,
+        "name": "白兰地",
+        "image": "https://placehold.co/200x200/8B4513/FFFFFF.png?text=Brandy"
+      },
+      {
+        "id": 504,
+        "name": "XO",
+        "image": "https://placehold.co/200x200/8B4513/FFFFFF.png?text=XO"
+      }
+    ],
+    "6": [
+      {
+        "id": 601,
+        "name": "所有无醇",
+        "image": "https://placehold.co/200x200/F7F3EE/4A0D12.png?text=Alcohol+Free"
+      },
+      {
+        "id": 602,
+        "name": "无醇红",
+        "image": "https://placehold.co/200x200/F7F3EE/4A0D12.png?text=AF+Red"
+      },
+      {
+        "id": 603,
+        "name": "无醇起泡",
+        "image": "https://placehold.co/200x200/F7F3EE/4A0D12.png?text=AF+Sparkling"
+      }
+    ],
+    "7": [
+      {
+        "id": 701,
+        "name": "所有名庄",
+        "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Grand+Cru"
+      },
+      {
+        "id": 702,
+        "name": "波尔多名庄",
+        "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Bordeaux+GC"
+      },
+      {
+        "id": 703,
+        "name": "勃艮第名庄",
+        "image": "https://placehold.co/200x200/4A0D12/FFFFFF.png?text=Burgundy+GC"
+      }
+    ],
+    "8": [
+      {
+        "id": 801,
+        "name": "所有促销",
+        "image": "https://placehold.co/200x200/FF0000/FFFFFF.png?text=Promo"
+      },
+      {
+        "id": 802,
+        "name": "限时折扣",
+        "image": "https://placehold.co/200x200/FF0000/FFFFFF.png?text=Sale"
+      },
+      {
+        "id": 803,
+        "name": "买赠专区",
+        "image": "https://placehold.co/200x200/FF0000/FFFFFF.png?text=Gift"
+      }
+    ],
+    "9": [
+      {
+        "id": 901,
+        "name": "所有起泡",
+        "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Sparkling"
+      },
+      {
+        "id": 902,
+        "name": "香槟",
+        "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Champagne"
+      },
+      {
+        "id": 903,
+        "name": "起泡酒",
+        "image": "https://placehold.co/200x200/E7D9C7/4A0D12.png?text=Cava"
+      }
+    ]
+  },
+  "goods": [
+    {
+      "id": 1,
+      "name": "拉菲罗斯柴尔德古堡干红",
+      "subtitle": "波尔多一级庄 2015",
+      "price": 8888,
+      "sales": 150,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
+      "tag": "一级庄",
+      "comment": 15,
+      "categoryId": 1,
+      "subCategoryId": 102,
+      "region": "波尔多",
+      "type": "红葡萄酒",
+      "alcohol": "13.5%",
+      "description": "拉菲古堡（Chateau Lafite Rothschild）是享誉世界的波尔多五大一级名庄之一。2015年份表现卓越，单宁丝滑，带有精致的黑香醋、烟草及矿物质香气，陈年潜力巨大。"
+    },
+    {
+      "id": 2,
+      "name": "玛歌红亭干红葡萄酒",
+      "subtitle": "玛歌庄园副牌",
+      "price": 2580,
+      "sales": 320,
+      "image": "https://placehold.co/400x400/6B0F1A/FFFFFF.png?text=Margaux",
+      "tag": "名庄",
+      "comment": 8,
+      "categoryId": 1,
+      "subCategoryId": 102,
+      "region": "波尔多",
+      "type": "红葡萄酒",
+      "alcohol": "13.5%",
+      "description": "玛歌红亭（Pavillon Rouge du Chateau Margaux）是顶级名庄玛歌庄园的副牌酒。它完美继承了玛歌庄园的高雅与细腻，口感柔美，充满红果与花香。"
+    },
+    {
+      "id": 3,
+      "name": "教皇新堡精品干红",
+      "subtitle": "罗纳河谷核心产区",
+      "price": 568,
+      "sales": 850,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Chateauneuf",
+      "tag": "高分",
+      "comment": 20,
+      "categoryId": 1,
+      "subCategoryId": 103,
+      "region": "罗纳河谷",
+      "type": "红葡萄酒",
+      "alcohol": "14.5%",
+      "description": "产自罗纳河谷教皇新堡（Chateauneuf du Pape）核心地块。混合了歌海娜、西拉等多种品种，香气浓郁，带有成熟红果、黑胡椒及地中海香料气息。"
+    },
+    {
+      "id": 4,
+      "name": "勃艮第夜丘村级干红",
+      "subtitle": "经典黑皮诺口感",
+      "price": 458,
+      "sales": 1200,
+      "image": "https://placehold.co/400x400/6B0F1A/FFFFFF.png?text=Pinot+Noir",
+      "tag": "经典",
+      "comment": 12,
+      "categoryId": 1,
+      "subCategoryId": 104,
+      "region": "勃艮第",
+      "type": "红葡萄酒",
+      "alcohol": "13%",
+      "description": "精选勃艮第夜丘（Cote de Nuits）优质地块黑皮诺。呈现迷人的宝石红色，带有樱桃、覆盆子等新鲜果香，单宁细腻，口感优雅且充满活力。"
+    },
+    {
+      "id": 5,
+      "name": "意大利巴罗洛红葡萄酒",
+      "subtitle": "内比奥罗之王",
+      "price": 680,
+      "sales": 450,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Barolo",
+      "tag": "酒王",
+      "comment": 5,
+      "categoryId": 1,
+      "subCategoryId": 105,
+      "region": "皮埃蒙特",
+      "type": "红葡萄酒",
+      "alcohol": "14%",
+      "description": "巴罗洛（Barolo）被誉为“酒中之王”。采用100%内比奥罗葡萄酿造，具有标志性的玫瑰、干香草及松露香气，酒体雄厚，单宁强劲，具有极佳的陈年能力。"
+    },
+    {
+      "id": 6,
+      "name": "尊享礼遇双支礼盒",
+      "subtitle": "精选红酒两支装",
+      "price": 398,
+      "sales": 2500,
+      "image": "https://placehold.co/400x400/8B7B6B/FFFFFF.png?text=Gift+Box",
+      "tag": "热销",
+      "comment": 45,
+      "categoryId": 2,
+      "subCategoryId": 202,
+      "region": "多产区",
+      "type": "礼盒",
+      "alcohol": "13.5%",
+      "description": "精选两款热销干红葡萄酒，配以高档礼盒包装，是您节日送礼、走亲访友的超值之选。"
+    },
+    {
+      "id": 7,
+      "name": "高端商务皮盒套装",
+      "subtitle": "送礼体面过人",
+      "price": 1280,
+      "sales": 600,
+      "image": "https://placehold.co/400x400/8B7B6B/FFFFFF.png?text=Leather+Box",
+      "tag": "奢华",
+      "comment": 10,
+      "categoryId": 2,
+      "subCategoryId": 203,
+      "region": "法国",
+      "type": "礼盒",
+      "alcohol": "14%",
+      "description": "专为商务场景设计，采用进口皮质礼盒，内含两支精品波尔多干红及整套专业酒具，尽显尊贵身份。"
+    },
+    {
+      "id": 8,
+      "name": "节日定制木盒礼包",
+      "subtitle": "含开瓶器及配件",
+      "price": 588,
+      "sales": 1800,
+      "image": "https://placehold.co/400x400/8B7B6B/FFFFFF.png?text=Wood+Box",
+      "tag": "定制",
+      "comment": 22,
+      "categoryId": 2,
+      "subCategoryId": 204,
+      "region": "智利",
+      "type": "礼盒",
+      "alcohol": "13.5%",
+      "description": "天然原木礼盒，内含智利精品干红一支及海马刀、倒酒器等实用配件，简约而不失格调。"
+    },
+    {
+      "id": 9,
+      "name": "蒙哈榭特级园霞多丽",
+      "subtitle": "白葡萄酒之巅",
+      "price": 3200,
+      "sales": 120,
+      "image": "https://placehold.co/400x400/F8E7C8/4A0D12.png?text=Montrachet",
+      "tag": "极品",
+      "comment": 3,
+      "categoryId": 3,
+      "subCategoryId": 302,
+      "region": "勃艮第",
+      "type": "干白",
+      "alcohol": "13.5%",
+      "description": "产自勃艮第蒙哈榭（Montrachet）特级园，世界上最顶级的霞多丽产区。酒体丰腴，香气极其复杂，具有无与伦比的优雅感。"
+    },
+    {
+      "id": 10,
+      "name": "新西兰云雾之湾长相思",
+      "subtitle": "纯净果香体验",
+      "price": 298,
+      "sales": 5200,
+      "image": "https://placehold.co/400x400/F8E7C8/4A0D12.png?text=Sauvignon+Blanc",
+      "tag": "人气",
+      "comment": 88,
+      "categoryId": 3,
+      "subCategoryId": 303,
+      "region": "马尔堡",
+      "type": "干白",
+      "alcohol": "13%",
+      "description": "新西兰长相思的标杆之作。充满热带水果、柑橘及百香果的清爽香气，酸度活泼，令人一试难忘。"
+    },
+    {
+      "id": 11,
+      "name": "德国伊贡米勒雷司令",
+      "subtitle": "雷司令中的拉菲",
+      "price": 1500,
+      "sales": 80,
+      "image": "https://placehold.co/400x400/F8E7C8/4A0D12.png?text=Riesling",
+      "tag": "顶级",
+      "comment": 6,
+      "categoryId": 3,
+      "subCategoryId": 304,
+      "region": "摩泽尔",
+      "type": "干白",
+      "alcohol": "8.5%",
+      "description": "德国摩泽尔产区的顶级名庄。这款雷司令展现了极致的纯净感和矿物质味，陈年潜力巨大。"
+    },
+    {
+      "id": 12,
+      "name": "滴金庄园贵腐甜白",
+      "subtitle": "液体黄金 375ml",
+      "price": 2800,
+      "sales": 45,
+      "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Yquem",
+      "tag": "稀缺",
+      "comment": 4,
+      "categoryId": 4,
+      "subCategoryId": 40,
+      "region": "苏玳",
+      "type": "甜白",
+      "alcohol": "14%",
+      "description": "苏玳产区唯一的超一级名庄。酒液呈深金色，具有复杂的蜂蜜、杏干和花香，被誉为“液体黄金”。"
+    },
+    {
+      "id": 13,
+      "name": "苏玳产区晚收甜白",
+      "subtitle": "性价比之选",
+      "price": 198,
+      "sales": 3200,
+      "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Sweet+White",
+      "tag": "推荐",
+      "comment": 34,
+      "categoryId": 4,
+      "subCategoryId": 403,
+      "region": "苏玳",
+      "type": "甜白",
+      "alcohol": "13.5%",
+      "description": "精选苏玳产区晚收葡萄酿制，香气甜美，口感圆润，是搭配甜点、下午茶的绝佳选择。"
+    },
+    {
+      "id": 14,
+      "name": "加拿大云岭冰酒",
+      "subtitle": "极寒淬炼精华",
+      "price": 688,
+      "sales": 450,
+      "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Ice+Wine",
+      "tag": "冰酒",
+      "comment": 18,
+      "categoryId": 4,
+      "subCategoryId": 404,
+      "region": "尼亚加拉",
+      "type": "冰酒",
+      "alcohol": "10.5%",
+      "description": "产自加拿大尼亚加拉半岛，在零下8度的极寒中手工采摘冰冻葡萄酿制。口感极其浓郁甜美。"
+    },
+    {
+      "id": 15,
+      "name": "麦卡伦 12 年雪莉桶",
+      "subtitle": "经典苏格兰威士忌",
+      "price": 650,
+      "sales": 8500,
+      "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Macallan+12",
+      "tag": "经典",
+      "comment": 120,
+      "categoryId": 5,
+      "subCategoryId": 502,
+      "region": "斯佩塞",
+      "type": "单一麦芽威士忌",
+      "alcohol": "40%",
+      "description": "麦卡伦（Macallan）雪莉桶系列的代表作。在精选的西班牙雪莉橡木桶中陈酿至少12年，呈现深邃的金色，带有干果、生姜及甜香草的香气，余韵持久。"
+    },
+    {
+      "id": 16,
+      "name": "人头马 VSOP 干邑",
+      "subtitle": "法国原装进口",
+      "price": 420,
+      "sales": 12000,
+      "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Remy+Martin",
+      "tag": "大牌",
+      "comment": 200,
+      "categoryId": 5,
+      "subCategoryId": 503,
+      "region": "干邑区",
+      "type": "白兰地",
+      "alcohol": "40%",
+      "description": "经典的人头马VSOP。采用大小香槟区的葡萄酿制，具有优雅的花香和香草香气，口感平衡。"
+    },
+    {
+      "id": 17,
+      "name": "轩尼诗 XO 700ml",
+      "subtitle": "干邑的代名词",
+      "price": 1850,
+      "sales": 3500,
+      "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Hennessy+XO",
+      "tag": "旗舰",
+      "comment": 95,
+      "categoryId": 5,
+      "subCategoryId": 504,
+      "region": "干邑区",
+      "type": "白兰地",
+      "alcohol": "40%",
+      "description": "轩尼诗XO是干邑等级的开创者。由百余种陈年生命之水调配而成，展现了极佳的复杂度和深度。"
+    },
+    {
+      "id": 18,
+      "name": "无醇脱醇红葡萄酒",
+      "subtitle": "健康不伤身",
+      "price": 128,
+      "sales": 1500,
+      "image": "https://placehold.co/400x400/F7F3EE/4A0D12.png?text=AF+Red",
+      "tag": "健康",
+      "comment": 15,
+      "categoryId": 6,
+      "subCategoryId": 602,
+      "region": "德国",
+      "type": "无醇",
+      "alcohol": "0.5%",
+      "description": "采用特殊脱醇工艺，保留了红葡萄酒的香气和单宁，但不含酒精，适合开车或不胜酒力的人士。"
+    },
+    {
+      "id": 19,
+      "name": "无醇起泡葡萄汁",
+      "subtitle": "全家共享欢乐",
+      "price": 88,
+      "sales": 2800,
+      "image": "https://placehold.co/400x400/F7F3EE/4A0D12.png?text=AF+Sparkling",
+      "tag": "聚会",
+      "comment": 40,
+      "categoryId": 6,
+      "subCategoryId": 603,
+      "region": "法国",
+      "type": "无醇",
+      "alcohol": "0%",
+      "description": "天然葡萄原汁酿造，气泡丰富，口感清爽甜美，是聚会时全家老少皆宜的健康饮品。"
+    },
+    {
+      "id": 20,
+      "name": "柏图斯庄园红葡萄酒",
+      "subtitle": "波尔多右岸之王",
+      "price": 28000,
+      "sales": 5,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Petrus",
+      "tag": "至尊",
+      "comment": 1,
+      "categoryId": 7,
+      "subCategoryId": 702,
+      "region": "波美侯",
+      "type": "红葡萄酒",
+      "alcohol": "14.5%",
+      "description": "波尔多右岸皇冠上的明珠。100%美乐酿造，产量极其稀少，口感丰满如丝绒，极具传奇色彩。"
+    },
+    {
+      "id": 21,
+      "name": "罗曼尼康帝特级园",
+      "subtitle": "勃艮第神话",
+      "price": 150000,
+      "sales": 1,
+      "image": "https://placehold.co/400x400/6B0F1A/FFFFFF.png?text=DRC",
+      "tag": "神级",
+      "comment": 0,
+      "categoryId": 7,
+      "subCategoryId": 703,
+      "region": "沃恩-罗曼尼",
+      "type": "红葡萄酒",
+      "alcohol": "13.5%",
+      "description": "世界上最昂贵、最受追捧的葡萄酒。它是平衡与纯粹的化身，每一滴都是勃艮第风土的终极表达。"
+    },
+    {
+      "id": 22,
+      "name": "限时特惠波尔多干红",
+      "subtitle": "第2件半价",
+      "price": 99,
+      "sales": 50000,
+      "image": "https://placehold.co/400x400/FF0000/FFFFFF.png?text=Special+Offer",
+      "tag": "超值",
+      "comment": 500,
+      "categoryId": 8,
+      "subCategoryId": 802,
+      "region": "波尔多",
+      "type": "红葡萄酒",
+      "alcohol": "13.5%",
+      "description": "精选波尔多大区级优质干红。果香浓郁，口感易饮，目前限时特惠，是日常佐餐的高性价比选择。"
+    },
+    {
+      "id": 23,
+      "name": "买红酒送海马刀",
+      "subtitle": "酒具大放送",
+      "price": 158,
+      "sales": 8500,
+      "image": "https://placehold.co/400x400/FF0000/FFFFFF.png?text=Gift+Included",
+      "tag": "买赠",
+      "comment": 120,
+      "categoryId": 8,
+      "subCategoryId": 803,
+      "region": "西班牙",
+      "type": "红葡萄酒",
+      "alcohol": "14%",
+      "description": "西班牙拉曼恰产区精品干红。现在购买即赠送专业海马型开瓶器一把，数量有限，送完为止。"
+    },
+    {
+      "id": 24,
+      "name": "唐培里侬香槟王 2012",
+      "subtitle": "年份香槟精品",
+      "price": 1680,
+      "sales": 450,
+      "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Dom+Perignon",
+      "tag": "顶级",
+      "comment": 15,
+      "categoryId": 9,
+      "subCategoryId": 902,
+      "region": "香槟区",
+      "type": "起泡酒",
+      "alcohol": "12.5%",
+      "description": "唐培里侬（Dom Perignon）仅在优秀的年份酿制年份香槟。2012年份口感饱满且精准，融合了花香、柑橘及烘烤面包的香气，气泡细腻，充满力量感。"
+    },
+    {
+      "id": 25,
+      "name": "库克陈年香槟",
+      "subtitle": "极致酿造艺术",
+      "price": 1880,
+      "sales": 280,
+      "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Krug",
+      "tag": "奢华",
+      "comment": 9,
+      "categoryId": 9,
+      "subCategoryId": 902,
+      "region": "香槟区",
+      "type": "起泡酒",
+      "alcohol": "12.5%",
+      "description": "库克（Krug）以其独特的调配工艺 and 橡木桶发酵闻名。这款香槟极其复杂，带有坚果和烘焙香气。"
+    },
+    {
+      "id": 26,
+      "name": "西班牙卡瓦起泡酒",
+      "subtitle": "清爽高性价比",
+      "price": 118,
+      "sales": 6500,
+      "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Cava",
+      "tag": "畅销",
+      "comment": 210,
+      "categoryId": 9,
+      "subCategoryId": 903,
+      "region": "加泰罗尼亚",
+      "type": "起泡酒",
+      "alcohol": "11.5%",
+      "description": "采用传统法酿造的西班牙卡瓦（Cava）。气泡细腻，口感清新，带有青苹果 and 花香，非常适合餐前开胃。"
+    },
+    {
+      "id": 27,
+      "name": "澳洲奔富 Bin 389",
+      "subtitle": "小葛兰许 2019",
+      "price": 699,
+      "sales": 4500,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Penfolds+389",
+      "tag": "名庄",
+      "comment": 450,
+      "categoryId": 1,
+      "subCategoryId": 105,
+      "region": "南澳",
+      "type": "红葡萄酒",
+      "alcohol": "14.5%",
+      "description": "奔富Bin 389被誉为“小葛兰许”。它在葛兰许使用过的橡木桶中陈酿，集合了赤霞珠的结构感 and 西拉的丰满感。"
+    },
+    {
+      "id": 28,
+      "name": "智利活魂 2018",
+      "subtitle": "智利酒王 跨界力作",
+      "price": 1280,
+      "sales": 850,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Almaviva",
+      "tag": "至尊",
+      "comment": 60,
+      "categoryId": 1,
+      "subCategoryId": 105,
+      "region": "迈坡谷",
+      "type": "红葡萄酒",
+      "alcohol": "14.5%",
+      "description": "活魂（Almaviva）是罗斯柴尔德男爵集团与干露酒庄的合资项目。它融合了法国酿酒技术与智利风土，口感极其浓郁。"
+    },
+    {
+      "id": 29,
+      "name": "拉图庄园干红 2011",
+      "subtitle": "波尔多一级庄",
+      "price": 6800,
+      "sales": 15,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Latour+2011",
+      "tag": "稀缺",
+      "comment": 5,
+      "categoryId": 7,
+      "subCategoryId": 702,
+      "region": "波尔多",
+      "type": "红葡萄酒",
+      "alcohol": "13.5%",
+      "description": "拉图庄园（Chateau Latour）以其酒体强劲、陈年潜力巨大而著称。2011年份表现稳健，具有典型的黑醋栗 and 雪松香气。"
+    },
+    {
+      "id": 30,
+      "name": "酩悦香槟 750ml",
+      "subtitle": "欢庆时刻首选",
+      "price": 428,
+      "sales": 15000,
+      "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Moet+Chandon",
+      "tag": "热门",
+      "comment": 800,
+      "categoryId": 9,
+      "subCategoryId": 902,
+      "region": "香槟区",
+      "type": "起泡酒",
+      "alcohol": "12%",
+      "description": "酩悦（Moet & Chandon）是世界上最著名的香槟品牌之一。口感清新活泼，是各类欢庆活动的绝佳伴侣。"
+    },
+    {
+      "id": 31,
+      "name": "白州 12 年威士忌",
+      "subtitle": "东方森林气息",
+      "price": 1680,
+      "sales": 120,
+      "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Hakushu+12",
+      "tag": "收藏",
+      "comment": 30,
+      "categoryId": 5,
+      "subCategoryId": 502,
+      "region": "山梨县",
+      "type": "威士忌",
+      "alcohol": "43%",
+      "description": "产自白州蒸馏所，具有独特的森林清新感。带有清爽的泥煤味 and 嫩叶、果实香气。"
+    },
+    {
+      "id": 32,
+      "name": "山崎 12 年威士忌",
+      "subtitle": "三得利旗舰之作",
+      "price": 1880,
+      "sales": 95,
+      "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Yamazaki+12",
+      "tag": "旗舰",
+      "comment": 25,
+      "categoryId": 5,
+      "subCategoryId": 502,
+      "region": "大阪府",
+      "type": "威士忌",
+      "alcohol": "43%",
+      "description": "山崎（Yamazaki）是日本威士忌的鼻祖。在水楢桶中陈酿，带有独特的东方禅意香气，口感醇厚丰富。"
+    },
+    {
+      "id": 33,
+      "name": "大摩 15 年威士忌",
+      "subtitle": "雪莉桶熟成精品",
+      "price": 850,
+      "sales": 450,
+      "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Dalmore+15",
+      "tag": "经典",
+      "comment": 40,
+      "categoryId": 5,
+      "subCategoryId": 502,
+      "region": "高地",
+      "type": "威士忌",
+      "alcohol": "40%",
+      "description": "大摩（Dalmore）15年威士忌在三种不同的雪莉桶中陈酿。具有标志性的巧克力、柑橘 and 香料风味。"
+    },
+    {
+      "id": 34,
+      "name": "杰克丹尼田纳西威士忌",
+      "subtitle": "美式自由风情",
+      "price": 188,
+      "sales": 25000,
+      "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Jack+Daniels",
+      "tag": "畅销",
+      "comment": 1200,
+      "categoryId": 5,
+      "subCategoryId": 502,
+      "region": "田纳西",
+      "type": "威士忌",
+      "alcohol": "40%",
+      "description": "全球最畅销的美式威士忌。经过糖枫木炭过滤，具有独特的柔滑口感 and 焦糖香气。"
+    },
+    {
+      "id": 35,
+      "name": "芝华士 12 年威士忌",
+      "subtitle": "苏格兰调配经典",
+      "price": 228,
+      "sales": 32000,
+      "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Chivas+12",
+      "tag": "大牌",
+      "comment": 1500,
+      "categoryId": 5,
+      "subCategoryId": 502,
+      "region": "苏格兰",
+      "type": "威士忌",
+      "alcohol": "40%",
+      "description": "经典的调配型威士忌。口感顺滑，带有蜂蜜、草本 and 水果的香气，是全球最受欢迎的调配威士忌之一。"
+    },
+    {
+      "id": 36,
+      "name": "酩悦粉红香槟",
+      "subtitle": "浪漫唯美体验",
+      "price": 528,
+      "sales": 5500,
+      "image": "https://placehold.co/400x400/E7D9C7/4A0D12.png?text=Moet+Rose",
+      "tag": "推荐",
+      "comment": 320,
+      "categoryId": 9,
+      "subCategoryId": 902,
+      "region": "香槟区",
+      "type": "起泡酒",
+      "alcohol": "12%",
+      "description": "呈现迷人的粉红色泽，充满草莓、覆盆子等红色水果的香气，口感浪漫且富有层次感。"
+    }
+  ],
+  "addresses": [
+    {
+      "id": 1,
+      "name": "张三",
+      "phone": "13800138000",
+      "province": "广东省",
+      "city": "深圳市",
+      "district": "南山区",
+      "detail": "某某街道某某小区",
+      "isDefault": true
+    },
+    {
+      "id": 2,
+      "name": "李四",
+      "phone": "13900139000",
+      "province": "北京市",
+      "city": "北京市",
+      "district": "朝阳区",
+      "detail": "某某路某某号院",
+      "isDefault": false
+    }
+  ],
+  "orders": [
+    {
+      "id": "1",
+      "orderNum": "ORD202603130001",
+      "status": 1,
+      "statusLabel": "待付款",
+      "createTime": "2026-03-13 10:00",
+      "totalPrice": 8888,
+      "totalCount": 1,
+      "goods": [
+        {
+          "id": 1,
+          "name": "拉菲罗斯柴尔德古堡干红",
+          "price": 8888,
+          "count": 1,
+          "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "orderNum": "ORD202603130002",
+      "status": 2,
+      "statusLabel": "待发货",
+      "createTime": "2026-03-12 15:30",
+      "totalPrice": 5160,
+      "totalCount": 2,
+      "goods": [
+        {
+          "id": 2,
+          "name": "玛歌红亭干红葡萄酒",
+          "price": 2580,
+          "count": 2,
+          "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"
+        }
+      ]
+    }
+  ],
+  "order_confirm_list": [
+    {
+      "id": 1,
+      "name": "拉菲罗斯柴尔德古堡干红",
+      "spec": "",
+      "price": 8888,
+      "count": 1,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"
+    }
+  ],
+  "user_login": {
+    "token": "mock_token_123456",
+    "userInfo": {
+      "id": 1,
+      "nickname": "Walton",
+      "avatar": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"
+    }
+  },
+  "user_info": {
+    "id": 1,
+    "nickname": "Walton",
+    "avatar": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"
+  },
+  "coupons": [
+    {
+      "id": 1,
+      "title": "全场通用券",
+      "discount": 20,
+      "minAmount": 200,
+      "startTime": "2026-03-01",
+      "endTime": "2026-03-31",
+      "status": 1
+    },
+    {
+      "id": 2,
+      "title": "红酒分类券",
+      "discount": 50,
+      "minAmount": 500,
+      "startTime": "2026-03-10",
+      "endTime": "2026-04-10",
+      "status": 1
+    },
+    {
+      "id": 3,
+      "title": "新人礼包券",
+      "discount": 10,
+      "minAmount": 0,
+      "startTime": "2026-01-01",
+      "endTime": "2026-12-31",
+      "status": 1
+    }
+  ],
+  "point-records": [
+    {
+      "id": 1,
+      "title": "购物获得",
+      "points": 199,
+      "time": "2026-03-13 10:00"
+    },
+    {
+      "id": 2,
+      "title": "每日签到",
+      "points": 5,
+      "time": "2026-03-13 08:30"
+    }
+  ],
+  "favorites": [],
+  "footprints": [],
+  "invoices": [],
+  "realname": {
+    "verified": false
+  },
+  "cart": [
+    {
+      "id": 1,
+      "name": "拉菲罗斯柴尔德古堡干红",
+      "price": 8888,
+      "count": 1,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015"
+    },
+    {
+      "id": 22,
+      "name": "限时特惠波尔多干红",
+      "price": 99,
+      "count": 1,
+      "image": "https://placehold.co/400x400/FF0000/FFFFFF.png?text=Special+Offer"
+    }
+  ]
+}

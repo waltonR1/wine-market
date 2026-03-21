@@ -1,5 +1,12 @@
 import type { ApiResponse } from '@/types/common'
-import type { CartItem } from '@/types/model/cart'
+
+export interface CartServerItem {
+  id: number
+  name: string
+  price: number
+  count: number
+  image: string
+}
 
 export interface CartSummary {
   totalCount: number
@@ -8,46 +15,23 @@ export interface CartSummary {
   checkedIds: number[]
 }
 
-export type GetCartListResponse = ApiResponse<CartItem[]>
+export type GetCartListResponse = ApiResponse<CartServerItem[]>
 
 export interface AddCartItemRequest {
   id: number
   count: number
 }
 
-export type AddCartItemResponse = ApiResponse<CartItem[]>
+export type AddCartItemResponse = ApiResponse<CartServerItem[]>
 
 export interface UpdateCartItemCountRequest {
   id: number
   count: number
 }
 
-export type UpdateCartItemCountResponse = ApiResponse<CartItem[]>
+export type UpdateCartItemCountResponse = ApiResponse<CartServerItem[]>
 
-export interface UpdateCartItemCheckedRequest {
-  id: number
-  checked: boolean
-}
-
-export type UpdateCartItemCheckedResponse = ApiResponse<CartItem[]>
-
-export interface UpdateCartAllCheckedRequest {
-  checked: boolean
-}
-
-export type UpdateCartAllCheckedResponse = ApiResponse<CartItem[]>
-
-export interface DeleteCartItemRequest {
-  id: number
-}
-
-export type DeleteCartItemResponse = ApiResponse<CartItem[]>
-
-export interface BatchDeleteCartItemsRequest {
-  ids: number[]
-}
-
-export type BatchDeleteCartItemsResponse = ApiResponse<CartItem[]>
+export type DeleteCartItemResponse = ApiResponse<CartServerItem[]>
 
 export type ClearCartResponse = ApiResponse<null>
 

@@ -5,15 +5,14 @@ import {
   getCartList as getCartListApi,
   addCartItem,
   updateCartItemCount,
-  updateCartItemChecked,
-  updateCartAllChecked,
   deleteCartItem,
-  batchDeleteCartItems,
-  clearCart as clearCartApi,
 } from '@/api/modules/cart'
 
 import type { CartItem } from '@/types/model/cart'
 import type { ProductItem } from '@/types/model/goods'
+import type { CartServerItem } from '@/types/api/cart'
+
+import { APP_CONFIG } from '@/config/app'
 
 export function useCart() {
   const cartStore = useCartStore()
@@ -24,8 +23,38 @@ export function useCart() {
   /**
    * 用接口返回的数据统一同步 store
    */
-  function syncCartList(list: CartItem[] | undefined) {
-    cartStore.setCartList(list || [])
+  function syncCartList(list: CartItem[]) {
+    cartStore.setCartList(list)
+  }
+
+  /**
+   * 将服务器返回的购物车数据转换为前端使用的 CartItem 列表
+   *
+   * 主要作用：
+   * 1. 将 CartServerItem 转换为前端 CartItem 结构
+   * 2. 保留当前本地购物车中的 checked 状态（用户勾选状态）
+   *
+   * 处理逻辑：
+   * - 服务器返回的数据通常不包含 checked 字段
+   * - 因此需要从 current（当前 store 中的购物车列表）中恢复对应商品的 checked 状态
+   * - 如果该商品之前不存在于 current 中，则默认 checked = true
+   *
+   * @param serverList 服务器返回的购物车数据
+   * @param current 当前 store 中已有的购物车列表
+   * @returns 转换后的前端购物车列表
+   */
+  function toClientList(serverList: CartServerItem[] | undefined, current: CartItem[]) {
+    const checkedMap = new Map<number, boolean>()
+    current.forEach(item => checkedMap.set(item.id, item.checked))
+
+    return (serverList || []).map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      count: item.count,
+      image: item.image,
+      checked: checkedMap.get(item.id) ?? true,
+    }))
   }
 
   /**
@@ -42,8 +71,9 @@ export function useCart() {
       const res = await getCartListApi()
 
       if (res.code === 0) {
-        syncCartList(res.data)
-        return res.data || []
+        const nextList = toClientList(res.data, cartList.value)
+        syncCartList(nextList)
+        return nextList
       }
 
       uni.showToast({
@@ -87,8 +117,9 @@ export function useCart() {
       })
 
       if (res.code === 0) {
-        // 这里可选：如果你希望以后端为准，可以打开下一行
-        // syncCartList(res.data)
+        if (APP_CONFIG.CART_SYNC_STRATEGY === 'server') {
+          syncCartList(toClientList(res.data, cartList.value))
+        }
 
         uni.showToast({
           title: '已添加到购物车',
@@ -167,6 +198,7 @@ export function useCart() {
       const res = await updateCartItemCount({ id, count })
 
       if (res.code === 0) {
+        syncCartList(toClientList(res.data, cartList.value))
         return true
       }
 
@@ -216,41 +248,8 @@ export function useCart() {
     const target = cartList.value.find(item => item.id === id)
     if (!target) return false
 
-    const nextChecked = !target.checked
-
-    // 先本地更新
     cartStore.toggleChecked(id)
-
-    // 未登录时只改本地
-    if (!isLogin.value) {
-      return true
-    }
-
-    try {
-      const res = await updateCartItemChecked({
-        id,
-        checked: nextChecked,
-      })
-
-      if (res.code === 0) {
-        return true
-      }
-
-      // 失败回滚
-      cartStore.toggleChecked(id)
-      uni.showToast({
-        title: res.message || '更新选中状态失败',
-        icon: 'none',
-      })
-      return false
-    } catch (error) {
-      cartStore.toggleChecked(id)
-      uni.showToast({
-        title: '更新选中状态失败',
-        icon: 'none',
-      })
-      return false
-    }
+    return true
   }
 
   /**
@@ -259,41 +258,8 @@ export function useCart() {
    * 已登录：乐观更新 + 失败回滚
    */
   async function toggleAllChecked() {
-    const nextChecked = !isAllChecked.value
-    const oldList = cartList.value.map(item => ({ ...item }))
-
-    // 先本地更新
     cartStore.toggleAllChecked()
-
-    // 未登录时只改本地
-    if (!isLogin.value) {
-      return true
-    }
-
-    try {
-      const res = await updateCartAllChecked({
-        checked: nextChecked,
-      })
-
-      if (res.code === 0) {
-        return true
-      }
-
-      // 失败回滚
-      cartStore.setCartList(oldList)
-      uni.showToast({
-        title: res.message || '全选状态更新失败',
-        icon: 'none',
-      })
-      return false
-    } catch (error) {
-      cartStore.setCartList(oldList)
-      uni.showToast({
-        title: '全选状态更新失败',
-        icon: 'none',
-      })
-      return false
-    }
+    return true
   }
 
   /**
@@ -316,9 +282,10 @@ export function useCart() {
     }
 
     try {
-      const res = await deleteCartItem({ id })
+      const res = await deleteCartItem(id)
 
       if (res.code === 0) {
+        syncCartList(toClientList(res.data, cartList.value))
         return true
       }
 
@@ -362,19 +329,19 @@ export function useCart() {
     }
 
     try {
-      const res = await batchDeleteCartItems({ ids })
-
-      if (res.code === 0) {
-        return true
+      let lastServerList: CartServerItem[] | undefined = undefined
+      for (const id of ids) {
+        const res = await deleteCartItem(id)
+        if (res.code !== 0) {
+          cartStore.setCartList(oldList)
+          uni.showToast({ title: res.message || '删除失败', icon: 'none' })
+          return false
+        }
+        lastServerList = res.data
       }
 
-      // 失败回滚
-      cartStore.setCartList(oldList)
-      uni.showToast({
-        title: res.message || '删除失败',
-        icon: 'none',
-      })
-      return false
+      syncCartList(toClientList(lastServerList, cartList.value))
+      return true
     } catch (error) {
       cartStore.setCartList(oldList)
       uni.showToast({
@@ -392,6 +359,7 @@ export function useCart() {
    */
   async function clearCart() {
     const oldList = cartList.value.map(item => ({ ...item }))
+    const ids = oldList.map(item => item.id)
 
     // 先本地清空
     cartStore.resetCart()
@@ -402,19 +370,16 @@ export function useCart() {
     }
 
     try {
-      const res = await clearCartApi()
-
-      if (res.code === 0) {
-        return true
+      for (const id of ids) {
+        const res = await deleteCartItem(id)
+        if (res.code !== 0) {
+          cartStore.setCartList(oldList)
+          uni.showToast({ title: res.message || '清空购物车失败', icon: 'none' })
+          return false
+        }
       }
 
-      // 失败回滚
-      cartStore.setCartList(oldList)
-      uni.showToast({
-        title: res.message || '清空购物车失败',
-        icon: 'none',
-      })
-      return false
+      return true
     } catch (error) {
       cartStore.setCartList(oldList)
       uni.showToast({

@@ -1,0 +1,240 @@
+const jsonServer = require('json-server')
+const path = require('path')
+
+const PORT = Number(process.env.PORT || 3000)
+const DB_PATH = path.join(__dirname, 'db.json')
+
+function ok(data, message = 'ok') {
+  return { code: 0, message, data }
+}
+
+function fail(message, data = null) {
+  return { code: 1, message, data }
+}
+
+const server = jsonServer.create()
+const router = jsonServer.router(DB_PATH)
+const middlewares = jsonServer.defaults()
+
+server.use(middlewares)
+server.use(jsonServer.bodyParser)
+
+router.render = (req, res) => {
+  const statusCode = res.statusCode
+  if (statusCode >= 400) {
+    const message = statusCode === 404 ? '资源不存在' : '请求失败'
+    res.status(200).jsonp(fail(message))
+    return
+  }
+  res.status(200).jsonp(ok(res.locals.data))
+}
+
+server.get('/goods_:id', (req, res) => {
+  req.url = `/goods/${req.params.id}`
+  router(req, res)
+})
+
+server.get('/order_default_address', (req, res) => {
+  req.url = '/addresses/default'
+  router(req, res)
+})
+
+server.get('/order_address_list', (req, res) => {
+  req.url = '/addresses'
+  router(req, res)
+})
+
+server.get('/order_list', (req, res) => {
+  req.url = '/orders'
+  router(req, res)
+})
+
+server.get('/member_coupons', (req, res) => {
+  req.url = '/coupons'
+  router(req, res)
+})
+
+server.get('/member_points_history', (req, res) => {
+  req.url = '/point-records'
+  router(req, res)
+})
+
+server.get('/member_favorites', (req, res) => {
+  req.url = '/favorites'
+  router(req, res)
+})
+
+server.get('/member_footprints', (req, res) => {
+  req.url = '/footprints'
+  router(req, res)
+})
+
+server.get('/member_invoices', (req, res) => {
+  req.url = '/invoices'
+  router(req, res)
+})
+
+server.get('/member_realname', (req, res) => {
+  req.url = '/realname'
+  router(req, res)
+})
+
+server.get('/cart_list', (req, res) => {
+  req.url = '/cart'
+  router(req, res)
+})
+
+function handleAddToCart(req, res) {
+  const { id, count } = req.body || {}
+  const goodsId = Number(id)
+  const addCount = Number(count)
+
+  if (!Number.isFinite(goodsId) || !Number.isFinite(addCount) || addCount < 1) {
+    res.status(200).jsonp(fail('参数错误'))
+    return
+  }
+
+  const db = router.db
+  const goods = db.get('goods').find({ id: goodsId }).value()
+
+  if (!goods) {
+    res.status(200).jsonp(fail('商品不存在'))
+    return
+  }
+
+  const existing = db.get('cart').find({ id: goodsId }).value()
+  if (existing) {
+    db.get('cart').find({ id: goodsId }).assign({ count: existing.count + addCount }).write()
+  } else {
+    db.get('cart')
+      .push({
+        id: goods.id,
+        name: goods.name,
+        price: goods.price,
+        count: addCount,
+        image: goods.image,
+      })
+      .write()
+  }
+
+  res.status(200).jsonp(ok(db.get('cart').value(), '加入购物车成功'))
+}
+
+function handleUpdateCartCount(req, res, cartId, nextCount) {
+  if (!Number.isFinite(cartId) || !Number.isFinite(nextCount) || nextCount < 1) {
+    res.status(200).jsonp(fail('商品数量不能小于 1'))
+    return
+  }
+
+  const db = router.db
+  const existing = db.get('cart').find({ id: cartId }).value()
+  if (!existing) {
+    res.status(200).jsonp(fail('购物车商品不存在'))
+    return
+  }
+
+  db.get('cart').find({ id: cartId }).assign({ count: nextCount }).write()
+  res.status(200).jsonp(ok(db.get('cart').value(), '数量更新成功'))
+}
+
+function handleDeleteCartItem(req, res, cartId) {
+  if (!Number.isFinite(cartId)) {
+    res.status(200).jsonp(fail('参数错误'))
+    return
+  }
+
+  const db = router.db
+  db.get('cart').remove({ id: cartId }).write()
+  res.status(200).jsonp(ok(db.get('cart').value(), '删除成功'))
+}
+
+server.post('/cart', handleAddToCart)
+server.post('/cart_add', handleAddToCart)
+
+server.post('/cart/:id', (req, res) => {
+  const cartId = Number(req.params.id)
+  const { count } = req.body || {}
+  const nextCount = Number(count)
+  handleUpdateCartCount(req, res, cartId, nextCount)
+})
+
+server.patch('/cart/:id', (req, res) => {
+  const cartId = Number(req.params.id)
+  const { count } = req.body || {}
+  const nextCount = Number(count)
+  handleUpdateCartCount(req, res, cartId, nextCount)
+})
+
+server.delete('/cart/:id', (req, res) => {
+  const cartId = Number(req.params.id)
+  handleDeleteCartItem(req, res, cartId)
+})
+
+server.delete('/cart', (req, res) => {
+  const db = router.db
+  db.set('cart', []).write()
+  res.status(200).jsonp(ok(null, '购物车已清空'))
+})
+
+server.post('/cart_update_count', (req, res) => {
+  const { id, count } = req.body || {}
+  handleUpdateCartCount(req, res, Number(id), Number(count))
+})
+
+server.post('/cart_delete', (req, res) => {
+  const { id } = req.body || {}
+  handleDeleteCartItem(req, res, Number(id))
+})
+
+server.post('/cart_batch_delete', (req, res) => {
+  const { ids } = req.body || {}
+  const db = router.db
+  if (!Array.isArray(ids) || ids.length === 0) {
+    res.status(200).jsonp(fail('参数错误'))
+    return
+  }
+  ids.map(Number).filter(Number.isFinite).forEach((id) => {
+    db.get('cart').remove({ id }).write()
+  })
+  res.status(200).jsonp(ok(db.get('cart').value(), '批量删除成功'))
+})
+
+server.post('/cart_clear', (req, res) => {
+  const db = router.db
+  db.set('cart', []).write()
+  res.status(200).jsonp(ok(null, '购物车已清空'))
+})
+
+server.post('/cart_update_checked', (req, res) => {
+  res.status(200).jsonp(ok(router.db.get('cart').value(), '已忽略 checked'))
+})
+
+server.post('/cart_update_all_checked', (req, res) => {
+  res.status(200).jsonp(ok(router.db.get('cart').value(), '已忽略 checked'))
+})
+
+server.get('/addresses/default', (req, res) => {
+  const db = router.db
+  const address = db.get('addresses').find({ isDefault: true }).value() || null
+  res.status(200).jsonp(ok(address))
+})
+
+server.use(router)
+
+server.use((req, res) => {
+  res.status(200).jsonp(fail('接口不存在'))
+})
+
+function start(port = PORT) {
+  const instance = server.listen(port, () => {
+    const actualPort = instance.address()?.port ?? port
+    console.log(`Mock server running at http://127.0.0.1:${actualPort}`)
+  })
+  return instance
+}
+
+module.exports = { server, start }
+
+if (require.main === module) {
+  start(PORT)
+}
