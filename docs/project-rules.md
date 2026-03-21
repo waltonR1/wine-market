@@ -17,7 +17,7 @@ pages -> hooks -> api -> request/mock
 * `pages` 负责页面展示和页面交互
 * `hooks` 负责复用业务逻辑
 * `api` 负责接口调用
-* `mock` 负责本地假数据
+* `mock` 负责本地假数据/本地模拟后端
 * `store` 负责跨页面共享状态
 
 ---
@@ -189,6 +189,11 @@ export * from './modules'
 
 **作用：本地模拟数据或模拟接口。**
 
+本项目的 mock 后端在根目录：
+
+* `db.json`：资源数据
+* `server.js`：包装 json-server，实现统一响应与必要的业务路由
+
 适合放：
 
 * 商品 mock 数据
@@ -257,6 +262,53 @@ export * from './modules'
 export interface GoodsItem {}
 export interface UserInfo {}
 export interface OrderItem {}
+```
+
+---
+
+## 三、接口与实现约定
+
+### 1. 统一响应结构
+
+Mock 服务与前端请求层统一使用：
+
+```ts
+{ code: number; message: string; data: any }
+```
+
+### 2. 资源化与方法约束
+
+* 资源优先使用 REST 风格路径（例如 `/goods/:id`、`/addresses`、`/cart/:id`）
+* **微信小程序不支持 PATCH**：更新类操作统一使用 `POST`（例如更新购物车数量、编辑地址）
+
+### 3. 商品详情数据结构
+
+`GET /goods/:id` 的详情必须包含：
+
+* `stock: number`（库存）
+* `detail: { type: 'title' | 'text' | 'image'; value: string }[]`（图文详情块）
+* `params: { label: string; value: string }[]`（商品参数）
+* `comments: { id; userName; avatar; score; content; time; images? }[]`（买家评论）
+
+前端详情页渲染逻辑依赖以上字段完整存在。
+
+### 4. 立即购买与确认订单
+
+详情页点击“立即购买”：
+
+* 写入 `store/order` 的确认订单临时商品列表
+* 跳转到 `pages/order/confirm`
+* 确认页优先使用 `store/order` 中的临时数据，避免额外请求覆盖
+
+---
+
+## 四、常用脚本
+
+```bash
+npm run mock
+npm run dev:mp-weixin
+npm run dev:h5
+npm run build:h5
 ```
 
 ---

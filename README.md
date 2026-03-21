@@ -6,7 +6,7 @@
 
 ## 项目特色
 
-- **前后端全解耦**：基于 `json-server 1.x` 搭建 Mock 后端，支持真实接口平滑切换。
+- **前后端全解耦**：基于 `server.js + db.json + json-server` 搭建 Mock 后端，支持真实接口平滑切换。
 - **大数据量适配**：
   - **无限滚动**：支持分页加载与触底自动预加载（阈值 200px）。
   - **感官性能**：内置列表/宫格双模式骨架屏，提升加载体验。
@@ -15,6 +15,8 @@
   - **环境管理**：一键切换 MOCK/真实 环境，支持全局业务配置。
   - **网络封装**：自动化 Loading 管理、统一错误拦截、请求日志追踪。
   - **代码规范**：严格的 TypeScript 类型约束与分层架构。
+- **商品详情完善**：库存展示 + 「图文详情 / 商品参数 / 买家评论」三 Tab。
+- **下单链路**：详情页“立即购买”写入确认订单临时数据并跳转确认页。
 
 ---
 
@@ -26,7 +28,7 @@
 - **状态管理**：[Pinia](https://pinia.vuejs.org/) - 现代、轻量级的状态管理库。
 - **样式**：[Tailwind CSS](https://tailwindcss.com/) (针对 uni-app 优化的原子化 CSS)。
 - **语言**：[TypeScript](https://www.typescriptlang.org/) - 强类型约束，提升代码健壮性。
-- **后端模拟**：[json-server 1.x](https://github.com/typicode/json-server) - 快速搭建 RESTful API Mock。
+- **后端模拟**：[json-server](https://github.com/typicode/json-server) - 本项目用 `server.js` 包装 json-server 实现统一响应与业务路由。
 
 ---
 
@@ -38,13 +40,14 @@ npm install
 ```
 
 ### 2. 启动 Mock 服务 (后端)
-项目根目录已配置 `db.json`，需先启动 json-server：
+项目根目录使用 `server.js + db.json` 提供 Mock API（统一响应 `{ code, message, data }`）：
 ```bash
-# 如果全局安装了 json-server
-json-server db.json --port 3000
-
-# 或者使用项目内置脚本 (如有配置)
 npm run mock
+```
+默认端口 `3000`，可通过环境变量覆盖：
+```bash
+# Windows PowerShell
+$env:PORT=3001; npm run mock
 ```
 
 ### 3. 启动前端项目
@@ -68,6 +71,12 @@ npm run dev:h5
 export const IS_MOCK = true 
 ```
 
+## Mock 约定
+
+- **微信小程序不支持 PATCH**：需要更新资源时统一用 `POST`（例如购物车更新数量）。
+- **商品详情数据结构**：`GET /goods/:id` 返回包含 `stock / params / detail / comments`，用于详情页的三 Tab 展示。
+- **立即购买**：详情页会写入 `store/order` 的确认订单临时数据后跳转 `pages/order/confirm`。
+
 此外，`APP_CONFIG` 提供了以下可配置项：
 - `ENABLE_LOG`: 是否在控制台打印请求/响应日志。
 - `SERVICE_PHONE`: 全局客服电话。
@@ -83,6 +92,7 @@ export const IS_MOCK = true
 ├── README.md
 ├── db.json         # Mock 数据库文件 (json-server 使用)
 ├── docs
+│   ├── mock-api.md
 │   └── project-rules.md
 ├── index.html
 ├── package-lock.json
