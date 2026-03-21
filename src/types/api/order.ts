@@ -1,9 +1,5 @@
 import type { ApiResponse } from '@/types/common'
-import type { AddressInfo, OrderConfirmItem, OrderItem } from '@/types/model/order'
-
-export type GetDefaultAddressResponse = ApiResponse<AddressInfo>
-
-export type GetAddressListResponse = ApiResponse<AddressInfo[]>
+import type { OrderConfirmItem, OrderItem } from '@/types/model/order'
 
 export type GetConfirmOrderListResponse = ApiResponse<OrderConfirmItem[]>
 

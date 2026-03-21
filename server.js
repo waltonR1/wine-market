@@ -34,16 +34,6 @@ server.get('/goods_:id', (req, res) => {
   router(req, res)
 })
 
-server.get('/order_default_address', (req, res) => {
-  req.url = '/addresses/default'
-  router(req, res)
-})
-
-server.get('/order_address_list', (req, res) => {
-  req.url = '/addresses'
-  router(req, res)
-})
-
 server.get('/order_list', (req, res) => {
   req.url = '/orders'
   router(req, res)
@@ -217,6 +207,153 @@ server.get('/addresses/default', (req, res) => {
   const db = router.db
   const address = db.get('addresses').find({ isDefault: true }).value() || null
   res.status(200).jsonp(ok(address))
+})
+
+function normalizeAddressPayload(payload) {
+  const data = payload || {}
+  return {
+    name: typeof data.name === 'string' ? data.name.trim() : '',
+    phone: typeof data.phone === 'string' ? data.phone.trim() : '',
+    province: typeof data.province === 'string' ? data.province.trim() : '',
+    city: typeof data.city === 'string' ? data.city.trim() : '',
+    district: typeof data.district === 'string' ? data.district.trim() : '',
+    detail: typeof data.detail === 'string' ? data.detail.trim() : '',
+    isDefault: Boolean(data.isDefault),
+  }
+}
+
+function validateAddressPayload(address) {
+  if (!address.name) return '请填写收货人'
+  if (!address.phone) return '请填写手机号'
+  if (!address.province) return '请填写省份'
+  if (!address.city) return '请填写城市'
+  if (!address.district) return '请填写区县'
+  if (!address.detail) return '请填写详细地址'
+  return ''
+}
+
+function clearAllDefault(db) {
+  const list = db.get('addresses').value() || []
+  db.set(
+    'addresses',
+    list.map(item => ({
+      ...item,
+      isDefault: false,
+    }))
+  ).write()
+}
+
+function ensureSingleDefault(db, preferredId) {
+  const list = db.get('addresses').value() || []
+  if (list.length === 0) return
+
+  const targetId =
+    preferredId ??
+    (list.find(item => item.isDefault)?.id ?? list[0].id)
+
+  db.set(
+    'addresses',
+    list.map(item => ({
+      ...item,
+      isDefault: item.id === targetId,
+    }))
+  ).write()
+}
+
+server.post('/addresses', (req, res) => {
+  const db = router.db
+  const payload = normalizeAddressPayload(req.body)
+  const error = validateAddressPayload(payload)
+  if (error) {
+    res.status(200).jsonp(fail(error))
+    return
+  }
+
+  const list = db.get('addresses').value() || []
+  const maxId = list.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0)
+  const nextId = maxId + 1
+
+  const shouldBeDefault = payload.isDefault || list.length === 0
+  payload.isDefault = shouldBeDefault
+
+  db.get('addresses')
+    .push({ id: nextId, ...payload, isDefault: shouldBeDefault })
+    .write()
+
+  if (shouldBeDefault) {
+    ensureSingleDefault(db, nextId)
+  } else {
+    ensureSingleDefault(db)
+  }
+
+  res.status(200).jsonp(ok(db.get('addresses').value(), '新增地址成功'))
+})
+
+server.post('/addresses/:id', (req, res) => {
+  const addressId = Number(req.params.id)
+  if (!Number.isFinite(addressId)) {
+    res.status(200).jsonp(fail('参数错误'))
+    return
+  }
+
+  const db = router.db
+  const existing = db.get('addresses').find({ id: addressId }).value()
+  if (!existing) {
+    res.status(200).jsonp(fail('地址不存在'))
+    return
+  }
+
+  const payload = normalizeAddressPayload({ ...existing, ...req.body })
+  const error = validateAddressPayload(payload)
+  if (error) {
+    res.status(200).jsonp(fail(error))
+    return
+  }
+
+  db.get('addresses')
+    .find({ id: addressId })
+    .assign(payload)
+    .write()
+
+  if (payload.isDefault) {
+    ensureSingleDefault(db, addressId)
+  } else {
+    ensureSingleDefault(db)
+  }
+
+  res.status(200).jsonp(ok(db.get('addresses').value(), '编辑地址成功'))
+})
+
+server.post('/addresses/:id/default', (req, res) => {
+  const addressId = Number(req.params.id)
+  if (!Number.isFinite(addressId)) {
+    res.status(200).jsonp(fail('参数错误'))
+    return
+  }
+
+  const db = router.db
+  const existing = db.get('addresses').find({ id: addressId }).value()
+  if (!existing) {
+    res.status(200).jsonp(fail('地址不存在'))
+    return
+  }
+
+  ensureSingleDefault(db, addressId)
+  res.status(200).jsonp(ok(db.get('addresses').value(), '默认地址已更新'))
+})
+
+server.delete('/addresses/:id', (req, res) => {
+  const addressId = Number(req.params.id)
+  if (!Number.isFinite(addressId)) {
+    res.status(200).jsonp(fail('参数错误'))
+    return
+  }
+
+  const db = router.db
+  db.get('addresses').remove({ id: addressId }).write()
+  ensureSingleDefault(db)
+
+  res.status(200).jsonp(ok(db.get('addresses').value(), '删除地址成功'))
 })
 
 server.use(router)

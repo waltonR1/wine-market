@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { AddressInfo, OrderConfirmItem } from '@/types/model/order'
+import type { AddressInfo } from '@/types/model/address'
+import type { OrderConfirmItem } from '@/types/model/order'
 
 export const useOrderStore = defineStore('order', () => {
   // 当前选择的收货地址

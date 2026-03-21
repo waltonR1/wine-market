@@ -1,16 +1,15 @@
 import { ref } from 'vue'
 import {
-  getAddressList as getAddressListApi,
-  getConfirmOrderList as getConfirmOrderListApi,
   getDefaultAddress as getDefaultAddressApi,
+  getConfirmOrderList as getConfirmOrderListApi,
   getOrderList as getOrderListApi,
-} from '@/api/modules/order'
-import type { AddressInfo, OrderConfirmItem, OrderItem } from '@/types/model/order'
+} from '@/api'
+import type { AddressInfo } from '@/types/model/address'
+import type { OrderConfirmItem, OrderItem } from '@/types/model/order'
 
 export function useOrder() {
   const loading = ref(false)
   const defaultAddress = ref<AddressInfo | null>(null)
-  const addressList = ref<AddressInfo[]>([])
   const confirmOrderList = ref<OrderConfirmItem[]>([])
   const orderList = ref<OrderItem[]>([])
 
@@ -29,26 +28,6 @@ export function useOrder() {
       uni.showToast({ title: '地址加载失败', icon: 'none' })
       defaultAddress.value = null
       return null
-    } finally {
-      loading.value = false
-    }
-  }
-
-  async function fetchAddressList() {
-    loading.value = true
-    try {
-      const res = await getAddressListApi()
-      if (res.code === 0) {
-        addressList.value = res.data
-        return res.data
-      }
-      uni.showToast({ title: res.message || '获取地址列表失败', icon: 'none' })
-      addressList.value = []
-      return []
-    } catch (err) {
-      uni.showToast({ title: '获取地址列表失败', icon: 'none' })
-      addressList.value = []
-      return []
     } finally {
       loading.value = false
     }
@@ -98,11 +77,9 @@ export function useOrder() {
   return {
     loading,
     defaultAddress,
-    addressList,
     confirmOrderList,
     orderList,
     fetchDefaultAddress,
-    fetchAddressList,
     fetchConfirmOrderList,
     fetchOrderList,
   }

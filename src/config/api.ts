@@ -31,10 +31,20 @@ export const API_PATHS = {
   GOODS_DETAIL: p((id: number | string) => `/goods/${id}`, (id: number | string) => `/goods/${id}`),
 
   // 订单相关
-  ORDER_DEFAULT_ADDRESS: p('/addresses/default', '/addresses/default'),
-  ORDER_ADDRESS_LIST: p('/addresses', '/addresses'),
   ORDER_CONFIRM_LIST: p('/order_confirm_list', '/orders/confirm'),
   ORDER_LIST: p('/orders', '/orders'),
+
+  // 地址管理
+  ADDRESS_LIST: p('/addresses', '/addresses'),
+  ADDRESS_DEFAULT: p('/addresses/default', '/addresses/default'),
+  ADDRESS_ITEM: p(
+    (id: number | string) => `/addresses/${id}`,
+    (id: number | string) => `/addresses/${id}`
+  ),
+  ADDRESS_SET_DEFAULT: p(
+    (id: number | string) => `/addresses/${id}/default`,
+    (id: number | string) => `/addresses/${id}/default`
+  ),
 
   // 用户相关
   USER_LOGIN: p('/user_login', '/auth/login'),
