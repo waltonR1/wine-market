@@ -310,7 +310,72 @@
       "region": "波尔多",
       "type": "红葡萄酒",
       "alcohol": "13.5%",
-      "description": "拉菲古堡（Chateau Lafite Rothschild）是享誉世界的波尔多五大一级名庄之一。2015年份表现卓越，单宁丝滑，带有精致的黑香醋、烟草及矿物质香气，陈年潜力巨大。"
+      "description": "拉菲古堡（Chateau Lafite Rothschild）是享誉世界的波尔多五大一级名庄之一。2015年份表现卓越，单宁丝滑，带有精致的黑香醋、烟草及矿物质香气，陈年潜力巨大。",
+      "stock": 37,
+      "params": [
+        {
+          "label": "产区",
+          "value": "波尔多"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "13.5%"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        },
+        {
+          "label": "年份",
+          "value": "2015"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "酒体结构紧致，入口细腻，黑醋栗与雪松香气交织，余味悠长。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/4A0D12/FFFFFF.png?text=Lafite+Detail+1"
+        },
+        {
+          "type": "text",
+          "value": "建议醒酒 30-60 分钟，搭配牛排、烤羊排等红肉更佳。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/6B0F1A/FFFFFF.png?text=Lafite+Detail+2"
+        }
+      ],
+      "comments": [
+        {
+          "id": 101,
+          "userName": "酒友A",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "香气很干净，层次丰富，确实是名庄的风格。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 102,
+          "userName": "酒友B",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "送礼很有面子，包装高级，物流也快。",
+          "time": "2026-03-19",
+          "images": []
+        }
+      ]
     },
     {
       "id": 2,
@@ -326,7 +391,60 @@
       "region": "波尔多",
       "type": "红葡萄酒",
       "alcohol": "13.5%",
-      "description": "玛歌红亭（Pavillon Rouge du Chateau Margaux）是顶级名庄玛歌庄园的副牌酒。它完美继承了玛歌庄园的高雅与细腻，口感柔美，充满红果与花香。"
+      "description": "玛歌红亭（Pavillon Rouge du Chateau Margaux）是顶级名庄玛歌庄园的副牌酒。它完美继承了玛歌庄园的高雅与细腻，口感柔美，充满红果与花香。",
+      "stock": 80,
+      "params": [
+        {
+          "label": "产区",
+          "value": "波尔多"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "13.5%"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "口感柔美细腻，果香突出，单宁顺滑，适合搭配牛排与烤肉。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/6B0F1A/FFFFFF.png?text=Margaux+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 201,
+          "userName": "酒友C",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "风格优雅，回味干净，值得回购。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 202,
+          "userName": "酒友D",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "搭配红肉很合适，香气很舒服。",
+          "time": "2026-03-19",
+          "images": []
+        }
+      ]
     },
     {
       "id": 3,
@@ -342,7 +460,60 @@
       "region": "罗纳河谷",
       "type": "红葡萄酒",
       "alcohol": "14.5%",
-      "description": "产自罗纳河谷教皇新堡（Chateauneuf du Pape）核心地块。混合了歌海娜、西拉等多种品种，香气浓郁，带有成熟红果、黑胡椒及地中海香料气息。"
+      "description": "产自罗纳河谷教皇新堡（Chateauneuf du Pape）核心地块。混合了歌海娜、西拉等多种品种，香气浓郁，带有成熟红果、黑胡椒及地中海香料气息。",
+      "stock": 60,
+      "params": [
+        {
+          "label": "产区",
+          "value": "罗纳河谷"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "14.5%"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "成熟红果与香料气息浓郁，结构饱满，适合搭配烤羊排与硬质奶酪。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/4A0D12/FFFFFF.png?text=Chateauneuf+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 301,
+          "userName": "酒友E",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "香气很浓郁，醒一会儿更好喝。",
+          "time": "2026-03-17",
+          "images": []
+        },
+        {
+          "id": 302,
+          "userName": "酒友F",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "黑胡椒与红果味道明显，性价比不错。",
+          "time": "2026-03-19",
+          "images": []
+        }
+      ]
     },
     {
       "id": 4,
@@ -358,7 +529,64 @@
       "region": "勃艮第",
       "type": "红葡萄酒",
       "alcohol": "13%",
-      "description": "精选勃艮第夜丘（Cote de Nuits）优质地块黑皮诺。呈现迷人的宝石红色，带有樱桃、覆盆子等新鲜果香，单宁细腻，口感优雅且充满活力。"
+      "description": "精选勃艮第夜丘（Cote de Nuits）优质地块黑皮诺。呈现迷人的宝石红色，带有樱桃、覆盆子等新鲜果香，单宁细腻，口感优雅且充满活力。",
+      "stock": 60,
+      "params": [
+        {
+          "label": "产区",
+          "value": "勃艮第"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "13%"
+        },
+        {
+          "label": "葡萄品种",
+          "value": "黑皮诺"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "樱桃与覆盆子果香清新，单宁细腻，适合搭配烤鸡与蘑菇料理。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/6B0F1A/FFFFFF.png?text=Pinot+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 401,
+          "userName": "酒友G",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "很优雅的黑皮诺，果香很舒服。",
+          "time": "2026-03-16",
+          "images": []
+        },
+        {
+          "id": 402,
+          "userName": "酒友H",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 4,
+          "content": "酸度明亮，配餐友好，整体不错。",
+          "time": "2026-03-19",
+          "images": []
+        }
+      ]
     },
     {
       "id": 5,
@@ -374,7 +602,55 @@
       "region": "皮埃蒙特",
       "type": "红葡萄酒",
       "alcohol": "14%",
-      "description": "巴罗洛（Barolo）被誉为“酒中之王”。采用100%内比奥罗葡萄酿造，具有标志性的玫瑰、干香草及松露香气，酒体雄厚，单宁强劲，具有极佳的陈年能力。"
+      "description": "巴罗洛（Barolo）被誉为“酒中之王”。采用100%内比奥罗葡萄酿造，具有标志性的玫瑰、干香草及松露香气，酒体雄厚，单宁强劲，具有极佳的陈年能力。",
+      "stock": 80,
+      "params": [
+        {
+          "label": "产区",
+          "value": "皮埃蒙特"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "14%"
+        },
+        {
+          "label": "葡萄品种",
+          "value": "内比奥罗"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "玫瑰与松露香气典型，单宁强劲，建议搭配炖牛肉与陈年奶酪。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/4A0D12/FFFFFF.png?text=Barolo+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 501,
+          "userName": "酒友I",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "结构感很强，醒酒后更圆润。",
+          "time": "2026-03-18",
+          "images": []
+        }
+      ]
     },
     {
       "id": 6,
@@ -390,7 +666,56 @@
       "region": "多产区",
       "type": "礼盒",
       "alcohol": "13.5%",
-      "description": "精选两款热销干红葡萄酒，配以高档礼盒包装，是您节日送礼、走亲访友的超值之选。"
+      "description": "精选两款热销干红葡萄酒，配以高档礼盒包装，是您节日送礼、走亲访友的超值之选。",
+      "stock": 40,
+      "params": [
+        {
+          "label": "类型",
+          "value": "礼盒"
+        },
+        {
+          "label": "酒精度",
+          "value": "13.5%"
+        },
+        {
+          "label": "规格",
+          "value": "双支装"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "双支装礼盒，包装精致，适合节日送礼与商务场景。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B7B6B/FFFFFF.png?text=Gift+Box+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 601,
+          "userName": "酒友J",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "礼盒包装很高级，送人很合适。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 602,
+          "userName": "酒友K",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "到货很快，包装没有破损。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 7,
@@ -406,7 +731,47 @@
       "region": "法国",
       "type": "礼盒",
       "alcohol": "14%",
-      "description": "专为商务场景设计，采用进口皮质礼盒，内含两支精品波尔多干红及整套专业酒具，尽显尊贵身份。"
+      "description": "专为商务场景设计，采用进口皮质礼盒，内含两支精品波尔多干红及整套专业酒具，尽显尊贵身份。",
+      "stock": 80,
+      "params": [
+        {
+          "label": "类型",
+          "value": "礼盒"
+        },
+        {
+          "label": "产地",
+          "value": "法国"
+        },
+        {
+          "label": "规格",
+          "value": "套装"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "皮质礼盒搭配专业酒具，商务送礼更显体面与格调。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B7B6B/FFFFFF.png?text=Leather+Box+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 701,
+          "userName": "酒友L",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "质感很好，送客户很合适。",
+          "time": "2026-03-18",
+          "images": []
+        }
+      ]
     },
     {
       "id": 8,
@@ -422,7 +787,56 @@
       "region": "智利",
       "type": "礼盒",
       "alcohol": "13.5%",
-      "description": "天然原木礼盒，内含智利精品干红一支及海马刀、倒酒器等实用配件，简约而不失格调。"
+      "description": "天然原木礼盒，内含智利精品干红一支及海马刀、倒酒器等实用配件，简约而不失格调。",
+      "stock": 40,
+      "params": [
+        {
+          "label": "类型",
+          "value": "礼盒"
+        },
+        {
+          "label": "产地",
+          "value": "智利"
+        },
+        {
+          "label": "配件",
+          "value": "海马刀/倒酒器等"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "原木礼盒搭配实用配件，节日送礼氛围感更强。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B7B6B/FFFFFF.png?text=Wood+Box+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 801,
+          "userName": "酒友M",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "木盒很好看，配件也实用。",
+          "time": "2026-03-19",
+          "images": []
+        },
+        {
+          "id": 802,
+          "userName": "酒友N",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 4,
+          "content": "送礼很有仪式感，整体满意。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 9,
@@ -438,7 +852,55 @@
       "region": "勃艮第",
       "type": "干白",
       "alcohol": "13.5%",
-      "description": "产自勃艮第蒙哈榭（Montrachet）特级园，世界上最顶级的霞多丽产区。酒体丰腴，香气极其复杂，具有无与伦比的优雅感。"
+      "description": "产自勃艮第蒙哈榭（Montrachet）特级园，世界上最顶级的霞多丽产区。酒体丰腴，香气极其复杂，具有无与伦比的优雅感。",
+      "stock": 30,
+      "params": [
+        {
+          "label": "产区",
+          "value": "勃艮第"
+        },
+        {
+          "label": "类型",
+          "value": "干白"
+        },
+        {
+          "label": "酒精度",
+          "value": "13.5%"
+        },
+        {
+          "label": "葡萄品种",
+          "value": "霞多丽"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "酒体丰腴，风味复杂，带有柑橘、坚果与矿物感，余味悠长。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/F8E7C8/4A0D12.png?text=Montrachet+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 901,
+          "userName": "酒友O",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "香气很复杂，口感很有层次。",
+          "time": "2026-03-18",
+          "images": []
+        }
+      ]
     },
     {
       "id": 10,
@@ -454,7 +916,64 @@
       "region": "马尔堡",
       "type": "干白",
       "alcohol": "13%",
-      "description": "新西兰长相思的标杆之作。充满热带水果、柑橘及百香果的清爽香气，酸度活泼，令人一试难忘。"
+      "description": "新西兰长相思的标杆之作。充满热带水果、柑橘及百香果的清爽香气，酸度活泼，令人一试难忘。",
+      "stock": 20,
+      "params": [
+        {
+          "label": "产区",
+          "value": "马尔堡"
+        },
+        {
+          "label": "类型",
+          "value": "干白"
+        },
+        {
+          "label": "酒精度",
+          "value": "13%"
+        },
+        {
+          "label": "葡萄品种",
+          "value": "长相思"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "柑橘与百香果香气清爽，酸度明亮，适合搭配海鲜与沙拉。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/F8E7C8/4A0D12.png?text=Sauvignon+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1001,
+          "userName": "酒友P",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "很清爽的口感，夏天喝很合适。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 1002,
+          "userName": "酒友Q",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "果香明显，配海鲜特别好。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 11,
@@ -470,7 +989,55 @@
       "region": "摩泽尔",
       "type": "干白",
       "alcohol": "8.5%",
-      "description": "德国摩泽尔产区的顶级名庄。这款雷司令展现了极致的纯净感和矿物质味，陈年潜力巨大。"
+      "description": "德国摩泽尔产区的顶级名庄。这款雷司令展现了极致的纯净感和矿物质味，陈年潜力巨大。",
+      "stock": 30,
+      "params": [
+        {
+          "label": "产区",
+          "value": "摩泽尔"
+        },
+        {
+          "label": "类型",
+          "value": "干白"
+        },
+        {
+          "label": "酒精度",
+          "value": "8.5%"
+        },
+        {
+          "label": "葡萄品种",
+          "value": "雷司令"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "矿物感突出，风味纯净，酸度细腻，具备良好的陈年潜力。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/F8E7C8/4A0D12.png?text=Riesling+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1101,
+          "userName": "酒友R",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "非常干净的雷司令，矿物感很漂亮。",
+          "time": "2026-03-19",
+          "images": []
+        }
+      ]
     },
     {
       "id": 12,
@@ -486,7 +1053,51 @@
       "region": "苏玳",
       "type": "甜白",
       "alcohol": "14%",
-      "description": "苏玳产区唯一的超一级名庄。酒液呈深金色，具有复杂的蜂蜜、杏干和花香，被誉为“液体黄金”。"
+      "description": "苏玳产区唯一的超一级名庄。酒液呈深金色，具有复杂的蜂蜜、杏干和花香，被誉为“液体黄金”。",
+      "stock": 8,
+      "params": [
+        {
+          "label": "产区",
+          "value": "苏玳"
+        },
+        {
+          "label": "类型",
+          "value": "甜白"
+        },
+        {
+          "label": "酒精度",
+          "value": "14%"
+        },
+        {
+          "label": "容量",
+          "value": "375ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "蜂蜜与杏干香气浓郁，甜美而不腻，适合搭配鹅肝与甜点。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/E7D9C7/4A0D12.png?text=Yquem+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1201,
+          "userName": "酒友S",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "甜而不腻，香气非常迷人。",
+          "time": "2026-03-18",
+          "images": []
+        }
+      ]
     },
     {
       "id": 13,
@@ -502,7 +1113,60 @@
       "region": "苏玳",
       "type": "甜白",
       "alcohol": "13.5%",
-      "description": "精选苏玳产区晚收葡萄酿制，香气甜美，口感圆润，是搭配甜点、下午茶的绝佳选择。"
+      "description": "精选苏玳产区晚收葡萄酿制，香气甜美，口感圆润，是搭配甜点、下午茶的绝佳选择。",
+      "stock": 40,
+      "params": [
+        {
+          "label": "产区",
+          "value": "苏玳"
+        },
+        {
+          "label": "类型",
+          "value": "甜白"
+        },
+        {
+          "label": "酒精度",
+          "value": "13.5%"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "甜美圆润，花果香突出，适合搭配甜点与下午茶。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/E7D9C7/4A0D12.png?text=Sweet+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1301,
+          "userName": "酒友T",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "甜度刚刚好，香气很讨喜。",
+          "time": "2026-03-19",
+          "images": []
+        },
+        {
+          "id": 1302,
+          "userName": "酒友U",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 4,
+          "content": "配小蛋糕很搭，性价比不错。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 14,
@@ -518,7 +1182,60 @@
       "region": "尼亚加拉",
       "type": "冰酒",
       "alcohol": "10.5%",
-      "description": "产自加拿大尼亚加拉半岛，在零下8度的极寒中手工采摘冰冻葡萄酿制。口感极其浓郁甜美。"
+      "description": "产自加拿大尼亚加拉半岛，在零下8度的极寒中手工采摘冰冻葡萄酿制。口感极其浓郁甜美。",
+      "stock": 80,
+      "params": [
+        {
+          "label": "产区",
+          "value": "尼亚加拉"
+        },
+        {
+          "label": "类型",
+          "value": "冰酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "10.5%"
+        },
+        {
+          "label": "容量",
+          "value": "375ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "极寒采摘锁住甜美精华，口感浓郁，果香与蜂蜜气息明显。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/E7D9C7/4A0D12.png?text=Icewine+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1401,
+          "userName": "酒友V",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "甜美浓郁，冰酒风格很典型。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 1402,
+          "userName": "酒友W",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "配甜点太合适了，香气很足。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 15,
@@ -534,7 +1251,64 @@
       "region": "斯佩塞",
       "type": "单一麦芽威士忌",
       "alcohol": "40%",
-      "description": "麦卡伦（Macallan）雪莉桶系列的代表作。在精选的西班牙雪莉橡木桶中陈酿至少12年，呈现深邃的金色，带有干果、生姜及甜香草的香气，余韵持久。"
+      "description": "麦卡伦（Macallan）雪莉桶系列的代表作。在精选的西班牙雪莉橡木桶中陈酿至少12年，呈现深邃的金色，带有干果、生姜及甜香草的香气，余韵持久。",
+      "stock": 20,
+      "params": [
+        {
+          "label": "产区",
+          "value": "斯佩塞"
+        },
+        {
+          "label": "类型",
+          "value": "单一麦芽威士忌"
+        },
+        {
+          "label": "酒精度",
+          "value": "40%"
+        },
+        {
+          "label": "陈酿",
+          "value": "12 年"
+        },
+        {
+          "label": "容量",
+          "value": "700ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "雪莉桶带来干果与香草风味，入口顺滑，余味持久。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B4513/FFFFFF.png?text=Macallan+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1501,
+          "userName": "酒友X",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "雪莉桶风味很明显，喝起来很舒服。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 1502,
+          "userName": "酒友Y",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "香气层次不错，余味很长。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 16,
@@ -550,7 +1324,64 @@
       "region": "干邑区",
       "type": "白兰地",
       "alcohol": "40%",
-      "description": "经典的人头马VSOP。采用大小香槟区的葡萄酿制，具有优雅的花香和香草香气，口感平衡。"
+      "description": "经典的人头马VSOP。采用大小香槟区的葡萄酿制，具有优雅的花香和香草香气，口感平衡。",
+      "stock": 5,
+      "params": [
+        {
+          "label": "产区",
+          "value": "干邑区"
+        },
+        {
+          "label": "类型",
+          "value": "白兰地"
+        },
+        {
+          "label": "酒精度",
+          "value": "40%"
+        },
+        {
+          "label": "等级",
+          "value": "VSOP"
+        },
+        {
+          "label": "容量",
+          "value": "700ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "花香与香草风味优雅，口感平衡顺滑，适合纯饮或加冰。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B4513/FFFFFF.png?text=VSOP+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1601,
+          "userName": "酒友Z",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "口感很顺，花香明显，适合聚会。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 1602,
+          "userName": "酒友AA",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "加冰也很好喝，回味干净。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 17,
@@ -566,7 +1397,64 @@
       "region": "干邑区",
       "type": "白兰地",
       "alcohol": "40%",
-      "description": "轩尼诗XO是干邑等级的开创者。由百余种陈年生命之水调配而成，展现了极佳的复杂度和深度。"
+      "description": "轩尼诗XO是干邑等级的开创者。由百余种陈年生命之水调配而成，展现了极佳的复杂度和深度。",
+      "stock": 40,
+      "params": [
+        {
+          "label": "产区",
+          "value": "干邑区"
+        },
+        {
+          "label": "类型",
+          "value": "白兰地"
+        },
+        {
+          "label": "酒精度",
+          "value": "40%"
+        },
+        {
+          "label": "等级",
+          "value": "XO"
+        },
+        {
+          "label": "容量",
+          "value": "700ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "层次复杂，香气深邃，口感醇厚，适合收藏与馈赠。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B4513/FFFFFF.png?text=XO+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1701,
+          "userName": "酒友AB",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "香气很有深度，口感很醇厚。",
+          "time": "2026-03-19",
+          "images": []
+        },
+        {
+          "id": 1702,
+          "userName": "酒友AC",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "很适合送礼，档次感很足。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 18,
@@ -582,7 +1470,51 @@
       "region": "德国",
       "type": "无醇",
       "alcohol": "0.5%",
-      "description": "采用特殊脱醇工艺，保留了红葡萄酒的香气和单宁，但不含酒精，适合开车或不胜酒力的人士。"
+      "description": "采用特殊脱醇工艺，保留了红葡萄酒的香气和单宁，但不含酒精，适合开车或不胜酒力的人士。",
+      "stock": 50,
+      "params": [
+        {
+          "label": "产地",
+          "value": "德国"
+        },
+        {
+          "label": "类型",
+          "value": "无醇"
+        },
+        {
+          "label": "酒精度",
+          "value": "0.5%"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "脱醇工艺保留香气与口感，轻松畅饮更无负担。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/F7F3EE/4A0D12.png?text=AF+Red+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1801,
+          "userName": "酒友AD",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 4,
+          "content": "香气还不错，开车也能喝很方便。",
+          "time": "2026-03-19",
+          "images": []
+        }
+      ]
     },
     {
       "id": 19,
@@ -598,7 +1530,60 @@
       "region": "法国",
       "type": "无醇",
       "alcohol": "0%",
-      "description": "天然葡萄原汁酿造，气泡丰富，口感清爽甜美，是聚会时全家老少皆宜的健康饮品。"
+      "description": "天然葡萄原汁酿造，气泡丰富，口感清爽甜美，是聚会时全家老少皆宜的健康饮品。",
+      "stock": 40,
+      "params": [
+        {
+          "label": "产地",
+          "value": "法国"
+        },
+        {
+          "label": "类型",
+          "value": "无醇"
+        },
+        {
+          "label": "酒精度",
+          "value": "0%"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "气泡丰富，甜美清爽，家庭聚会氛围感拉满。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/F7F3EE/4A0D12.png?text=AF+Sparkling+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1901,
+          "userName": "酒友AE",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "气泡感很足，小朋友也能喝。",
+          "time": "2026-03-19",
+          "images": []
+        },
+        {
+          "id": 1902,
+          "userName": "酒友AF",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 4,
+          "content": "甜度适中，聚会很合适。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 20,
@@ -614,7 +1599,55 @@
       "region": "波美侯",
       "type": "红葡萄酒",
       "alcohol": "14.5%",
-      "description": "波尔多右岸皇冠上的明珠。100%美乐酿造，产量极其稀少，口感丰满如丝绒，极具传奇色彩。"
+      "description": "波尔多右岸皇冠上的明珠。100%美乐酿造，产量极其稀少，口感丰满如丝绒，极具传奇色彩。",
+      "stock": 2,
+      "params": [
+        {
+          "label": "产区",
+          "value": "波美侯"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "14.5%"
+        },
+        {
+          "label": "葡萄品种",
+          "value": "美乐"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "稀缺名庄，酒体饱满如丝绒，陈年潜力巨大。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/4A0D12/FFFFFF.png?text=Petrus+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 2001,
+          "userName": "酒友AG",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "传奇名庄，口感非常细腻。",
+          "time": "2026-03-19",
+          "images": []
+        }
+      ]
     },
     {
       "id": 21,
@@ -630,7 +1663,45 @@
       "region": "沃恩-罗曼尼",
       "type": "红葡萄酒",
       "alcohol": "13.5%",
-      "description": "世界上最昂贵、最受追捧的葡萄酒。它是平衡与纯粹的化身，每一滴都是勃艮第风土的终极表达。"
+      "description": "世界上最昂贵、最受追捧的葡萄酒。它是平衡与纯粹的化身，每一滴都是勃艮第风土的终极表达。",
+      "stock": 1,
+      "params": [
+        {
+          "label": "产区",
+          "value": "沃恩-罗曼尼"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "13.5%"
+        },
+        {
+          "label": "等级",
+          "value": "特级园"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "极致风土表达，平衡与纯粹兼具，珍稀藏品级佳酿。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/6B0F1A/FFFFFF.png?text=DRC+Detail+1"
+        }
+      ],
+      "comments": []
     },
     {
       "id": 22,
@@ -646,7 +1717,60 @@
       "region": "波尔多",
       "type": "红葡萄酒",
       "alcohol": "13.5%",
-      "description": "精选波尔多大区级优质干红。果香浓郁，口感易饮，目前限时特惠，是日常佐餐的高性价比选择。"
+      "description": "精选波尔多大区级优质干红。果香浓郁，口感易饮，目前限时特惠，是日常佐餐的高性价比选择。",
+      "stock": 0,
+      "params": [
+        {
+          "label": "产区",
+          "value": "波尔多"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "13.5%"
+        },
+        {
+          "label": "活动",
+          "value": "第2件半价"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "日常佐餐高性价比选择，果香浓郁，口感易饮。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/FF0000/FFFFFF.png?text=Sale+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 2201,
+          "userName": "酒友AH",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "性价比很高，日常喝很合适。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 2202,
+          "userName": "酒友AI",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "价格很划算，口感也不错。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 23,
@@ -662,7 +1786,60 @@
       "region": "西班牙",
       "type": "红葡萄酒",
       "alcohol": "14%",
-      "description": "西班牙拉曼恰产区精品干红。现在购买即赠送专业海马型开瓶器一把，数量有限，送完为止。"
+      "description": "西班牙拉曼恰产区精品干红。现在购买即赠送专业海马型开瓶器一把，数量有限，送完为止。",
+      "stock": 20,
+      "params": [
+        {
+          "label": "产地",
+          "value": "西班牙"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "14%"
+        },
+        {
+          "label": "赠品",
+          "value": "海马型开瓶器"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "精选干红搭配赠品海马刀，入手更划算。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/FF0000/FFFFFF.png?text=Gift+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 2301,
+          "userName": "酒友AJ",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "赠品很实用，酒也好喝。",
+          "time": "2026-03-19",
+          "images": []
+        },
+        {
+          "id": 2302,
+          "userName": "酒友AK",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 4,
+          "content": "买赠很划算，到货也快。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 24,
@@ -678,7 +1855,64 @@
       "region": "香槟区",
       "type": "起泡酒",
       "alcohol": "12.5%",
-      "description": "唐培里侬（Dom Perignon）仅在优秀的年份酿制年份香槟。2012年份口感饱满且精准，融合了花香、柑橘及烘烤面包的香气，气泡细腻，充满力量感。"
+      "description": "唐培里侬（Dom Perignon）仅在优秀的年份酿制年份香槟。2012年份口感饱满且精准，融合了花香、柑橘及烘烤面包的香气，气泡细腻，充满力量感。",
+      "stock": 80,
+      "params": [
+        {
+          "label": "产区",
+          "value": "香槟区"
+        },
+        {
+          "label": "类型",
+          "value": "起泡酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "12.5%"
+        },
+        {
+          "label": "年份",
+          "value": "2012"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "花香与烘焙香气交织，气泡细腻，口感精准有力量。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/E7D9C7/4A0D12.png?text=DP+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 2401,
+          "userName": "酒友AL",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "气泡很细，香气很优雅。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 2402,
+          "userName": "酒友AM",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "年份香槟确实不一样，口感很棒。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 25,
@@ -694,7 +1928,64 @@
       "region": "香槟区",
       "type": "起泡酒",
       "alcohol": "12.5%",
-      "description": "库克（Krug）以其独特的调配工艺 and 橡木桶发酵闻名。这款香槟极其复杂，带有坚果和烘焙香气。"
+      "description": "库克（Krug）以其独特的调配工艺 and 橡木桶发酵闻名。这款香槟极其复杂，带有坚果和烘焙香气。",
+      "stock": 80,
+      "params": [
+        {
+          "label": "产区",
+          "value": "香槟区"
+        },
+        {
+          "label": "类型",
+          "value": "起泡酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "12.5%"
+        },
+        {
+          "label": "工艺",
+          "value": "橡木桶发酵"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "坚果与烘焙香气突出，口感复杂细腻，适合重要场合与送礼。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/E7D9C7/4A0D12.png?text=Krug+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 2501,
+          "userName": "酒友AN",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "香气很复杂，气泡细腻，仪式感满满。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 2502,
+          "userName": "酒友AO",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "烘焙香和坚果香很舒服，口感很顺。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 26,
@@ -710,7 +2001,64 @@
       "region": "加泰罗尼亚",
       "type": "起泡酒",
       "alcohol": "11.5%",
-      "description": "采用传统法酿造的西班牙卡瓦（Cava）。气泡细腻，口感清新，带有青苹果 and 花香，非常适合餐前开胃。"
+      "description": "采用传统法酿造的西班牙卡瓦（Cava）。气泡细腻，口感清新，带有青苹果 and 花香，非常适合餐前开胃。",
+      "stock": 20,
+      "params": [
+        {
+          "label": "产区",
+          "value": "加泰罗尼亚"
+        },
+        {
+          "label": "类型",
+          "value": "起泡酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "11.5%"
+        },
+        {
+          "label": "风味",
+          "value": "青苹果/花香"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "清新易饮，气泡细腻，适合作为餐前开胃或聚会畅饮。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/E7D9C7/4A0D12.png?text=Cava+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 2601,
+          "userName": "酒友AP",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "很清爽，气泡很舒服，性价比高。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 2602,
+          "userName": "酒友AQ",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 4,
+          "content": "开胃好喝，聚会很合适。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 27,
@@ -726,7 +2074,64 @@
       "region": "南澳",
       "type": "红葡萄酒",
       "alcohol": "14.5%",
-      "description": "奔富Bin 389被誉为“小葛兰许”。它在葛兰许使用过的橡木桶中陈酿，集合了赤霞珠的结构感 and 西拉的丰满感。"
+      "description": "奔富Bin 389被誉为“小葛兰许”。它在葛兰许使用过的橡木桶中陈酿，集合了赤霞珠的结构感 and 西拉的丰满感。",
+      "stock": 40,
+      "params": [
+        {
+          "label": "产区",
+          "value": "南澳"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "14.5%"
+        },
+        {
+          "label": "年份",
+          "value": "2019"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "结构感与丰满度兼具，橡木桶带来香草与烘烤香气，适合搭配烤肉。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/4A0D12/FFFFFF.png?text=Penfolds+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 2701,
+          "userName": "酒友AR",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "入口饱满，木香很舒服，配烤肉很搭。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 2702,
+          "userName": "酒友AS",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "小葛兰许名不虚传，层次感不错。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 28,
@@ -742,7 +2147,64 @@
       "region": "迈坡谷",
       "type": "红葡萄酒",
       "alcohol": "14.5%",
-      "description": "活魂（Almaviva）是罗斯柴尔德男爵集团与干露酒庄的合资项目。它融合了法国酿酒技术与智利风土，口感极其浓郁。"
+      "description": "活魂（Almaviva）是罗斯柴尔德男爵集团与干露酒庄的合资项目。它融合了法国酿酒技术与智利风土，口感极其浓郁。",
+      "stock": 60,
+      "params": [
+        {
+          "label": "产区",
+          "value": "迈坡谷"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "14.5%"
+        },
+        {
+          "label": "年份",
+          "value": "2018"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "法国技艺与智利风土融合，酒体浓郁，层次丰富，适合收藏与宴请。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/4A0D12/FFFFFF.png?text=Almaviva+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 2801,
+          "userName": "酒友AT",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "酒体很浓郁，风味很饱满。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 2802,
+          "userName": "酒友AU",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "层次感明显，适合重要场合。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 29,
@@ -758,7 +2220,55 @@
       "region": "波尔多",
       "type": "红葡萄酒",
       "alcohol": "13.5%",
-      "description": "拉图庄园（Chateau Latour）以其酒体强劲、陈年潜力巨大而著称。2011年份表现稳健，具有典型的黑醋栗 and 雪松香气。"
+      "description": "拉图庄园（Chateau Latour）以其酒体强劲、陈年潜力巨大而著称。2011年份表现稳健，具有典型的黑醋栗 and 雪松香气。",
+      "stock": 3,
+      "params": [
+        {
+          "label": "产区",
+          "value": "波尔多"
+        },
+        {
+          "label": "类型",
+          "value": "红葡萄酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "13.5%"
+        },
+        {
+          "label": "年份",
+          "value": "2011"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "黑醋栗与雪松香气典型，结构强劲，具备优秀的陈年潜力。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/4A0D12/FFFFFF.png?text=Latour+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 2901,
+          "userName": "酒友AV",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "经典波尔多风格，香气很稳。",
+          "time": "2026-03-19",
+          "images": []
+        }
+      ]
     },
     {
       "id": 30,
@@ -774,7 +2284,60 @@
       "region": "香槟区",
       "type": "起泡酒",
       "alcohol": "12%",
-      "description": "酩悦（Moet & Chandon）是世界上最著名的香槟品牌之一。口感清新活泼，是各类欢庆活动的绝佳伴侣。"
+      "description": "酩悦（Moet & Chandon）是世界上最著名的香槟品牌之一。口感清新活泼，是各类欢庆活动的绝佳伴侣。",
+      "stock": 5,
+      "params": [
+        {
+          "label": "产区",
+          "value": "香槟区"
+        },
+        {
+          "label": "类型",
+          "value": "起泡酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "12%"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "清新活泼的香槟风格，适合各类欢庆场景与聚会分享。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/E7D9C7/4A0D12.png?text=Moet+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 3001,
+          "userName": "酒友AW",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "气泡细，口感清爽，聚会必备。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 3002,
+          "userName": "酒友AX",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "很经典的香槟，回购多次。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 31,
@@ -790,7 +2353,64 @@
       "region": "山梨县",
       "type": "威士忌",
       "alcohol": "43%",
-      "description": "产自白州蒸馏所，具有独特的森林清新感。带有清爽的泥煤味 and 嫩叶、果实香气。"
+      "description": "产自白州蒸馏所，具有独特的森林清新感。带有清爽的泥煤味 and 嫩叶、果实香气。",
+      "stock": 30,
+      "params": [
+        {
+          "label": "产地",
+          "value": "山梨县"
+        },
+        {
+          "label": "类型",
+          "value": "威士忌"
+        },
+        {
+          "label": "酒精度",
+          "value": "43%"
+        },
+        {
+          "label": "陈酿",
+          "value": "12 年"
+        },
+        {
+          "label": "容量",
+          "value": "700ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "森林清新感明显，带轻泥煤与果香，适合慢饮与收藏。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B4513/FFFFFF.png?text=Hakushu+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 3101,
+          "userName": "酒友AY",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "很清爽的森林气息，喝起来很干净。",
+          "time": "2026-03-19",
+          "images": []
+        },
+        {
+          "id": 3102,
+          "userName": "酒友AZ",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 4,
+          "content": "轻泥煤很舒服，余味不错。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 32,
@@ -806,7 +2426,68 @@
       "region": "大阪府",
       "type": "威士忌",
       "alcohol": "43%",
-      "description": "山崎（Yamazaki）是日本威士忌的鼻祖。在水楢桶中陈酿，带有独特的东方禅意香气，口感醇厚丰富。"
+      "description": "山崎（Yamazaki）是日本威士忌的鼻祖。在水楢桶中陈酿，带有独特的东方禅意香气，口感醇厚丰富。",
+      "stock": 30,
+      "params": [
+        {
+          "label": "产地",
+          "value": "大阪府"
+        },
+        {
+          "label": "类型",
+          "value": "威士忌"
+        },
+        {
+          "label": "酒精度",
+          "value": "43%"
+        },
+        {
+          "label": "陈酿",
+          "value": "12 年"
+        },
+        {
+          "label": "桶型",
+          "value": "水楢桶"
+        },
+        {
+          "label": "容量",
+          "value": "700ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "东方禅意香气明显，口感醇厚丰富，适合收藏与品鉴。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B4513/FFFFFF.png?text=Yamazaki+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 3201,
+          "userName": "酒友BA",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "香气很特别，口感非常圆润。",
+          "time": "2026-03-19",
+          "images": []
+        },
+        {
+          "id": 3202,
+          "userName": "酒友BB",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "很经典的日威，值得收藏。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 33,
@@ -822,7 +2503,68 @@
       "region": "高地",
       "type": "威士忌",
       "alcohol": "40%",
-      "description": "大摩（Dalmore）15年威士忌在三种不同的雪莉桶中陈酿。具有标志性的巧克力、柑橘 and 香料风味。"
+      "description": "大摩（Dalmore）15年威士忌在三种不同的雪莉桶中陈酿。具有标志性的巧克力、柑橘 and 香料风味。",
+      "stock": 80,
+      "params": [
+        {
+          "label": "产区",
+          "value": "高地"
+        },
+        {
+          "label": "类型",
+          "value": "威士忌"
+        },
+        {
+          "label": "酒精度",
+          "value": "40%"
+        },
+        {
+          "label": "陈酿",
+          "value": "15 年"
+        },
+        {
+          "label": "桶型",
+          "value": "雪莉桶"
+        },
+        {
+          "label": "容量",
+          "value": "700ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "巧克力、柑橘与香料风味突出，雪莉桶带来更丰富的层次。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B4513/FFFFFF.png?text=Dalmore+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 3301,
+          "userName": "酒友BC",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "雪莉桶风味很棒，巧克力香很明显。",
+          "time": "2026-03-19",
+          "images": []
+        },
+        {
+          "id": 3302,
+          "userName": "酒友BD",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 4,
+          "content": "层次感很好，适合慢慢品。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 34,
@@ -838,7 +2580,64 @@
       "region": "田纳西",
       "type": "威士忌",
       "alcohol": "40%",
-      "description": "全球最畅销的美式威士忌。经过糖枫木炭过滤，具有独特的柔滑口感 and 焦糖香气。"
+      "description": "全球最畅销的美式威士忌。经过糖枫木炭过滤，具有独特的柔滑口感 and 焦糖香气。",
+      "stock": 0,
+      "params": [
+        {
+          "label": "产地",
+          "value": "田纳西"
+        },
+        {
+          "label": "类型",
+          "value": "威士忌"
+        },
+        {
+          "label": "酒精度",
+          "value": "40%"
+        },
+        {
+          "label": "工艺",
+          "value": "糖枫木炭过滤"
+        },
+        {
+          "label": "容量",
+          "value": "700ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "柔滑口感与焦糖香气明显，适合纯饮、加冰或调酒。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B4513/FFFFFF.png?text=JD+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 3401,
+          "userName": "酒友BE",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "经典好喝，调酒也很合适。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 3402,
+          "userName": "酒友BF",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "焦糖香很明显，入口顺滑。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 35,
@@ -854,7 +2653,64 @@
       "region": "苏格兰",
       "type": "威士忌",
       "alcohol": "40%",
-      "description": "经典的调配型威士忌。口感顺滑，带有蜂蜜、草本 and 水果的香气，是全球最受欢迎的调配威士忌之一。"
+      "description": "经典的调配型威士忌。口感顺滑，带有蜂蜜、草本 and 水果的香气，是全球最受欢迎的调配威士忌之一。",
+      "stock": 0,
+      "params": [
+        {
+          "label": "产地",
+          "value": "苏格兰"
+        },
+        {
+          "label": "类型",
+          "value": "威士忌"
+        },
+        {
+          "label": "酒精度",
+          "value": "40%"
+        },
+        {
+          "label": "陈酿",
+          "value": "12 年"
+        },
+        {
+          "label": "容量",
+          "value": "700ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "蜂蜜与水果香气突出，口感顺滑，适合入门与日常畅饮。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/8B4513/FFFFFF.png?text=Chivas+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 3501,
+          "userName": "酒友BG",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "很顺口，蜂蜜香明显，适合聚会。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 3502,
+          "userName": "酒友BH",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 4,
+          "content": "性价比不错，口感很平衡。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     },
     {
       "id": 36,
@@ -870,7 +2726,64 @@
       "region": "香槟区",
       "type": "起泡酒",
       "alcohol": "12%",
-      "description": "呈现迷人的粉红色泽，充满草莓、覆盆子等红色水果的香气，口感浪漫且富有层次感。"
+      "description": "呈现迷人的粉红色泽，充满草莓、覆盆子等红色水果的香气，口感浪漫且富有层次感。",
+      "stock": 20,
+      "params": [
+        {
+          "label": "产区",
+          "value": "香槟区"
+        },
+        {
+          "label": "类型",
+          "value": "起泡酒"
+        },
+        {
+          "label": "酒精度",
+          "value": "12%"
+        },
+        {
+          "label": "风味",
+          "value": "草莓/覆盆子"
+        },
+        {
+          "label": "容量",
+          "value": "750ml"
+        }
+      ],
+      "detail": [
+        {
+          "type": "title",
+          "value": "图文详情"
+        },
+        {
+          "type": "text",
+          "value": "粉红色泽迷人，红色水果香气突出，适合浪漫场景与聚会分享。"
+        },
+        {
+          "type": "image",
+          "value": "https://placehold.co/750x420/E7D9C7/4A0D12.png?text=Moet+Rose+Detail+1"
+        }
+      ],
+      "comments": [
+        {
+          "id": 3601,
+          "userName": "酒友BI",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "草莓香很明显，气泡细腻，颜值也高。",
+          "time": "2026-03-18",
+          "images": []
+        },
+        {
+          "id": 3602,
+          "userName": "酒友BJ",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "口感很浪漫，聚会喝很合适。",
+          "time": "2026-03-20",
+          "images": []
+        }
+      ]
     }
   ],
   "addresses": [
@@ -1030,7 +2943,7 @@
       "id": 1,
       "name": "拉菲罗斯柴尔德古堡干红",
       "price": 8888,
-      "count": 1,
+      "count": 2,
       "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015"
     },
     {

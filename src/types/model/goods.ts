@@ -4,8 +4,31 @@ export interface ProductItem {
     subtitle: string
     price: number
     image: string
+    sales?: number
     tag?: string
     comment?: number
+    categoryId?: number
+    subCategoryId?: number
+}
+
+export interface GoodsDetailBlock {
+    type: 'title' | 'text' | 'image'
+    value: string
+}
+
+export interface GoodsParamItem {
+    label: string
+    value: string
+}
+
+export interface GoodsComment {
+    id: number
+    userName: string
+    avatar: string
+    score: number
+    content: string
+    time: string
+    images?: string[]
 }
 
 export interface ProductDetail extends ProductItem {
@@ -13,6 +36,10 @@ export interface ProductDetail extends ProductItem {
     type: string
     alcohol: string
     description: string
+    stock: number
+    detail: GoodsDetailBlock[]
+    params: GoodsParamItem[]
+    comments: GoodsComment[]
 }
 
 export interface FirstCategoryItem {

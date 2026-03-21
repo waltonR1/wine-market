@@ -22,9 +22,11 @@ export const API_PATHS = {
   MEMBER_PROFILE: p('/member_profile', '/member/profile'),
   MEMBER_WALLET: p('/member_wallet', '/member/wallet'),
 
-  // 商品相关
+  // 首页相关
   HOME_CATEGORIES: p('/home_categories', '/home/categories'),
   HOME_PRODUCTS: p('/home_products', '/home/products'),
+
+  // 商品相关
   CATEGORIES_FIRST: p('/categories_first', '/categories/first'),
   CATEGORIES_SECOND: p('/categories_second', '/categories/second'),
   GOODS_LIST: p('/goods', '/goods'),

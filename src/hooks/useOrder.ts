@@ -1,13 +1,18 @@
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import {
   getDefaultAddress as getDefaultAddressApi,
   getConfirmOrderList as getConfirmOrderListApi,
   getOrderList as getOrderListApi,
 } from '@/api'
+import { useOrderStore } from '@/store/order'
 import type { AddressInfo } from '@/types/model/address'
 import type { OrderConfirmItem, OrderItem } from '@/types/model/order'
 
 export function useOrder() {
+  const orderStore = useOrderStore()
+  const { confirmGoodsList } = storeToRefs(orderStore)
+
   const loading = ref(false)
   const defaultAddress = ref<AddressInfo | null>(null)
   const confirmOrderList = ref<OrderConfirmItem[]>([])
@@ -34,11 +39,17 @@ export function useOrder() {
   }
 
   async function fetchConfirmOrderList() {
+    if (confirmGoodsList.value.length > 0) {
+      confirmOrderList.value = confirmGoodsList.value
+      return confirmGoodsList.value
+    }
+
     loading.value = true
     try {
       const res = await getConfirmOrderListApi()
       if (res.code === 0) {
         confirmOrderList.value = res.data
+        orderStore.setConfirmGoods(res.data)
         return res.data
       }
       uni.showToast({ title: res.message || '订单商品加载失败', icon: 'none' })

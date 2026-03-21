@@ -29,10 +29,85 @@ router.render = (req, res) => {
   res.status(200).jsonp(ok(res.locals.data))
 }
 
-server.get('/goods_:id', (req, res) => {
-  req.url = `/goods/${req.params.id}`
-  router(req, res)
+function buildGoodsDetail(goods) {
+  const sales = Number(goods.sales || 0)
+  const stock = Number.isFinite(Number(goods.stock))
+    ? Number(goods.stock)
+    : Math.max(0, 200 - Math.floor(sales / 50))
+
+  const params = Array.isArray(goods.params)
+    ? goods.params
+    : [
+        { label: '产区', value: goods.region || '' },
+        { label: '类型', value: goods.type || '' },
+        { label: '酒精度', value: goods.alcohol || '' },
+      ].filter((p) => p.value)
+
+  const detail = Array.isArray(goods.detail)
+    ? goods.detail
+    : [
+        { type: 'title', value: '酒品介绍' },
+        { type: 'text', value: goods.description || '' },
+        { type: 'image', value: goods.image || '' },
+      ].filter((b) => b.value)
+
+  let comments = Array.isArray(goods.comments) ? goods.comments : []
+  if (comments.length === 0 && Number(goods.comment || 0) > 0) {
+    const count = Math.min(2, Number(goods.comment || 0))
+    comments = Array.from({ length: count }).map((_, idx) => ({
+      id: goods.id * 10 + idx + 1,
+      userName: idx === 0 ? '酒友A' : '酒友B',
+      avatar: 'https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U',
+      score: 5,
+      content:
+        idx === 0
+          ? '口感非常平衡，果香浓郁，回味悠长。'
+          : '包装精美，适合送礼，物流也很快。',
+      time: '2026-03-20',
+      images: [],
+    }))
+  }
+
+  return {
+    ...goods,
+    stock,
+    params,
+    detail,
+    comments,
+  }
+}
+
+server.get('/goods/:id', (req, res) => {
+  const id = Number(req.params.id)
+  if (!Number.isFinite(id)) {
+    res.status(200).jsonp(fail('参数错误'))
+    return
+  }
+
+  const db = router.db
+  const goods = db.get('goods').find({ id }).value()
+  if (!goods) {
+    res.status(200).jsonp(fail('商品不存在'))
+    return
+  }
+
+  res.status(200).jsonp(ok(buildGoodsDetail(goods)))
 })
+
+// server.get('/goods_:id', (req, res) => {
+//   const id = Number(req.params.id)
+//   if (!Number.isFinite(id)) {
+//     res.status(200).jsonp(fail('参数错误'))
+//     return
+//   }
+//   const db = router.db
+//   const goods = db.get('goods').find({ id }).value()
+//   if (!goods) {
+//     res.status(200).jsonp(fail('商品不存在'))
+//     return
+//   }
+//   res.status(200).jsonp(ok(buildGoodsDetail(goods)))
+// })
 
 server.get('/order_list', (req, res) => {
   req.url = '/orders'
