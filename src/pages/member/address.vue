@@ -2,14 +2,19 @@
   <view class="min-h-screen bg-background pb-20">
     <view class="p-4">
       <template v-if="addressList.length > 0">
-        <AddressCard
+        <view
           v-for="item in addressList"
           :key="item.id"
-          :item="item"
-          @edit="handleEdit"
-          @delete="handleDelete"
-          @set-default="handleSetDefault"
-        />
+          @click="handleSelectAddress(item)"
+        >
+          <AddressCard
+            :item="item"
+            :select-mode="isSelectMode"
+            @edit="handleEdit"
+            @delete="handleDelete"
+            @set-default="handleSetDefault"
+          />
+        </view>
       </template>
 
       <view v-else class="flex flex-col items-center pt-32">
@@ -40,11 +45,13 @@
 </template>
 
 <script setup lang="ts">
-import { onShow } from '@dcloudio/uni-app'
+import {onLoad, onShow} from '@dcloudio/uni-app'
 import type { AddressInfo } from '@/types/model/address'
 import AddressCard from './components/AddressCard.vue'
 import AddressForm from './components/AddressForm.vue'
 import { useAddress } from '@/hooks/useAddress'
+import { ref } from 'vue'
+import { useOrderStore } from '@/store/order'
 
 const {
   addressList,
@@ -61,6 +68,13 @@ const {
   remove,
   setDefault,
 } = useAddress()
+
+const isSelectMode = ref(false)
+const orderStore = useOrderStore()
+
+onLoad((options) => {
+  isSelectMode.value = options?.select === '1'
+})
 
 onShow(() => {
   fetchList()
@@ -96,6 +110,14 @@ function handleDelete(item: AddressInfo) {
       }
     },
   })
+}
+
+function handleSelectAddress(item: AddressInfo) {
+  if (!isSelectMode.value) return
+
+  orderStore.setCurrentAddress(item)
+
+  uni.navigateBack()
 }
 </script>
 

@@ -45,7 +45,7 @@ import type { OrderItem } from '@/types/model/order'
 import { useOrder } from '@/hooks/useOrder'
 
 const activeStatus = ref(0)
-const { orderList, fetchOrderList } = useOrder()
+const { orderList, fetchOrderList, cancelOrder, confirmReceiveOrder } = useOrder()
 
 const tabs = [
   { label: '全部', status: 0 },
@@ -53,6 +53,7 @@ const tabs = [
   { label: '待发货', status: 2 },
   { label: '待收货', status: 3 },
   { label: '待评价', status: 4 },
+  { label: '已取消', status: 6 },
 ]
 
 const fetchList = async () => {
@@ -74,11 +75,81 @@ const changeTab = (status: number) => {
   fetchList()
 }
 
-const handleOrderAction = (type: string, order: OrderItem) => {
-  uni.showToast({
-    title: `操作: ${type} 订单: ${order.orderNum}`,
-    icon: 'none'
+async function handleCancelOrder(order: OrderItem) {
+  const res = await new Promise<UniApp.ShowModalRes>((resolve) => {
+    uni.showModal({
+      title: '提示',
+      content: `确定取消订单 ${order.orderNum} 吗？`,
+      success: resolve,
+    })
   })
+
+  if (!res.confirm) return
+
+  const ok = await cancelOrder(order.id)
+  if (!ok) return
+
+  uni.showToast({
+    title: '订单已取消',
+    icon: 'success',
+  })
+
+  fetchList()
+}
+
+async function handleConfirmOrder(order: OrderItem) {
+  const res = await new Promise<UniApp.ShowModalRes>((resolve) => {
+    uni.showModal({
+      title: '提示',
+      content: '确认已收到商品？',
+      success: resolve,
+    })
+  })
+
+  if (!res.confirm) return
+
+  const ok = await confirmReceiveOrder(order.id)
+  if (!ok) return
+
+  uni.showToast({
+    title: '已确认收货',
+    icon: 'success',
+  })
+
+  fetchList()
+}
+
+function handlePayOrder(order: OrderItem) {
+  uni.showToast({
+    title: '支付功能暂未接入',
+    icon: 'none',
+  })
+}
+
+function handleCommentOrder(order: OrderItem) {
+  uni.showToast({
+    title: '评价功能暂未接入',
+    icon: 'none',
+  })
+}
+
+const handleOrderAction = async (type: string, order: OrderItem) => {
+  switch (type) {
+    case 'cancel':
+      await handleCancelOrder(order)
+      break
+    case 'pay':
+      handlePayOrder(order)
+      break
+    case 'confirm':
+      await handleConfirmOrder(order)
+      break
+    case 'comment':
+      handleCommentOrder(order)
+      break
+    default:
+      break
+  }
 }
 </script>
 

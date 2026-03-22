@@ -14,25 +14,25 @@
     </view>
 
     <view class="text-[13px] text-[#333] mb-4 leading-relaxed">
-      {{ item.province }}{{ item.city }}{{ item.district }}{{ item.detail }}
+      {{ formatAddress(item) }}
     </view>
 
-    <view class="border-t border-[#F5F5F5] pt-3 flex justify-between items-center">
+    <view v-if="!selectMode" class="border-t border-[#F5F5F5] pt-3 flex justify-between items-center">
       <view>
         <view
           v-if="!item.isDefault"
           class="text-[12px] text-accent"
-          @click="$emit('setDefault', item)"
+          @click.stop="$emit('setDefault', item)"
         >
           设为默认
         </view>
       </view>
 
       <view class="flex justify-end gap-4">
-        <view class="flex items-center text-[12px] text-[#666]" @click="$emit('edit', item)">
+        <view class="flex items-center text-[12px] text-[#666]" @click.stop="$emit('edit', item)">
           <text class="mr-1">✏️</text> 编辑
         </view>
-        <view class="flex items-center text-[12px] text-[#666]" @click="$emit('delete', item)">
+        <view class="flex items-center text-[12px] text-[#666]" @click.stop="$emit('delete', item)">
           <text class="mr-1">🗑️</text> 删除
         </view>
       </view>
@@ -42,9 +42,11 @@
 
 <script setup lang="ts">
 import type { AddressInfo } from '@/types/model/address'
+import {formatAddress} from "@/utils/format";
 
 defineProps<{
   item: AddressInfo
+  selectMode?: boolean
 }>()
 
 defineEmits<{

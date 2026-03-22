@@ -4,6 +4,9 @@ import {
   getDefaultAddress as getDefaultAddressApi,
   getConfirmOrderList as getConfirmOrderListApi,
   getOrderList as getOrderListApi,
+  createOrder as createOrderApi,
+  cancelOrder as cancelOrderApi,
+  confirmReceiveOrder as confirmReceiveOrderApi,
 } from '@/api'
 import { useOrderStore } from '@/store/order'
 import type { AddressInfo } from '@/types/model/address'
@@ -11,19 +14,27 @@ import type { OrderConfirmItem, OrderItem } from '@/types/model/order'
 
 export function useOrder() {
   const orderStore = useOrderStore()
-  const { confirmGoodsList } = storeToRefs(orderStore)
+  const { confirmGoodsList, currentAddress } = storeToRefs(orderStore)
 
   const loading = ref(false)
-  const defaultAddress = ref<AddressInfo | null>(null)
+  const defaultAddress = ref<AddressInfo | null>(currentAddress.value || null)
   const confirmOrderList = ref<OrderConfirmItem[]>([])
   const orderList = ref<OrderItem[]>([])
 
-  async function  fetchDefaultAddress() {
+  async function fetchDefaultAddress() {
+    if (currentAddress.value) {
+      defaultAddress.value = currentAddress.value
+      return currentAddress.value
+    }
+
     loading.value = true
     try {
       const res = await getDefaultAddressApi()
       if (res.code === 0) {
         defaultAddress.value = res.data
+        if (res.data) {
+          orderStore.setCurrentAddress(res.data)
+        }
         return res.data
       }
       uni.showToast({ title: res.message || '地址加载失败', icon: 'none' })
@@ -85,6 +96,81 @@ export function useOrder() {
     }
   }
 
+  async function submitOrder(payload: {
+    goods: OrderConfirmItem[]
+    address: AddressInfo
+    remark?: string
+    from?: 'cart' | 'buyNow'
+  }) {
+    loading.value = true
+    try {
+      const res = await createOrderApi(payload)
+      if (res.code === 0) {
+        orderStore.clearConfirmInfo()
+        confirmOrderList.value = []
+        return res.data
+      }
+
+      uni.showToast({
+        title: res.message || '提交订单失败',
+        icon: 'none',
+      })
+      return null
+    } catch (err) {
+      uni.showToast({
+        title: '提交订单失败',
+        icon: 'none',
+      })
+      return null
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function cancelOrder(id: string | number) {
+    loading.value = true
+    try {
+      const res = await cancelOrderApi(id)
+      if (res.code === 0) return true
+
+      uni.showToast({
+        title: res.message || '取消订单失败',
+        icon: 'none',
+      })
+      return false
+    } catch {
+      uni.showToast({
+        title: '取消订单失败',
+        icon: 'none',
+      })
+      return false
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function confirmReceiveOrder(id: string | number) {
+    loading.value = true
+    try {
+      const res = await confirmReceiveOrderApi(id)
+      if (res.code === 0) return true
+
+      uni.showToast({
+        title: res.message || '确认收货失败',
+        icon: 'none',
+      })
+      return false
+    } catch {
+      uni.showToast({
+        title: '确认收货失败',
+        icon: 'none',
+      })
+      return false
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     loading,
     defaultAddress,
@@ -93,6 +179,9 @@ export function useOrder() {
     fetchDefaultAddress,
     fetchConfirmOrderList,
     fetchOrderList,
+    submitOrder,
+    cancelOrder,
+    confirmReceiveOrder,
   }
 }
 

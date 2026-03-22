@@ -1,14 +1,17 @@
 <template>
   <view class="min-h-screen bg-background pb-[120px]">
     <!-- 收货地址 -->
-    <view class="bg-white px-4 py-4 flex items-center justify-between">
+    <view
+      class="bg-white px-4 py-4 flex items-center justify-between"
+      @click="goSelectAddress"
+    >
       <view v-if="address">
         <view class="text-[14px] font-medium text-[#333]">
           {{ address.name }} {{ address.phone }}
         </view>
 
         <view class="text-[12px] text-[#666] mt-1">
-          {{ address.detail }}
+          {{ formatAddress(address) }}
         </view>
       </view>
 
@@ -121,9 +124,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
+import {onLoad, onShow} from '@dcloudio/uni-app'
 import { checkLogin } from '@/utils/permission'
 import { useOrder } from '@/hooks/useOrder'
+import {formatAddress} from "@/utils/format";
 
 const remark = ref('')
 
@@ -132,7 +136,16 @@ const {
   confirmOrderList: orderList,
   fetchDefaultAddress,
   fetchConfirmOrderList,
+  submitOrder: submitOrderApi,
 } = useOrder()
+
+const pageFrom = ref<'cart' | 'buyNow'>('buyNow')
+
+onLoad((options) => {
+  if (options?.from === 'cart') {
+    pageFrom.value = 'cart'
+  }
+})
 
 onShow(async () => {
   const ok = checkLogin('/pages/order/confirm')
@@ -147,7 +160,13 @@ const totalPrice = computed(() => {
   }, 0)
 })
 
-function submitOrder() {
+function goSelectAddress() {
+  uni.navigateTo({
+    url: '/pages/member/address?select=1',
+  })
+}
+
+async function submitOrder() {
   if (!address.value) {
     uni.showToast({
       title: '请先选择收货地址',
@@ -164,9 +183,24 @@ function submitOrder() {
     return
   }
 
+  const order = await submitOrderApi({
+    goods: orderList.value,
+    address: address.value,
+    remark: remark.value.trim(),
+    from: pageFrom.value,
+  })
+
+  if (!order) return
+
   uni.showToast({
     title: '订单已提交',
     icon: 'success',
   })
+
+  setTimeout(() => {
+    uni.redirectTo({
+      url: '/pages/order/list?status=1',
+    })
+  }, 300)
 }
 </script>

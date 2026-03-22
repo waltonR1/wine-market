@@ -164,6 +164,8 @@ import { onShow } from '@dcloudio/uni-app'
 import Empty from '@/components/common/Empty.vue'
 import { useCart } from '@/hooks/useCart'
 import { useUser } from '@/hooks/useUser'
+import type { OrderConfirmItem } from '@/types/model/order'
+import { useOrderStore } from '@/store/order'
 
 const isEdit = ref(false)
 const { isLogin } = useUser()
@@ -179,6 +181,8 @@ const {
   decreaseCount,
   clearChecked,
 } = useCart()
+
+const orderStore = useOrderStore()
 
 function goCategory() {
   uni.switchTab({
@@ -236,8 +240,19 @@ function goConfirm() {
     return
   }
 
+  const confirmGoods: OrderConfirmItem[] = checkedList.value.map(item => ({
+    id: item.id,
+    name: item.name,
+    spec: '',
+    price: item.price,
+    count: item.count,
+    image: item.image,
+  }))
+
+  orderStore.setConfirmGoods(confirmGoods)
+
   uni.navigateTo({
-    url: '/pages/order/confirm',
+    url: '/pages/order/confirm?from=cart',
   })
 }
 </script>

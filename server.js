@@ -357,6 +357,130 @@ server.delete('/addresses/:id', (req, res) => {
   res.status(200).jsonp(ok(db.get('addresses').value(), '删除地址成功'))
 })
 
+function formatDateTime(date = new Date()) {
+  const pad = (n) => String(n).padStart(2, '0')
+  const y = date.getFullYear()
+  const m = pad(date.getMonth() + 1)
+  const d = pad(date.getDate())
+  const h = pad(date.getHours())
+  const min = pad(date.getMinutes())
+  return `${y}-${m}-${d} ${h}:${min}`
+}
+
+function generateOrderNum(db) {
+  const list = db.get('orders').value() || []
+  const date = new Date()
+  const pad = (n) => String(n).padStart(2, '0')
+  const ymd = `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}`
+  const todayOrders = list.filter(item => String(item.orderNum || '').startsWith(`ORD${ymd}`))
+  const seq = String(todayOrders.length + 1).padStart(4, '0')
+  return `ORD${ymd}${seq}`
+}
+
+server.post('/orders/submit', (req, res) => {
+  const db = router.db
+  const { goods, address, remark = '', from = 'buyNow' } = req.body || {}
+
+  if (!Array.isArray(goods) || goods.length === 0) {
+    res.status(200).jsonp(fail('暂无可提交商品'))
+    return
+  }
+
+  if (!address || !address.id) {
+    res.status(200).jsonp(fail('请选择收货地址'))
+    return
+  }
+
+  const totalPrice = goods.reduce((sum, item) => {
+    return sum + Number(item.price || 0) * Number(item.count || 0)
+  }, 0)
+
+  const totalCount = goods.reduce((sum, item) => {
+    return sum + Number(item.count || 0)
+  }, 0)
+
+  const order = {
+    id: String(Date.now()),
+    orderNum: generateOrderNum(db),
+    status: 1,
+    statusLabel: '待付款',
+    createTime: formatDateTime(),
+    totalPrice,
+    totalCount,
+    goods: goods.map(item => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      count: item.count,
+      image: item.image,
+    })),
+    address,
+    remark,
+  }
+
+  db.get('orders').unshift(order).write()
+  db.set('order_confirm_list', []).write()
+
+  if (from === 'cart') {
+    const checkedIds = goods.map(item => item.id)
+    db.get('cart').remove(item => checkedIds.includes(item.id)).write()
+  }
+
+  res.status(200).jsonp(ok(order, '订单提交成功'))
+})
+
+server.post('/orders/:id/cancel', (req, res) => {
+  const orderId = String(req.params.id)
+  const db = router.db
+  const order = db.get('orders').find({ id: orderId }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  if (order.status !== 1) {
+    res.status(200).jsonp(fail('当前订单不可取消'))
+    return
+  }
+
+  db.get('orders')
+    .find({ id: orderId })
+    .assign({
+      status: 6,
+      statusLabel: '已取消',
+    })
+    .write()
+
+  res.status(200).jsonp(ok(null, '订单已取消'))
+})
+
+server.post('/orders/:id/confirm', (req, res) => {
+  const orderId = String(req.params.id)
+  const db = router.db
+  const order = db.get('orders').find({ id: orderId }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  if (order.status !== 3) {
+    res.status(200).jsonp(fail('当前订单不可确认收货'))
+    return
+  }
+
+  db.get('orders')
+    .find({ id: orderId })
+    .assign({
+      status: 4,
+      statusLabel: '待评价',
+    })
+    .write()
+
+  res.status(200).jsonp(ok(null, '已确认收货'))
+})
+
 server.use(router)
 
 server.use((req, res) => {

@@ -35,6 +35,9 @@ export const API_PATHS = {
   // 订单相关
   ORDER_CONFIRM_LIST: p('/order_confirm_list', '/orders/confirm'),
   ORDER_LIST: p('/orders', '/orders'),
+  ORDER_SUBMIT: '/orders/submit',
+  ORDER_CANCEL: (id: string | number) => `/orders/${id}/cancel`,
+  ORDER_CONFIRM: (id: string | number) => `/orders/${id}/confirm`,
 
   // 地址管理
   ADDRESS_LIST: p('/addresses', '/addresses'),
