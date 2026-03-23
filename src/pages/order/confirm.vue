@@ -183,6 +183,16 @@ async function submitOrder() {
     return
   }
 
+  for (const item of orderList.value) {
+    if (typeof item.stock === 'number' && item.count > item.stock) {
+      uni.showToast({
+        title: `${item.name} 库存不足`,
+        icon: 'none',
+      })
+      return
+    }
+  }
+
   const order = await submitOrderApi({
     goods: orderList.value,
     address: address.value,

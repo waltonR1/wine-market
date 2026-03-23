@@ -53,6 +53,7 @@ export function useCart() {
       price: item.price,
       count: item.count,
       image: item.image,
+      stock: item.stock,
       checked: checkedMap.get(item.id) ?? true,
     }))
   }
@@ -117,7 +118,7 @@ export function useCart() {
       })
 
       if (res.code === 0) {
-        if (APP_CONFIG.CART_SYNC_STRATEGY === 'server') {
+        if (APP_CONFIG.USE_SERVER_CART_SYNC) {
           syncCartList(toClientList(res.data, cartList.value))
         }
 
@@ -149,6 +150,16 @@ export function useCart() {
    * 商品转购物车项后添加
    */
   async function addProductToCart(product: ProductItem) {
+
+    if (!APP_CONFIG.ALLOW_ADD_OUT_OF_STOCK)
+      if (product.stock <= 0) {
+        uni.showToast({
+          title: '该商品已售罄',
+          icon: 'none',
+        })
+        return false
+      }
+
     const goods: CartItem = {
       id: product.id,
       name: product.name,
@@ -156,6 +167,7 @@ export function useCart() {
       count: 1,
       checked: true,
       image: product.image,
+      stock: product.stock,
     }
 
     return addToCart(goods)
@@ -186,7 +198,14 @@ export function useCart() {
       return false
     }
 
-    // 先本地更新
+    if (count > target.stock) {
+      uni.showToast({
+        title: '已达到库存上限',
+        icon: 'none',
+      })
+      return false
+    }
+
     cartStore.updateCount(id, count)
 
     // 未登录时只改本地

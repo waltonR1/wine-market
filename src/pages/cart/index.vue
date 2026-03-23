@@ -5,7 +5,7 @@
       <view class="flex items-center">
         <view class="text-[16px] mr-2">🏪</view>
         <view class="text-[15px] font-medium text-text-main">
-          卡迈高
+          {{ APP_CONFIG.APP_NAME }}
         </view>
       </view>
 
@@ -35,9 +35,9 @@
       >
         <!-- 选择框 -->
         <view
-            class="w-[22px] h-[22px] rounded-full border flex items-center justify-center mr-3"
-            :class="item.checked ? 'border-accent bg-accent' : 'border-[#d9d9d9] bg-white'"
-            @click="toggleChecked(item.id)"
+          class="w-[22px] h-[22px] rounded-full border flex items-center justify-center mr-3"
+          :class="getCheckClass(item)"
+          @click="handleToggleChecked(item)"
         >
           <view
               v-if="item.checked"
@@ -62,6 +62,9 @@
               <view class="text-[12px] text-text-secondary mt-2">
                 快递
               </view>
+              <view class="text-[12px] text-text-secondary mt-1">
+                库存：{{ item.stock }}
+              </view>
             </view>
 
             <view class="text-[18px] font-bold text-accent whitespace-nowrap">
@@ -70,25 +73,35 @@
           </view>
 
           <view class="mt-3 flex items-center justify-end">
-            <view class="flex items-center">
-              <view
+            <template v-if="!isOutOfStock(item)">
+              <view class="flex items-center">
+                <view
                   class="w-[28px] h-[28px] rounded-full bg-[#F5F1EC] flex items-center justify-center text-accent text-[16px]"
                   @click="decreaseCount(item.id)"
-              >
-                −
-              </view>
+                >
+                  −
+                </view>
 
-              <view class="mx-3 text-[14px] text-text-main min-w-[14px] text-center">
-                {{ item.count }}
-              </view>
+                <view class="mx-3 text-[14px] text-text-main min-w-[14px] text-center">
+                  {{ item.count }}
+                </view>
 
-              <view
+                <view
                   class="w-[28px] h-[28px] rounded-full bg-[#F5F1EC] flex items-center justify-center text-accent text-[16px]"
                   @click="increaseCount(item.id)"
-              >
-                +
+                >
+                  +
+                </view>
               </view>
+            </template>
+
+            <view
+              v-else
+              class="text-[12px] text-[#C40000] bg-[#FFF1F0] px-3 py-1 rounded-full"
+            >
+              库存不足
             </view>
+
           </view>
         </view>
       </view>
@@ -107,13 +120,13 @@
     <view
         class="fixed bottom-0 left-0 right-0 bg-white border-t border-[#eee] px-4 py-3 flex items-center justify-between"
     >
-      <view class="flex items-center" @click="toggleAllChecked">
+      <view class="flex items-center" @click="handleToggleAllChecked">
         <view
             class="w-[22px] h-[22px] rounded-full border flex items-center justify-center mr-2"
-            :class="isAllChecked ? 'border-accent bg-accent' : 'border-[#d9d9d9] bg-white'"
+            :class="displayAllChecked ? 'border-accent bg-accent' : 'border-[#d9d9d9] bg-white'"
         >
           <view
-              v-if="isAllChecked"
+              v-if="displayAllChecked"
               class="w-[8px] h-[8px] rounded-full bg-white"
           />
         </view>
@@ -166,17 +179,16 @@ import { useCart } from '@/hooks/useCart'
 import { useUser } from '@/hooks/useUser'
 import type { OrderConfirmItem } from '@/types/model/order'
 import { useOrderStore } from '@/store/order'
+import APP_CONFIG from "@/config/app";
 
 const isEdit = ref(false)
 const { isLogin } = useUser()
 const {
   cartList,
   checkedList,
-  isAllChecked,
   totalPrice,
   getCartList,
   toggleChecked,
-  toggleAllChecked,
   increaseCount,
   decreaseCount,
   clearChecked,
@@ -184,19 +196,79 @@ const {
 
 const orderStore = useOrderStore()
 
+onShow(() => {
+  getCartList()
+})
+
 function goCategory() {
   uni.switchTab({
     url: '/pages/goods/category',
   })
 }
 
-onShow(() => {
-  getCartList()
+const checkedCount = computed(() => checkedList.value.length)
+
+function isOutOfStock(item: typeof cartList.value[number]) {
+  return item.stock <= 0
+}
+
+function isSelectableInCurrentMode(item: typeof cartList.value[number]) {
+  if (isEdit.value) return true
+  return !isOutOfStock(item)
+}
+
+const displayAllChecked = computed(() => {
+  const currentList = cartList.value.filter(isSelectableInCurrentMode)
+  return currentList.length > 0 && currentList.every(item => item.checked)
 })
 
-const checkedCount = computed(() => {
-  return checkedList.value.length
+const validCheckedList = computed(() => {
+  return checkedList.value.filter(item => item.stock > 0)
 })
+
+function handleToggleChecked(item: typeof cartList.value[number]) {
+  if (!isSelectableInCurrentMode(item)) {
+    uni.showToast({
+      title: '库存不足，暂不可结算',
+      icon: 'none',
+    })
+    return
+  }
+
+  toggleChecked(item.id)
+}
+
+function getCheckClass(item: typeof cartList.value[number]) {
+  if (!isSelectableInCurrentMode(item)) {
+    return 'border-[#e5e5e5] bg-[#f5f5f5] opacity-50'
+  }
+
+  return item.checked
+    ? 'border-accent bg-accent'
+    : 'border-[#d9d9d9] bg-white'
+}
+
+function handleToggleAllChecked() {
+  const currentList = cartList.value.filter(isSelectableInCurrentMode)
+
+  if (currentList.length === 0) {
+    uni.showToast({
+      title: isEdit.value ? '暂无可操作商品' : '暂无可结算商品',
+      icon: 'none',
+    })
+    return
+  }
+
+  const nextChecked = !currentList.every(item => item.checked)
+
+  cartList.value.forEach(item => {
+    if (isSelectableInCurrentMode(item)) {
+      item.checked = nextChecked
+    } else {
+      item.checked = false
+    }
+  })
+}
 
 async function deleteChecked() {
   if (checkedCount.value === 0) {
@@ -214,13 +286,24 @@ async function deleteChecked() {
     isEdit.value = false
   }
 
-  uni.showToast({ title: '删除成功', icon: 'success' })
+  uni.showToast({
+    title: '删除成功',
+    icon: 'success',
+  })
 }
 
 function goConfirm() {
   if (checkedCount.value === 0) {
     uni.showToast({
       title: '请选择要结算的商品',
+      icon: 'none',
+    })
+    return
+  }
+
+  if (validCheckedList.value.length === 0) {
+    uni.showToast({
+      title: '暂无可结算商品',
       icon: 'none',
     })
     return
@@ -240,13 +323,14 @@ function goConfirm() {
     return
   }
 
-  const confirmGoods: OrderConfirmItem[] = checkedList.value.map(item => ({
+  const confirmGoods: OrderConfirmItem[] = validCheckedList.value.map(item => ({
     id: item.id,
     name: item.name,
     spec: '',
     price: item.price,
     count: item.count,
     image: item.image,
+    stock: item.stock,
   }))
 
   orderStore.setConfirmGoods(confirmGoods)

@@ -144,7 +144,7 @@ function handleAddToCart(req, res) {
 
   const existing = db.get('cart').find({ id: goodsId }).value()
   if (existing) {
-    db.get('cart').find({ id: goodsId }).assign({ count: existing.count + addCount }).write()
+    db.get('cart').find({ id: goodsId }).assign({ count: existing.count + addCount, stock: goods.stock }).write()
   } else {
     db.get('cart')
       .push({
@@ -153,8 +153,10 @@ function handleAddToCart(req, res) {
         price: goods.price,
         count: addCount,
         image: goods.image,
+        stock: goods.stock,
       })
       .write()
+    console.log(goods)
   }
 
   res.status(200).jsonp(ok(db.get('cart').value(), '加入购物车成功'))
@@ -167,13 +169,16 @@ function handleUpdateCartCount(req, res, cartId, nextCount) {
   }
 
   const db = router.db
+
+  const goods = db.get('goods').find({ id: cartId }).value()
+
   const existing = db.get('cart').find({ id: cartId }).value()
   if (!existing) {
     res.status(200).jsonp(fail('购物车商品不存在'))
     return
   }
 
-  db.get('cart').find({ id: cartId }).assign({ count: nextCount }).write()
+  db.get('cart').find({ id: cartId }).assign({ count: nextCount, stock: goods?.stock ?? existing.stock, }).write()
   res.status(200).jsonp(ok(db.get('cart').value(), '数量更新成功'))
 }
 
@@ -391,6 +396,20 @@ server.post('/orders/submit', (req, res) => {
     return
   }
 
+  const goodsSource = db.get('goods').value() || []
+  for (const item of goods) {
+    const source = goodsSource.find(g => Number(g.id) === Number(item.id))
+    if (!source) {
+      res.status(200).jsonp(fail(`${item.name || '商品'} 不存在`))
+      return
+    }
+
+    if (Number(item.count || 0) > Number(source.stock || 0)) {
+      res.status(200).jsonp(fail(`${item.name || source.name} 库存不足`))
+      return
+    }
+  }
+
   const totalPrice = goods.reduce((sum, item) => {
     return sum + Number(item.price || 0) * Number(item.count || 0)
   }, 0)
@@ -398,6 +417,9 @@ server.post('/orders/submit', (req, res) => {
   const totalCount = goods.reduce((sum, item) => {
     return sum + Number(item.count || 0)
   }, 0)
+
+  const freight = 0
+  const payPrice = totalPrice + freight
 
   const order = {
     id: String(Date.now()),
@@ -407,6 +429,8 @@ server.post('/orders/submit', (req, res) => {
     createTime: formatDateTime(),
     totalPrice,
     totalCount,
+    freight,
+    payPrice,
     goods: goods.map(item => ({
       id: item.id,
       name: item.name,

@@ -6,6 +6,7 @@ export interface CartServerItem {
   price: number
   count: number
   image: string
+  stock: number
 }
 
 export interface CartSummary {

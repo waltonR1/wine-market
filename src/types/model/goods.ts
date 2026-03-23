@@ -4,6 +4,7 @@ export interface ProductItem {
     subtitle: string
     price: number
     image: string
+    stock: number
     sales?: number
     tag?: string
     comment?: number
@@ -36,7 +37,6 @@ export interface ProductDetail extends ProductItem {
     type: string
     alcohol: string
     description: string
-    stock: number
     detail: GoodsDetailBlock[]
     params: GoodsParamItem[]
     comments: GoodsComment[]

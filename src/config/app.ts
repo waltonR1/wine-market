@@ -22,7 +22,10 @@ export const APP_CONFIG = {
    * true  = 以后端返回数据为准
    * false = 以本地乐观更新结果为准
    */
-  CART_SYNC_STRATEGY: 'server' as 'server' | 'local',
+  USE_SERVER_CART_SYNC: true,
+
+  // 是否允许添加库存为0的商品至购物车
+  ALLOW_ADD_OUT_OF_STOCK: false,
 } as const
 
 export default APP_CONFIG

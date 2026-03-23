@@ -209,8 +209,12 @@ function addCart() {
 
 function buyNow() {
   if (!product.value) return
+
   if (product.value.stock <= 0) {
-    uni.showToast({ title: '库存不足', icon: 'none' })
+    uni.showToast({
+      title: '库存不足',
+      icon: 'none',
+    })
     return
   }
 
@@ -222,6 +226,7 @@ function buyNow() {
       price: product.value.price,
       count: 1,
       image: product.value.image,
+      stock: product.value.stock,
     },
   ])
 

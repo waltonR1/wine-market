@@ -17,37 +17,40 @@
       {{ formatAddress(item) }}
     </view>
 
-    <view v-if="!selectMode" class="border-t border-[#F5F5F5] pt-3 flex justify-between items-center">
+    <view class="border-t border-[#F5F5F5] pt-3 flex justify-between items-center">
       <view>
-        <view
-          v-if="!item.isDefault"
-          class="text-[12px] text-accent"
-          @click.stop="$emit('setDefault', item)"
-        >
+        <view v-if="showSetDefault" class="text-[12px] text-accent" @click.stop="$emit('setDefault', item)">
           设为默认
         </view>
       </view>
 
       <view class="flex justify-end gap-4">
         <view class="flex items-center text-[12px] text-[#666]" @click.stop="$emit('edit', item)">
-          <text class="mr-1">✏️</text> 编辑
+          <text class="mr-1">✏️</text>
+          编辑
         </view>
-        <view class="flex items-center text-[12px] text-[#666]" @click.stop="$emit('delete', item)">
-          <text class="mr-1">🗑️</text> 删除
+
+        <view v-if="showDelete" class="flex items-center text-[12px] text-[#666]" @click.stop="$emit('delete', item)">
+          <text class="mr-1">🗑️</text>
+          删除
         </view>
       </view>
     </view>
   </view>
 </template>
 
-<script setup lang="ts">
-import type { AddressInfo } from '@/types/model/address'
+<script lang="ts" setup>
+import type {AddressInfo} from '@/types/model/address'
 import {formatAddress} from "@/utils/format";
+import {computed} from "vue";
 
-defineProps<{
+const props = defineProps<{
   item: AddressInfo
   selectMode?: boolean
 }>()
+
+const showSetDefault = computed(() => !props.selectMode && !props.item.isDefault)
+const showDelete = computed(() => !props.selectMode)
 
 defineEmits<{
   (e: 'edit', item: AddressInfo): void
