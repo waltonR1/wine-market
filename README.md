@@ -195,7 +195,7 @@ export const IS_MOCK = true
 │       └── validate.ts
 ├── tailwind.config.js
 ├── tsconfig.json
-└── vite.config.js
+└── vite.config.ts
 ```
 
 ---

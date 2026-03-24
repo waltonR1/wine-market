@@ -1,18 +1,12 @@
 {
+  "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "strict": false,
-    "jsx": "preserve",
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
+    "sourceMap": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
+    "lib": ["ESNext", "DOM"],
     "types": ["@dcloudio/types", "vite/client"]
   },
   "include": [
@@ -21,6 +15,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "main.ts",
+    "vite.config.ts",
     "shims-uni.d.ts"
   ]
 }

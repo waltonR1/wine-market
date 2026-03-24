@@ -3233,5 +3233,14 @@
   "realname": {
     "verified": false
   },
-  "cart": []
+  "cart": [
+    {
+      "id": 1,
+      "name": "拉菲罗斯柴尔德古堡干红",
+      "price": 8888,
+      "count": 3,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
+      "stock": 37
+    }
+  ]
 }
