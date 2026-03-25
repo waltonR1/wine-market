@@ -46,7 +46,7 @@ import type { OrderItem } from '@/types/model/order'
 import { useOrder } from '@/hooks/useOrder'
 
 const activeStatus = ref(0)
-const { orderList, fetchOrderList, cancelOrder, confirmReceiveOrder } = useOrder()
+const { orderList, actionLoading, fetchOrderList, cancelOrder, confirmReceiveOrder } = useOrder()
 
 const tabs = [
   { label: '全部', status: 0 },
@@ -77,6 +77,8 @@ const changeTab = (status: number) => {
 }
 
 async function handleCancelOrder(order: OrderItem) {
+  if (actionLoading.value) return
+
   const res = await new Promise<UniApp.ShowModalRes>((resolve) => {
     uni.showModal({
       title: '提示',
@@ -99,6 +101,8 @@ async function handleCancelOrder(order: OrderItem) {
 }
 
 async function handleConfirmOrder(order: OrderItem) {
+  if (actionLoading.value) return
+
   const res = await new Promise<UniApp.ShowModalRes>((resolve) => {
     uni.showModal({
       title: '提示',
@@ -134,6 +138,8 @@ function handleCommentOrder(order: OrderItem) {
 }
 
 const handleOrderAction = async (type: string, order: OrderItem) => {
+  if (actionLoading.value && (type === 'cancel' || type === 'confirm')) return
+
   switch (type) {
     case 'cancel':
       await handleCancelOrder(order)

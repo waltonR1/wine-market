@@ -2910,8 +2910,8 @@
     {
       "id": "1774206699458",
       "orderNum": "ORD202603220007",
-      "status": 1,
-      "statusLabel": "待付款",
+      "status": 2,
+      "statusLabel": "待发货",
       "createTime": "2026-03-22 20:11",
       "totalPrice": 8888,
       "totalCount": 1,
@@ -2937,14 +2937,14 @@
         "isDefault": true
       },
       "remark": "这是一个测试",
-      "payType": "",
-      "payTime": "",
+      "payType": "wechat",
+      "payTime": "2026-03-25 16:05",
       "deliveryTime": "",
       "finishTime": "",
       "cancelTime": "",
       "logisticsCompany": "",
       "logisticsNo": "",
-      "logisticsStatusText": "暂无物流信息"
+      "logisticsStatusText": "商家已收款，待安排发货"
     },
     {
       "id": "1774206581948",
@@ -3073,8 +3073,8 @@
     {
       "id": "1774178873772",
       "orderNum": "ORD202603220003",
-      "status": 3,
-      "statusLabel": "待收货",
+      "status": 4,
+      "statusLabel": "待评价",
       "createTime": "2026-03-22 12:27",
       "totalPrice": 9538,
       "totalCount": 2,
@@ -3110,7 +3110,7 @@
       "payType": "",
       "payTime": "",
       "deliveryTime": "",
-      "finishTime": "",
+      "finishTime": "2026-03-25 16:20",
       "cancelTime": "",
       "logisticsCompany": "",
       "logisticsNo": "",

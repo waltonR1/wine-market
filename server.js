@@ -440,6 +440,14 @@ server.post('/orders/submit', (req, res) => {
     })),
     address,
     remark,
+    payType: '',
+    payTime: '',
+    deliveryTime: '',
+    finishTime: '',
+    cancelTime: '',
+    logisticsCompany: '',
+    logisticsNo: '',
+    logisticsStatusText: '暂无物流信息',
   }
 
   db.get('orders').unshift(order).write()
@@ -472,6 +480,7 @@ server.post('/orders/:id/cancel', (req, res) => {
     .find({ id: orderId })
     .assign({
       status: 6,
+      cancelTime: formatDateTime(),
       statusLabel: '已取消',
     })
     .write()
@@ -498,6 +507,7 @@ server.post('/orders/:id/confirm', (req, res) => {
     .find({ id: orderId })
     .assign({
       status: 4,
+      finishTime: formatDateTime(),
       statusLabel: '待评价',
     })
     .write()
@@ -549,6 +559,7 @@ server.post('/order/pay', (req, res) => {
       statusLabel: '待发货',
       payType,
       payTime,
+      logisticsStatusText: '商家已收款，待安排发货',
     })
     .write()
 

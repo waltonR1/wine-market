@@ -8,6 +8,10 @@ interface OrderStatusConfigItem {
   actions: OrderAction[]
 }
 
+const PAY_TYPE_TEXT_MAP: Record<string, string> = {
+  wechat: '微信支付',
+}
+
 export const ORDER_STATUS_CONFIG: Record<OrderStatus, OrderStatusConfigItem> = {
   1: {
     text: '待付款',
@@ -42,6 +46,11 @@ export function getOrderStatusText(status: OrderStatus) {
 
 export function getOrderStatusDesc(status: OrderStatus) {
   return ORDER_STATUS_CONFIG[status].desc
+}
+
+export function getOrderPayTypeText(payType?: string) {
+  if (!payType) return '-'
+  return PAY_TYPE_TEXT_MAP[payType] || payType
 }
 
 export function hasOrderAction(status: OrderStatus, action: OrderAction) {

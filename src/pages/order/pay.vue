@@ -7,12 +7,11 @@
     <template v-else-if="orderDetail">
       <view class="px-4 pt-6 text-center">
         <view class="text-[14px] text-text-secondary">需支付</view>
-        <view class="mt-2 text-[32px] font-bold text-accent">¥{{ orderDetail.payPrice }}</view>
+        <view class="mt-2 text-[32px] font-bold text-accent">￥{{ orderDetail.payPrice }}</view>
       </view>
 
       <view class="mx-3 mt-6 rounded-2xl bg-white p-4">
         <view class="mb-3 text-[15px] font-bold text-text-main">订单信息</view>
-
         <view class="space-y-3 text-[13px]">
           <view class="flex justify-between">
             <text class="text-text-secondary">订单编号</text>
@@ -31,7 +30,6 @@
 
       <view class="mx-3 mt-3 rounded-2xl bg-white p-4">
         <view class="mb-3 text-[15px] font-bold text-text-main">支付方式</view>
-
         <view
           class="flex items-center justify-between rounded-xl border px-4 py-3"
           :class="payType === 'wechat' ? 'border-accent' : 'border-[#EEEEEE]'"
@@ -50,6 +48,7 @@
         <button
           class="h-[44px] rounded-full bg-accent text-[15px] leading-[44px] text-white"
           :loading="payLoading"
+          :disabled="payLoading"
           @click="handlePay"
         >
           确认支付
@@ -70,7 +69,6 @@ import { useOrder } from '@/hooks/useOrder'
 
 const orderId = ref('')
 const payType = ref<'wechat'>('wechat')
-
 const { pageLoading, payLoading, orderDetail, fetchOrderDetail, payOrder } = useOrder()
 
 async function init() {
@@ -94,7 +92,7 @@ async function init() {
 }
 
 async function handlePay() {
-  if (!orderDetail.value) return
+  if (!orderDetail.value || payLoading.value) return
 
   const result = await payOrder({
     id: orderDetail.value.id,
