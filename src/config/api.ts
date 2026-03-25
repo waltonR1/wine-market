@@ -1,74 +1,102 @@
-import {IS_MOCK} from './env'
+﻿import { IS_MOCK } from './env'
+
+type Id = string | number
+type PathBuilder<Args extends readonly unknown[] = readonly unknown[]> = (...args: Args) => string
+type ApiPathValue = string | PathBuilder
 
 /**
- * 路径处理助手
- * @param mockPath Mock 环境下的路径 (对应 db.json)
- * @param realPath 真实环境下的路径 (默认与 mockPath 相同)
+ * 在 mock / real 环境之间选择路径。
+ * 支持静态字符串和动态函数路径，类型由 TypeScript 自动推导。
  */
-function p<T extends string | ((...args: any[]) => string)>(mockPath: T, realPath?: T): T {
-  return (IS_MOCK ? mockPath : (realPath || mockPath)) as T
+function pickPath<T extends string>(mockValue: T, realValue: T): T
+function pickPath<Args extends readonly unknown[]>(
+  mockValue: PathBuilder<Args>,
+  realValue: PathBuilder<Args>
+): PathBuilder<Args>
+function pickPath(mockValue: ApiPathValue, realValue: ApiPathValue): ApiPathValue {
+  return IS_MOCK ? mockValue : realValue
 }
 
 /**
- * API 路径配置文件
- *
- * 这里的路径在 Mock 模式下对应 db.json 中的键名，
- * 在真实模式下对应标准的 RESTful API 路径。
- *
- * 通过 IS_MOCK 开关一键切换。
+ * API 路径配置（按模块分组）
+ * 当前 mock 与 real 暂时一致的接口，也统一保留双路径占位，便于后续平滑切换。
  */
 export const API_PATHS = {
-  // 会员相关
-  MEMBER_PROFILE: p('/member_profile', '/member/profile'),
-  MEMBER_WALLET: p('/member_wallet', '/member/wallet'),
+  MEMBER: {
+    PROFILE: pickPath('/member_profile', '/member/profile'),
+    WALLET: pickPath('/member_wallet', '/member/wallet'),
+    COUPONS: pickPath('/coupons', '/coupons'),
+    POINTS_HISTORY: pickPath('/point-records', '/point-records'),
+    FAVORITES: pickPath('/favorites', '/favorites'),
+    FOOTPRINTS: pickPath('/footprints', '/footprints'),
+    REALNAME: pickPath('/realname', '/realname'),
+    INVOICES: pickPath('/invoices', '/invoices'),
+  },
 
-  // 首页相关
-  HOME_CATEGORIES: p('/home_categories', '/home/categories'),
-  HOME_PRODUCTS: p('/home_products', '/home/products'),
+  HOME: {
+    CATEGORIES: pickPath('/home_categories', '/home/categories'),
+    PRODUCTS: pickPath('/home_products', '/home/products'),
+  },
 
-  // 商品相关
-  CATEGORIES_FIRST: p('/categories_first', '/categories/first'),
-  CATEGORIES_SECOND: p('/categories_second', '/categories/second'),
-  GOODS_LIST: p('/goods', '/goods'),
-  GOODS_DETAIL: p((id: number | string) => `/goods/${id}`, (id: number | string) => `/goods/${id}`),
+  CATEGORY: {
+    FIRST: pickPath('/categories_first', '/categories/first'),
+    SECOND: pickPath('/categories_second', '/categories/second'),
+  },
 
-  // 订单相关
-  ORDER_CONFIRM_LIST: p('/order_confirm_list', '/orders/confirm'),
-  ORDER_LIST: p('/orders', '/orders'),
-  ORDER_SUBMIT: '/orders/submit',
-  ORDER_CANCEL: (id: string | number) => `/orders/${id}/cancel`,
-  ORDER_CONFIRM: (id: string | number) => `/orders/${id}/confirm`,
+  GOODS: {
+    LIST: pickPath('/goods', '/goods'),
+    DETAIL: pickPath(
+      (id: Id) => `/goods/${id}`,
+      (id: Id) => `/goods/${id}`
+    ),
+  },
 
-  // 地址管理
-  ADDRESS_LIST: p('/addresses', '/addresses'),
-  ADDRESS_DEFAULT: p('/addresses/default', '/addresses/default'),
-  ADDRESS_ITEM: p(
-    (id: number | string) => `/addresses/${id}`,
-    (id: number | string) => `/addresses/${id}`
-  ),
-  ADDRESS_SET_DEFAULT: p(
-    (id: number | string) => `/addresses/${id}/default`,
-    (id: number | string) => `/addresses/${id}/default`
-  ),
+  CART: {
+    LIST: pickPath('/cart', '/cart'),
+    ADD: pickPath('/cart', '/cart'),
+    ITEM: pickPath(
+      (id: Id) => `/cart/${id}`,
+      (id: Id) => `/cart/${id}`
+    ),
+    CLEAR: pickPath('/cart', '/cart'),
+  },
 
-  // 用户相关
-  USER_LOGIN: p('/user_login', '/auth/login'),
-  USER_INFO: p('/user_info', '/user/info'),
+  ADDRESS: {
+    LIST: pickPath('/addresses', '/addresses'),
+    CREATE: pickPath('/addresses', '/addresses'),
+    DEFAULT: pickPath('/addresses/default', '/addresses/default'),
+    ITEM: pickPath(
+      (id: Id) => `/addresses/${id}`,
+      (id: Id) => `/addresses/${id}`
+    ),
+    SET_DEFAULT: pickPath(
+      (id: Id) => `/addresses/${id}/default`,
+      (id: Id) => `/addresses/${id}/default`
+    ),
+  },
 
-  // 购物车
-  CART_LIST: p('/cart', '/cart'),
-  CART_ADD: p('/cart', '/cart'),
-  CART_ITEM: p(
-    (id: number | string) => `/cart/${id}`,
-    (id: number | string) => `/cart/${id}`
-  ),
-  CART_CLEAR: p('/cart', '/cart'),
+  ORDER: {
+    CONFIRM_LIST: pickPath('/order_confirm_list', '/orders/confirm'),
+    LIST: pickPath('/orders', '/orders'),
+    SUBMIT: pickPath('/orders/submit', '/orders/submit'),
+    CANCEL: pickPath(
+      (id: Id) => `/orders/${id}/cancel`,
+      (id: Id) => `/orders/${id}/cancel`
+    ),
+    CONFIRM: pickPath(
+      (id: Id) => `/orders/${id}/confirm`,
+      (id: Id) => `/orders/${id}/confirm`
+    ),
+    // 保持现有接口契约：当前 mock 服务为 /order/:id/detail（单数）
+    DETAIL: pickPath(
+      (id: Id) => `/order/${id}/detail`,
+      (id: Id) => `/order/${id}/detail`
+    ),
+    PAY: pickPath('/order/pay', '/order/pay'),
+  },
 
-  // 会员扩展
-  MEMBER_COUPONS: p('/coupons', '/coupons'),
-  MEMBER_POINTS_HISTORY: p('/point-records', '/point-records'),
-  MEMBER_FAVORITES: p('/favorites', '/favorites'),
-  MEMBER_FOOTPRINTS: p('/footprints', '/footprints'),
-  MEMBER_REALNAME: p('/realname', '/realname'),
-  MEMBER_INVOICES: p('/invoices', '/invoices'),
+  USER: {
+    LOGIN: pickPath('/user_login', '/auth/login'),
+    INFO: pickPath('/user_info', '/user/info'),
+  },
 } as const

@@ -1,4 +1,4 @@
-import { request } from '@/utils/request'
+﻿import { request } from '@/utils/request'
 import { API_PATHS } from '@/config/api'
 import type {
   GetCartListResponse,
@@ -7,15 +7,15 @@ import type {
   UpdateCartItemCountRequest,
   UpdateCartItemCountResponse,
   DeleteCartItemResponse,
-  ClearCartResponse,
+  ClearCartResponse, CartServerItem,
 } from '@/types/api/cart'
 
 /**
  * 获取购物车列表
  */
 export function getCartList(): Promise<GetCartListResponse> {
-  return request({
-    url: API_PATHS.CART_LIST,
+  return request<CartServerItem[]>({
+    url: API_PATHS.CART.LIST,
     method: 'GET',
   })
 }
@@ -24,8 +24,8 @@ export function getCartList(): Promise<GetCartListResponse> {
  * 添加商品到购物车
  */
 export function addCartItem(data: AddCartItemRequest): Promise<AddCartItemResponse> {
-  return request({
-    url: API_PATHS.CART_ADD,
+  return request<CartServerItem[]>({
+    url: API_PATHS.CART.ADD,
     method: 'POST',
     data,
   })
@@ -34,11 +34,9 @@ export function addCartItem(data: AddCartItemRequest): Promise<AddCartItemRespon
 /**
  * 更新购物车商品数量
  */
-export function updateCartItemCount(
-  data: UpdateCartItemCountRequest
-): Promise<UpdateCartItemCountResponse> {
-  return request({
-    url: API_PATHS.CART_ITEM(data.id),
+export function updateCartItemCount(data: UpdateCartItemCountRequest): Promise<UpdateCartItemCountResponse> {
+  return request<CartServerItem[]>({
+    url: API_PATHS.CART.ITEM(data.id),
     method: 'POST',
     data: { count: data.count },
   })
@@ -48,8 +46,8 @@ export function updateCartItemCount(
  * 删除单个购物车商品
  */
 export function deleteCartItem(id: number): Promise<DeleteCartItemResponse> {
-  return request({
-    url: API_PATHS.CART_ITEM(id),
+  return request<CartServerItem[]>({
+    url: API_PATHS.CART.ITEM(id),
     method: 'DELETE',
   })
 }
@@ -58,8 +56,8 @@ export function deleteCartItem(id: number): Promise<DeleteCartItemResponse> {
  * 清空购物车
  */
 export function clearCart(): Promise<ClearCartResponse> {
-  return request({
-    url: API_PATHS.CART_CLEAR,
+  return request<null>({
+    url: API_PATHS.CART.CLEAR,
     method: 'DELETE',
   })
 }
