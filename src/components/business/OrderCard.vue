@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import type { OrderItem } from '@/types/model/order'
+import {
+  canCancelOrder,
+  canPayOrder,
+  canConfirmReceive,
+  canCommentOrder,
+} from '@/utils/order'
 
 const props = defineProps<{
   order: OrderItem
@@ -37,21 +43,21 @@ const emit = defineEmits<{
       <view class="text-[12px] text-[#999]">{{ props.order.createTime }}</view>
       <view class="flex items-center">
         <text class="text-[12px] text-[#333] mr-1">共{{ props.order.totalCount }}件 合计:</text>
-        <text class="text-[15px] font-bold text-[#333]">¥{{ props.order.totalPrice }}</text>
+        <text class="text-[15px] font-bold text-[#333]">¥{{ props.order.payPrice }}</text>
       </view>
     </view>
 
     <view class="flex justify-end mt-4 space-x-3">
-      <view v-if="props.order.status === 1" class="px-4 py-1.5 rounded-full border border-[#DDD] text-[13px] text-[#666]" @click.stop="emit('action', 'cancel', props.order)">
+      <view v-if="canCancelOrder(props.order.status)" class="px-4 py-1.5 rounded-full border border-[#DDD] text-[13px] text-[#666]" @click.stop="emit('action', 'cancel', props.order)">
         取消订单
       </view>
-      <view v-if="props.order.status === 1" class="px-5 py-1.5 rounded-full bg-[#C40000] text-white text-[13px] font-medium" @click.stop="emit('action', 'pay', props.order)">
+      <view v-if="canPayOrder(props.order.status)" class="px-5 py-1.5 rounded-full bg-[#C40000] text-white text-[13px] font-medium" @click.stop="emit('action', 'pay', props.order)">
         立即支付
       </view>
-      <view v-if="props.order.status === 3" class="px-5 py-1.5 rounded-full bg-[#C40000] text-white text-[13px] font-medium" @click.stop="emit('action', 'confirm', props.order)">
+      <view v-if="canConfirmReceive(props.order.status)" class="px-5 py-1.5 rounded-full bg-[#C40000] text-white text-[13px] font-medium" @click.stop="emit('action', 'confirm', props.order)">
         确认收货
       </view>
-      <view v-if="props.order.status === 4" class="px-4 py-1.5 rounded-full border border-[#DDD] text-[13px] text-[#666]" @click.stop="emit('action', 'comment', props.order)">
+      <view v-if="canCommentOrder(props.order.status)" class="px-4 py-1.5 rounded-full border border-[#DDD] text-[13px] text-[#666]" @click.stop="emit('action', 'comment', props.order)">
         立即评价
       </view>
     </view>

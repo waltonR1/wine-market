@@ -1,5 +1,11 @@
 import type { ApiResponse } from '@/types/common'
-import type { OrderConfirmItem, OrderItem } from '@/types/model/order'
+import type {
+  OrderConfirmItem,
+  OrderItem,
+  GetOrderDetailData,
+  PayOrderData,
+  PayOrderParams,
+} from '@/types/model/order'
 import type { AddressInfo } from '@/types/model/address'
 
 export type GetConfirmOrderListResponse = ApiResponse<OrderConfirmItem[]>
@@ -18,3 +24,9 @@ export type CreateOrderResponse = ApiResponse<OrderItem>
 export type CancelOrderResponse = ApiResponse<null>
 
 export type ConfirmReceiveOrderResponse = ApiResponse<null>
+
+export type GetOrderDetailResponse = ApiResponse<GetOrderDetailData>
+
+export interface PayOrderRequest extends PayOrderParams {}
+
+export type PayOrderResponse = ApiResponse<PayOrderData>

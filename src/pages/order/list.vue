@@ -25,6 +25,7 @@
             :key="order.id"
             :order="order"
             @action="handleOrderAction"
+            @click="goOrderDetail"
         />
       </template>
 
@@ -120,9 +121,8 @@ async function handleConfirmOrder(order: OrderItem) {
 }
 
 function handlePayOrder(order: OrderItem) {
-  uni.showToast({
-    title: '支付功能暂未接入',
-    icon: 'none',
+  uni.navigateTo({
+    url: `/pages/order/pay?id=${order.id}`,
   })
 }
 
@@ -150,6 +150,12 @@ const handleOrderAction = async (type: string, order: OrderItem) => {
     default:
       break
   }
+}
+
+function goOrderDetail(order: OrderItem) {
+  uni.navigateTo({
+    url: `/pages/order/detail?id=${order.id}`,
+  })
 }
 </script>
 

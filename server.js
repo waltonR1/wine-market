@@ -505,6 +505,63 @@ server.post('/orders/:id/confirm', (req, res) => {
   res.status(200).jsonp(ok(null, '已确认收货'))
 })
 
+server.get('/order/:id/detail', (req, res) => {
+  const id = String(req.params.id)
+  const db = router.db
+
+  const order = db.get('orders').find({ id }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  res.status(200).jsonp(ok({ order }))
+})
+
+server.post('/order/pay', (req, res) => {
+  const { id, payType = 'wechat' } = req.body || {}
+
+  if (!id) {
+    res.status(200).jsonp(fail('参数错误'))
+    return
+  }
+
+  const db = router.db
+  const order = db.get('orders').find({ id: String(id) }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  if (order.status !== 1) {
+    res.status(200).jsonp(fail('订单不可支付'))
+    return
+  }
+
+  const payTime = formatDateTime()
+
+  db.get('orders')
+    .find({ id: String(id) })
+    .assign({
+      status: 2,
+      statusLabel: '待发货',
+      payType,
+      payTime,
+    })
+    .write()
+
+  res.status(200).jsonp(
+    ok({
+      id,
+      status: 2,
+      statusLabel: '待发货',
+      payTime,
+    })
+  )
+})
+
 server.use(router)
 
 server.use((req, res) => {

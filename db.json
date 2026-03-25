@@ -2832,8 +2832,8 @@
     {
       "id": "1774303740186",
       "orderNum": "ORD202603230002",
-      "status": 1,
-      "statusLabel": "待付款",
+      "status": 2,
+      "statusLabel": "待发货",
       "createTime": "2026-03-23 23:09",
       "totalPrice": 150000,
       "totalCount": 1,
@@ -2858,13 +2858,21 @@
         "detail": "某某路某某号院",
         "isDefault": true
       },
-      "remark": "test"
+      "remark": "test",
+      "payType": "wechat",
+      "payTime": "2026-03-24 23:42",
+      "deliveryTime": "",
+      "finishTime": "",
+      "cancelTime": "",
+      "logisticsCompany": "",
+      "logisticsNo": "",
+      "logisticsStatusText": "暂无物流信息"
     },
     {
       "id": "1774303477431",
       "orderNum": "ORD202603230001",
-      "status": 1,
-      "statusLabel": "待付款",
+      "status": 6,
+      "statusLabel": "已取消",
       "createTime": "2026-03-23 23:04",
       "totalPrice": 35552,
       "totalCount": 4,
@@ -2889,7 +2897,15 @@
         "detail": "某某街道某某小区",
         "isDefault": false
       },
-      "remark": ""
+      "remark": "",
+      "payType": "",
+      "payTime": "",
+      "deliveryTime": "",
+      "finishTime": "",
+      "cancelTime": "",
+      "logisticsCompany": "",
+      "logisticsNo": "",
+      "logisticsStatusText": "暂无物流信息"
     },
     {
       "id": "1774206699458",
@@ -2920,7 +2936,15 @@
         "detail": "某某路某某号院",
         "isDefault": true
       },
-      "remark": "这是一个测试"
+      "remark": "这是一个测试",
+      "payType": "",
+      "payTime": "",
+      "deliveryTime": "",
+      "finishTime": "",
+      "cancelTime": "",
+      "logisticsCompany": "",
+      "logisticsNo": "",
+      "logisticsStatusText": "暂无物流信息"
     },
     {
       "id": "1774206581948",
@@ -2951,7 +2975,15 @@
         "detail": "某某路某某号院",
         "isDefault": true
       },
-      "remark": ""
+      "remark": "",
+      "payType": "",
+      "payTime": "",
+      "deliveryTime": "",
+      "finishTime": "",
+      "cancelTime": "",
+      "logisticsCompany": "",
+      "logisticsNo": "",
+      "logisticsStatusText": "暂无物流信息"
     },
     {
       "id": "1774206359815",
@@ -2982,7 +3014,15 @@
         "detail": "某某路某某号院",
         "isDefault": true
       },
-      "remark": ""
+      "remark": "",
+      "payType": "",
+      "payTime": "",
+      "deliveryTime": "",
+      "finishTime": "",
+      "cancelTime": "",
+      "logisticsCompany": "",
+      "logisticsNo": "",
+      "logisticsStatusText": "暂无物流信息"
     },
     {
       "id": "1774205670998",
@@ -3020,7 +3060,15 @@
         "detail": "某某路某某号院",
         "isDefault": true
       },
-      "remark": ""
+      "remark": "",
+      "payType": "",
+      "payTime": "",
+      "deliveryTime": "",
+      "finishTime": "",
+      "cancelTime": "",
+      "logisticsCompany": "",
+      "logisticsNo": "",
+      "logisticsStatusText": "暂无物流信息"
     },
     {
       "id": "1774178873772",
@@ -3058,7 +3106,15 @@
         "detail": "321213321",
         "isDefault": false
       },
-      "remark": ""
+      "remark": "",
+      "payType": "",
+      "payTime": "",
+      "deliveryTime": "",
+      "finishTime": "",
+      "cancelTime": "",
+      "logisticsCompany": "",
+      "logisticsNo": "",
+      "logisticsStatusText": "暂无物流信息"
     },
     {
       "id": "1774136961502",
@@ -3096,7 +3152,15 @@
         "detail": "某某街道某某小区",
         "isDefault": true
       },
-      "remark": ""
+      "remark": "",
+      "payType": "",
+      "payTime": "",
+      "deliveryTime": "",
+      "finishTime": "",
+      "cancelTime": "",
+      "logisticsCompany": "",
+      "logisticsNo": "",
+      "logisticsStatusText": "暂无物流信息"
     },
     {
       "id": "1774136939872",
@@ -3127,47 +3191,15 @@
         "detail": "某某街道某某小区",
         "isDefault": true
       },
-      "remark": ""
-    },
-    {
-      "id": "1",
-      "orderNum": "ORD202603130001",
-      "status": 1,
-      "statusLabel": "待付款",
-      "createTime": "2026-03-13 10:00",
-      "totalPrice": 8888,
-      "totalCount": 1,
-      "freight": 0,
-      "payPrice": 8888,
-      "goods": [
-        {
-          "id": 1,
-          "name": "拉菲罗斯柴尔德古堡干红",
-          "price": 8888,
-          "count": 1,
-          "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "orderNum": "ORD202603130002",
-      "status": 2,
-      "statusLabel": "待发货",
-      "createTime": "2026-03-12 15:30",
-      "totalPrice": 5160,
-      "totalCount": 2,
-      "freight": 0,
-      "payPrice": 8888,
-      "goods": [
-        {
-          "id": 2,
-          "name": "玛歌红亭干红葡萄酒",
-          "price": 2580,
-          "count": 2,
-          "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Wine"
-        }
-      ]
+      "remark": "",
+      "payType": "",
+      "payTime": "",
+      "deliveryTime": "",
+      "finishTime": "",
+      "cancelTime": "",
+      "logisticsCompany": "",
+      "logisticsNo": "",
+      "logisticsStatusText": "暂无物流信息"
     }
   ],
   "order_confirm_list": [],

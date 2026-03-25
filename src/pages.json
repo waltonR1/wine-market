@@ -134,6 +134,20 @@
         "navigationBarTitleText": "登录",
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path": "pages/order/detail",
+      "style": {
+        "navigationBarTitleText": "订单详情",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/order/pay",
+      "style": {
+        "navigationBarTitleText": "支付订单",
+        "enablePullDownRefresh": false
+      }
     }
   ],
   "tabBar": {
