@@ -52,7 +52,7 @@
     {
       "id": 22,
       "name": "限时特惠波尔多干红",
-      "subtitle": "第2件半价",
+      "subtitle": "第二件半价",
       "price": 99,
       "image": "https://placehold.co/400x400/6B0F1A/FFFFFF.png?text=Bordeaux+Sale",
       "tag": "超值",
@@ -310,7 +310,7 @@
       "region": "波尔多",
       "type": "红葡萄酒",
       "alcohol": "13.5%",
-      "description": "拉菲古堡（Chateau Lafite Rothschild）是享誉世界的波尔多五大一级名庄之一。2015年份表现卓越，单宁丝滑，带有精致的黑香醋、烟草及矿物质香气，陈年潜力巨大。",
+      "description": "经典一级庄风格，酒体饱满，层次细腻。",
       "stock": 37,
       "params": [
         {
@@ -358,17 +358,17 @@
       ],
       "comments": [
         {
-          "id": 1774490799078,
-          "orderId": "1774600000002",
-          "userName": "Wine ??",
+          "id": 1774532268661,
+          "userName": "Wine 用户",
           "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
-          "score": 3,
-          "content": "啊DDS",
+          "score": 5,
+          "content": "AS",
           "time": "2026-03-26",
+          "anonymous": false,
+          "orderId": "1774600000002",
           "images": [
             "https://placehold.co/160x160/E8EEF4/4A5A70.png?text=Pic+2"
           ],
-          "anonymous": false,
           "appendTime": "",
           "appendContent": "",
           "appendImages": []
@@ -380,8 +380,9 @@
           "score": 3,
           "content": "心塞u插穗与法国元帅的犯规哦撒地方 关于",
           "time": "2026-03-25",
-          "images": [],
+          "anonymous": false,
           "orderId": "",
+          "images": [],
           "appendTime": "",
           "appendContent": "",
           "appendImages": []
@@ -393,8 +394,9 @@
           "score": 5,
           "content": "香气很干净，层次丰富，确实是名庄的风格。",
           "time": "2026-03-18",
-          "images": [],
+          "anonymous": false,
           "orderId": "",
+          "images": [],
           "appendTime": "",
           "appendContent": "",
           "appendImages": []
@@ -406,8 +408,9 @@
           "score": 5,
           "content": "送礼很有面子，包装高级，物流也快。",
           "time": "2026-03-19",
-          "images": [],
+          "anonymous": false,
           "orderId": "",
+          "images": [],
           "appendTime": "",
           "appendContent": "",
           "appendImages": []
@@ -1366,13 +1369,13 @@
       "sales": 8500,
       "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Macallan+12",
       "tag": "经典",
-      "comment": 3,
+      "comment": 4,
       "categoryId": 5,
       "subCategoryId": 502,
-      "region": "斯佩塞",
-      "type": "单一麦芽威士忌",
+      "region": "苏格兰",
+      "type": "威士忌",
       "alcohol": "40%",
-      "description": "麦卡伦（Macallan）雪莉桶系列的代表作。在精选的西班牙雪莉橡木桶中陈酿至少12年，呈现深邃的金色，带有干果、生姜及甜香草的香气，余韵持久。",
+      "description": "雪莉桶风格明显，口感圆润，适合纯饮或加冰。",
       "stock": 20,
       "params": [
         {
@@ -1412,14 +1415,31 @@
       ],
       "comments": [
         {
+          "id": 1774532429376,
+          "userName": "匿名用户",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "CDS",
+          "time": "2026-03-26",
+          "anonymous": true,
+          "orderId": "1774600000001",
+          "images": [
+            "https://placehold.co/160x160/F4E7DD/7A4B2F.png?text=Pic+1"
+          ],
+          "appendTime": "",
+          "appendContent": "",
+          "appendImages": []
+        },
+        {
           "id": 1774478921261,
           "userName": "Wine 用户",
           "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
           "score": 3,
           "content": "心塞u插穗与法国元帅的犯规哦撒地方 关于",
           "time": "2026-03-25",
-          "images": [],
+          "anonymous": false,
           "orderId": "",
+          "images": [],
           "appendTime": "",
           "appendContent": "",
           "appendImages": []
@@ -1431,8 +1451,9 @@
           "score": 5,
           "content": "雪莉桶风味很明显，喝起来很舒服。",
           "time": "2026-03-18",
-          "images": [],
+          "anonymous": false,
           "orderId": "",
+          "images": [],
           "appendTime": "",
           "appendContent": "",
           "appendImages": []
@@ -1444,8 +1465,9 @@
           "score": 5,
           "content": "香气层次不错，余味很长。",
           "time": "2026-03-20",
-          "images": [],
+          "anonymous": false,
           "orderId": "",
+          "images": [],
           "appendTime": "",
           "appendContent": "",
           "appendImages": []
@@ -1880,7 +1902,7 @@
     {
       "id": 22,
       "name": "限时特惠波尔多干红",
-      "subtitle": "第2件半价",
+      "subtitle": "第二件半价",
       "price": 99,
       "sales": 50000,
       "image": "https://placehold.co/400x400/FF0000/FFFFFF.png?text=Special+Offer",
@@ -1891,7 +1913,7 @@
       "region": "波尔多",
       "type": "红葡萄酒",
       "alcohol": "13.5%",
-      "description": "精选波尔多大区级优质干红。果香浓郁，口感易饮，目前限时特惠，是日常佐餐的高性价比选择。",
+      "description": "日常易饮型干红，适合聚会和餐酒搭配。",
       "stock": 0,
       "params": [
         {
@@ -1939,7 +1961,7 @@
           ],
           "orderId": "1774206359815",
           "appendTime": "2026-03-26 10:30",
-          "appendContent": "?????????????????",
+          "appendContent": "醒酒后酸度更柔和，餐搭表现更好。",
           "appendImages": [
             "https://placehold.co/160x160/F1E7E9/8D4F5A.png?text=Append+1"
           ]
@@ -2375,19 +2397,19 @@
     },
     {
       "id": 28,
-      "name": "智利活魂 2018",
-      "subtitle": "智利酒王 跨界力作",
+      "name": "智利活灵魂 2018",
+      "subtitle": "名庄联名款红葡萄酒",
       "price": 1280,
       "sales": 850,
       "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Almaviva",
       "tag": "至尊",
-      "comment": 2,
+      "comment": 3,
       "categoryId": 1,
       "subCategoryId": 105,
       "region": "迈坡谷",
       "type": "红葡萄酒",
       "alcohol": "14.5%",
-      "description": "活魂（Almaviva）是罗斯柴尔德男爵集团与干露酒庄的合资项目。它融合了法国酿酒技术与智利风土，口感极其浓郁。",
+      "description": "结构感强，果味集中，陈年潜力良好。",
       "stock": 60,
       "params": [
         {
@@ -2427,14 +2449,31 @@
       ],
       "comments": [
         {
+          "id": 1774532429391,
+          "userName": "匿名用户",
+          "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
+          "score": 5,
+          "content": "CDS",
+          "time": "2026-03-26",
+          "anonymous": true,
+          "orderId": "1774600000001",
+          "images": [
+            "https://placehold.co/160x160/F4E7DD/7A4B2F.png?text=Pic+1"
+          ],
+          "appendTime": "",
+          "appendContent": "",
+          "appendImages": []
+        },
+        {
           "id": 2801,
           "userName": "酒友AT",
           "avatar": "https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U",
           "score": 5,
           "content": "酒体很浓郁，风味很饱满。",
           "time": "2026-03-18",
-          "images": [],
+          "anonymous": false,
           "orderId": "",
+          "images": [],
           "appendTime": "",
           "appendContent": "",
           "appendImages": []
@@ -2446,8 +2485,9 @@
           "score": 5,
           "content": "层次感明显，适合重要场合。",
           "time": "2026-03-20",
-          "images": [],
+          "anonymous": false,
           "orderId": "",
+          "images": [],
           "appendTime": "",
           "appendContent": "",
           "appendImages": []
@@ -3122,7 +3162,7 @@
       "province": "上海市",
       "city": "上海市",
       "district": "黄浦区",
-      "detail": "21达瓦我",
+      "detail": "21号达华公寓",
       "isDefault": true
     },
     {
@@ -3152,7 +3192,7 @@
           "price": 8888,
           "count": 7,
           "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
-          "spec": "",
+          "spec": "标准装",
           "stock": 37
         },
         {
@@ -3161,7 +3201,7 @@
           "price": 650,
           "count": 20,
           "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Macallan+12",
-          "spec": "",
+          "spec": "标准装",
           "stock": 20
         },
         {
@@ -3181,7 +3221,7 @@
         "province": "上海市",
         "city": "上海市",
         "district": "黄浦区",
-        "detail": "21达瓦我",
+        "detail": "21号达华公寓",
         "isDefault": true
       },
       "remark": "",
@@ -3226,7 +3266,7 @@
       "goods": [
         {
           "id": 1,
-          "name": "???????????",
+          "name": "拉菲罗斯柴尔德古堡干红",
           "price": 8888,
           "count": 1,
           "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
@@ -3240,7 +3280,7 @@
         "province": "上海市",
         "city": "上海市",
         "district": "黄浦区",
-        "detail": "21达瓦我",
+        "detail": "21号达华公寓",
         "isDefault": true
       },
       "remark": "",
@@ -3249,13 +3289,13 @@
       "deliveryTime": "2026-03-25 20:10",
       "finishTime": "2026-03-26 08:45",
       "cancelTime": "",
-      "logisticsCompany": "????",
+      "logisticsCompany": "京东物流",
       "logisticsNo": "JD9988776655",
-      "logisticsStatusText": "????????",
-      "commentTime": "2026-03-26 03:06",
+      "logisticsStatusText": "已签收，等待评价",
+      "commentTime": "2026-03-26 14:37",
       "closeReason": "commented",
-      "commentScore": 3,
-      "commentContent": "啊DDS",
+      "commentScore": 5,
+      "commentContent": "AS",
       "commentAnonymous": false,
       "afterSaleStatus": "none",
       "afterSaleType": "",
@@ -3270,13 +3310,14 @@
       "afterSaleHandleTime": "",
       "afterSaleCompleteTime": "",
       "afterSaleRejectReason": "",
-      "afterSaleTimeline": []
+      "afterSaleTimeline": [],
+      "statusDesc": "订单已评价并关闭"
     },
     {
       "id": "1774600000001",
       "orderNum": "ORD202603260101",
-      "status": 3,
-      "statusLabel": "???",
+      "status": 6,
+      "statusLabel": "已关闭",
       "createTime": "2026-03-26 09:10",
       "totalPrice": 1730,
       "totalCount": 2,
@@ -3285,7 +3326,7 @@
       "goods": [
         {
           "id": 15,
-          "name": "??? 12 ????",
+          "name": "麦卡伦 12 年雪莉桶",
           "price": 650,
           "count": 1,
           "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Macallan+12",
@@ -3293,7 +3334,7 @@
         },
         {
           "id": 28,
-          "name": "????? 2018",
+          "name": "智利活灵魂 2018",
           "price": 1080,
           "count": 1,
           "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Almaviva",
@@ -3307,41 +3348,44 @@
         "province": "上海市",
         "city": "上海市",
         "district": "黄浦区",
-        "detail": "21达瓦我",
+        "detail": "21号达华公寓",
         "isDefault": true
       },
-      "remark": "????????",
+      "remark": "请工作日白天送达",
       "payType": "wechat",
       "payTime": "2026-03-26 09:12",
       "deliveryTime": "2026-03-26 13:30",
-      "finishTime": "",
+      "finishTime": "2026-03-26 14:38",
       "cancelTime": "",
-      "logisticsCompany": "????",
+      "logisticsCompany": "顺丰速运",
       "logisticsNo": "SF1234567890",
-      "logisticsStatusText": "????????????",
-      "commentTime": "",
-      "closeReason": "",
-      "commentScore": 0,
-      "commentContent": "",
-      "commentAnonymous": false,
+      "logisticsStatusText": "包裹运输中，预计今日送达",
+      "commentTime": "2026-03-26 14:40",
+      "closeReason": "commented",
+      "commentScore": 5,
+      "commentContent": "CDS",
+      "commentAnonymous": true,
       "afterSaleStatus": "none",
       "afterSaleType": "",
       "afterSaleReason": "",
       "afterSaleApplyTime": "",
-      "commentImages": [],
+      "commentImages": [
+        "https://placehold.co/160x160/F4E7DD/7A4B2F.png?text=Pic+1"
+      ],
       "appendCommentTime": "",
       "appendCommentContent": "",
       "appendCommentImages": [],
       "afterSaleHandleTime": "",
       "afterSaleCompleteTime": "",
       "afterSaleRejectReason": "",
-      "afterSaleTimeline": []
+      "afterSaleTimeline": [],
+      "statusDesc": "订单已评价并关闭"
     },
     {
       "id": "1774303740186",
       "orderNum": "ORD202603230002",
       "status": 2,
-      "statusLabel": "???",
+      "statusLabel": "待发货",
       "createTime": "2026-03-23 23:09",
       "totalPrice": 150000,
       "totalCount": 1,
@@ -3398,7 +3442,7 @@
       "id": "1774303477431",
       "orderNum": "ORD202603230001",
       "status": 6,
-      "statusLabel": "???",
+      "statusLabel": "已关闭",
       "createTime": "2026-03-23 23:04",
       "totalPrice": 35552,
       "totalCount": 4,
@@ -3411,7 +3455,7 @@
           "price": 8888,
           "count": 4,
           "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
-          "spec": ""
+          "spec": "标准装"
         }
       ],
       "address": {
@@ -3455,7 +3499,7 @@
       "id": "1774206699458",
       "orderNum": "ORD202603220007",
       "status": 2,
-      "statusLabel": "???",
+      "statusLabel": "待发货",
       "createTime": "2026-03-22 20:11",
       "totalPrice": 8888,
       "totalCount": 1,
@@ -3468,7 +3512,7 @@
           "price": 8888,
           "count": 1,
           "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
-          "spec": ""
+          "spec": "标准装"
         }
       ],
       "address": {
@@ -3525,7 +3569,7 @@
           "price": 99,
           "count": 3,
           "image": "https://placehold.co/400x400/FF0000/FFFFFF.png?text=Special+Offer",
-          "spec": ""
+          "spec": "标准装"
         }
       ],
       "address": {
@@ -3569,7 +3613,7 @@
       "id": "1774206359815",
       "orderNum": "ORD202603220005",
       "status": 6,
-      "statusLabel": "???",
+      "statusLabel": "已关闭",
       "createTime": "2026-03-22 20:05",
       "totalPrice": 99,
       "totalCount": 1,
@@ -3582,7 +3626,7 @@
           "price": 99,
           "count": 1,
           "image": "https://placehold.co/400x400/FF0000/FFFFFF.png?text=Special+Offer",
-          "spec": ""
+          "spec": "标准装"
         }
       ],
       "address": {
@@ -3607,7 +3651,7 @@
       "closeReason": "commented",
       "commentTime": "2026-03-25 23:14",
       "commentScore": 3,
-      "commentContent": "订单搜索",
+      "commentContent": "入口顺滑，果香明显，适合聚餐分享。",
       "afterSaleStatus": "none",
       "afterSaleType": "",
       "afterSaleReason": "",
@@ -3617,7 +3661,7 @@
         "https://placehold.co/160x160/E8EEF4/4A5A70.png?text=Review+2"
       ],
       "appendCommentTime": "2026-03-26 10:30",
-      "appendCommentContent": "放了两天后口感更顺，适合搭配牛排。",
+      "appendCommentContent": "醒酒后层次更清晰，搭配牛排更合适。",
       "appendCommentImages": [
         "https://placehold.co/160x160/F1E7E9/8D4F5A.png?text=Append+1"
       ],
@@ -3631,7 +3675,7 @@
       "id": "1774205670998",
       "orderNum": "ORD202603220004",
       "status": 1,
-      "statusLabel": "???",
+      "statusLabel": "待付款",
       "createTime": "2026-03-22 19:54",
       "totalPrice": 10168,
       "totalCount": 2,
@@ -3644,15 +3688,15 @@
           "price": 8888,
           "count": 1,
           "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
-          "spec": ""
+          "spec": "标准装"
         },
         {
           "id": 28,
-          "name": "智利活魂 2018",
+          "name": "智利活灵魂 2018",
           "price": 1280,
           "count": 1,
           "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Almaviva",
-          "spec": ""
+          "spec": "标准装"
         }
       ],
       "address": {
@@ -3696,7 +3740,7 @@
       "id": "1774178873772",
       "orderNum": "ORD202603220003",
       "status": 6,
-      "statusLabel": "???",
+      "statusLabel": "已关闭",
       "createTime": "2026-03-22 12:27",
       "totalPrice": 9538,
       "totalCount": 2,
@@ -3709,7 +3753,7 @@
           "price": 8888,
           "count": 1,
           "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
-          "spec": ""
+          "spec": "标准装"
         },
         {
           "id": 15,
@@ -3717,7 +3761,7 @@
           "price": 650,
           "count": 1,
           "image": "https://placehold.co/400x400/8B4513/FFFFFF.png?text=Macallan+12",
-          "spec": ""
+          "spec": "标准装"
         }
       ],
       "address": {
@@ -3741,17 +3785,17 @@
       "logisticsStatusText": "暂无物流信息",
       "afterSaleStatus": "reviewing",
       "afterSaleType": "退货退款",
-      "afterSaleReason": "213",
+      "afterSaleReason": "收到后外箱有轻微破损，申请售后处理。",
       "afterSaleApplyTime": "2026-03-25 23:26",
       "closeReason": "commented",
       "commentTime": "2026-03-25 23:48",
       "commentScore": 3,
-      "commentContent": "心塞u插穗与法国元帅的犯规哦撒地方 关于",
+      "commentContent": "酒体扎实，开瓶后香气展开很快。",
       "commentImages": [
         "https://placehold.co/160x160/F4E7DD/7A4B2F.png?text=Review+1"
       ],
       "appendCommentTime": "2026-03-26 02:52",
-      "appendCommentContent": "大苏打撒旦",
+      "appendCommentContent": "放置半小时后口感更柔和。",
       "appendCommentImages": [
         "https://placehold.co/160x160/F4E7DD/7A4B2F.png?text=Pic+1",
         "https://placehold.co/160x160/E8EEF4/4A5A70.png?text=Pic+2",
@@ -3803,7 +3847,7 @@
       "id": "1774136939872",
       "orderNum": "ORD202603220001",
       "status": 1,
-      "statusLabel": "???",
+      "statusLabel": "待付款",
       "createTime": "2026-03-22 00:48",
       "totalPrice": 8888,
       "totalCount": 1,
@@ -3816,7 +3860,7 @@
           "price": 8888,
           "count": 1,
           "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
-          "spec": ""
+          "spec": "标准装"
         }
       ],
       "address": {

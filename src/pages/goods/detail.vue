@@ -1,22 +1,11 @@
 <template>
-  <view
-    v-if="product"
-    class="min-h-screen bg-background pb-[100px]"
-  >
-    <image
-      :src="product.image"
-      class="mb-5 h-[320px] w-full bg-[#EFE7DE]"
-      mode="aspectFill"
-    />
+  <view v-if="product" class="min-h-screen bg-background pb-[100px]">
+    <image :src="product.image" class="mb-5 h-[320px] w-full bg-[#EFE7DE]" mode="aspectFill" />
 
     <view class="-mt-6 rounded-t-3xl bg-white p-5">
-      <view class="text-[20px] font-bold leading-6 text-text-main">
-        {{ product.name }}
-      </view>
+      <view class="text-[20px] font-bold leading-6 text-text-main">{{ product.name }}</view>
 
-      <view class="mt-2 text-[13px] text-text-secondary">
-        {{ product.subtitle }}
-      </view>
+      <view class="mt-2 text-[13px] text-text-secondary">{{ product.subtitle }}</view>
 
       <view class="mt-3 flex items-center justify-between">
         <view class="text-[12px] text-text-secondary">
@@ -28,9 +17,7 @@
         </view>
       </view>
 
-      <view class="mt-4 text-[26px] font-bold text-accent">
-        ¥{{ product.price }}
-      </view>
+      <view class="mt-4 text-[26px] font-bold text-accent">￥{{ product.price }}</view>
 
       <view class="my-1 h-[1px] bg-[#EEE]"></view>
 
@@ -61,10 +48,7 @@
 
         <view v-if="activeTab === 'detail'" class="mt-4">
           <view v-for="(block, idx) in product.detail" :key="idx">
-            <view
-              v-if="block.type === 'title'"
-              class="text-[16px] font-bold text-text-main"
-            >
+            <view v-if="block.type === 'title'" class="text-[16px] font-bold text-text-main">
               {{ block.value }}
             </view>
             <view
@@ -103,39 +87,61 @@
 
         <view v-else class="mt-4">
           <view
-            v-for="c in product.comments"
-            :key="c.id"
+            v-for="comment in product.comments"
+            :key="comment.id"
             class="mb-4 rounded-2xl bg-[#F8F5F2] p-4"
           >
             <view class="flex items-center justify-between">
               <view class="flex items-center">
-                <image
-                  :src="c.avatar"
-                  class="h-[34px] w-[34px] rounded-full bg-white"
-                  mode="aspectFill"
-                />
+                <image :src="comment.avatar" class="h-[34px] w-[34px] rounded-full bg-white" mode="aspectFill" />
                 <view class="ml-3">
-                  <view class="text-[13px] font-medium text-text-main">{{ c.userName }}</view>
-                  <view class="mt-0.5 text-[11px] text-text-secondary">{{ c.time }}</view>
+                  <view class="flex items-center gap-2">
+                    <view class="text-[13px] font-medium text-text-main">{{ comment.userName }}</view>
+                    <view
+                      v-if="comment.anonymous"
+                      class="rounded-full bg-[#EFE7DE] px-2 py-[2px] text-[10px] text-[#7A4B2F]"
+                    >
+                      匿名
+                    </view>
+                  </view>
+                  <view class="mt-0.5 text-[11px] text-text-secondary">{{ comment.time }}</view>
                 </view>
               </view>
-              <view class="text-[12px] text-accent">
-                {{ renderStars(c.score) }}
-              </view>
+              <view class="text-[12px] text-accent">{{ renderStars(comment.score) }}</view>
             </view>
 
-            <view class="mt-3 text-[13px] leading-6 text-[#6F6258]">
-              {{ c.content }}
-            </view>
+            <view class="mt-3 text-[13px] leading-6 text-[#6F6258]">{{ comment.content }}</view>
 
-            <view v-if="c.images && c.images.length" class="mt-3 grid grid-cols-3 gap-2">
+            <view v-if="comment.images?.length" class="mt-3 grid grid-cols-3 gap-2">
               <image
-                v-for="(img, idx) in c.images"
+                v-for="(img, idx) in comment.images"
                 :key="idx"
                 :src="img"
                 class="h-[90px] w-full rounded-xl bg-white"
                 mode="aspectFill"
               />
+            </view>
+
+            <view
+              v-if="comment.appendContent || comment.appendTime || comment.appendImages?.length"
+              class="mt-4 rounded-2xl border border-[#E8DED6] bg-white/70 p-3"
+            >
+              <view class="flex items-center justify-between">
+                <text class="text-[12px] font-medium text-[#7A4B2F]">追加评价</text>
+                <text class="text-[11px] text-text-secondary">{{ comment.appendTime || '-' }}</text>
+              </view>
+              <view v-if="comment.appendContent" class="mt-2 text-[12px] leading-6 text-[#6F6258]">
+                {{ comment.appendContent }}
+              </view>
+              <view v-if="comment.appendImages?.length" class="mt-3 grid grid-cols-3 gap-2">
+                <image
+                  v-for="(img, idx) in comment.appendImages"
+                  :key="idx"
+                  :src="img"
+                  class="h-[86px] w-full rounded-xl bg-white"
+                  mode="aspectFill"
+                />
+              </view>
             </view>
           </view>
 
@@ -149,18 +155,11 @@
       </view>
     </view>
 
-    <view
-      class="fixed bottom-0 left-0 right-0 flex items-center justify-between border-t border-[#eee] bg-white px-4 py-3"
-    >
-      <view class="text-[20px] font-bold text-accent">
-        ¥{{ product.price }}
-      </view>
+    <view class="fixed bottom-0 left-0 right-0 flex items-center justify-between border-t border-[#eee] bg-white px-4 py-3">
+      <view class="text-[20px] font-bold text-accent">￥{{ product.price }}</view>
 
       <view class="flex gap-3">
-        <view
-          class="rounded-full border border-accent px-4 py-2 text-[13px] text-accent"
-          @click="addCart"
-        >
+        <view class="rounded-full border border-accent px-4 py-2 text-[13px] text-accent" @click="addCart">
           加入购物车
         </view>
 
@@ -175,10 +174,7 @@
     </view>
   </view>
 
-  <view
-    v-else
-    class="min-h-screen flex items-center justify-center text-text-secondary"
-  >
+  <view v-else class="min-h-screen flex items-center justify-center text-text-secondary">
     商品加载中...
   </view>
 </template>
@@ -203,8 +199,9 @@ onLoad(async (options) => {
 })
 
 function renderStars(score: number) {
-  const filled = '★'.repeat(Math.max(0, Math.min(5, score)))
-  const empty = '☆'.repeat(Math.max(0, 5 - Math.max(0, Math.min(5, score))))
+  const safeScore = Math.max(0, Math.min(5, score || 0))
+  const filled = '★'.repeat(safeScore)
+  const empty = '☆'.repeat(5 - safeScore)
   return `${filled}${empty}`
 }
 

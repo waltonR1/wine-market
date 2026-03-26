@@ -4,6 +4,27 @@ const path = require('path')
 const PORT = Number(process.env.PORT || 3000)
 const DB_PATH = path.join(__dirname, 'db.json')
 
+const ORDER_STATUS_TEXT = {
+  1: '待付款',
+  2: '待发货',
+  3: '待收货',
+  4: '待评价',
+  6: '已关闭',
+}
+
+const AFTER_SALE_STATUS_TEXT = {
+  applying: '申请已提交',
+  reviewing: '平台审核中',
+  approved: '审核通过',
+  refunding: '退款处理中',
+  completed: '售后完成',
+  rejected: '售后已拒绝',
+}
+
+const server = jsonServer.create()
+const router = jsonServer.router(DB_PATH)
+const middlewares = jsonServer.defaults()
+
 function ok(data, message = 'ok') {
   return { code: 0, message, data }
 }
@@ -12,24 +33,47 @@ function fail(message, data = null) {
   return { code: 1, message, data }
 }
 
-const server = jsonServer.create()
-const router = jsonServer.router(DB_PATH)
-const middlewares = jsonServer.defaults()
-
 server.use(middlewares)
 server.use(jsonServer.bodyParser)
 
 router.render = (req, res) => {
-  const statusCode = res.statusCode
-  if (statusCode >= 400) {
-    const message = statusCode === 404 ? '资源不存在' : '请求失败'
+  if (res.statusCode >= 400) {
+    const message = res.statusCode === 404 ? '资源不存在' : '请求失败'
     res.status(200).jsonp(fail(message))
     return
   }
+
   res.status(200).jsonp(ok(res.locals.data))
 }
 
-function buildGoodsDetail(goods) {
+function formatDateTime(date = new Date()) {
+  const pad = value => String(value).padStart(2, '0')
+  const year = date.getFullYear()
+  const month = pad(date.getMonth() + 1)
+  const day = pad(date.getDate())
+  const hour = pad(date.getHours())
+  const minute = pad(date.getMinutes())
+  return `${year}-${month}-${day} ${hour}:${minute}`
+}
+
+function normalizeGoodsComment(comment = {}) {
+  return {
+    id: Number(comment.id || Date.now()),
+    userName: String(comment.userName || '酒友'),
+    avatar: String(comment.avatar || 'https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U'),
+    score: Number(comment.score || 0),
+    content: String(comment.content || ''),
+    time: String(comment.time || ''),
+    anonymous: Boolean(comment.anonymous),
+    orderId: String(comment.orderId || ''),
+    images: Array.isArray(comment.images) ? comment.images : [],
+    appendTime: String(comment.appendTime || ''),
+    appendContent: String(comment.appendContent || ''),
+    appendImages: Array.isArray(comment.appendImages) ? comment.appendImages : [],
+  }
+}
+
+function normalizeGoodsDetail(goods = {}) {
   const sales = Number(goods.sales || 0)
   const stock = Number.isFinite(Number(goods.stock))
     ? Number(goods.stock)
@@ -41,7 +85,7 @@ function buildGoodsDetail(goods) {
         { label: '产区', value: goods.region || '' },
         { label: '类型', value: goods.type || '' },
         { label: '酒精度', value: goods.alcohol || '' },
-      ].filter((p) => p.value)
+      ].filter(item => item.value)
 
   const detail = Array.isArray(goods.detail)
     ? goods.detail
@@ -49,23 +93,20 @@ function buildGoodsDetail(goods) {
         { type: 'title', value: '酒品介绍' },
         { type: 'text', value: goods.description || '' },
         { type: 'image', value: goods.image || '' },
-      ].filter((b) => b.value)
+      ].filter(item => item.value)
 
-  let comments = Array.isArray(goods.comments) ? goods.comments : []
+  let comments = Array.isArray(goods.comments) ? goods.comments.map(normalizeGoodsComment) : []
   if (comments.length === 0 && Number(goods.comment || 0) > 0) {
     const count = Math.min(2, Number(goods.comment || 0))
-    comments = Array.from({ length: count }).map((_, idx) => ({
-      id: goods.id * 10 + idx + 1,
-      userName: idx === 0 ? '酒友A' : '酒友B',
-      avatar: 'https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U',
-      score: 5,
-      content:
-        idx === 0
-          ? '口感非常平衡，果香浓郁，回味悠长。'
-          : '包装精美，适合送礼，物流也很快。',
-      time: '2026-03-20',
-      images: [],
-    }))
+    comments = Array.from({ length: count }).map((_, index) =>
+      normalizeGoodsComment({
+        id: goods.id * 10 + index + 1,
+        userName: index === 0 ? '酒友A' : '酒友B',
+        score: 5,
+        content: index === 0 ? '果香干净，口感平衡，适合聚餐分享。' : '包装不错，送礼也很合适。',
+        time: '2026-03-20',
+      })
+    )
   }
 
   return {
@@ -74,7 +115,266 @@ function buildGoodsDetail(goods) {
     params,
     detail,
     comments,
+    comment: comments.length,
   }
+}
+
+function getDb() {
+  return router.db
+}
+
+function getOrderCloseReason(order = {}) {
+  if (order.closeReason) return order.closeReason
+  if (Number(order.status) !== 6) return ''
+  return order.commentTime ? 'commented' : 'cancelled'
+}
+
+function getOrderStatusLabel(status) {
+  return ORDER_STATUS_TEXT[Number(status)] || ''
+}
+
+function getOrderStatusDesc(order = {}) {
+  const closeReason = getOrderCloseReason(order)
+  if (order.afterSaleStatus && order.afterSaleStatus !== 'none') {
+    return AFTER_SALE_STATUS_TEXT[order.afterSaleStatus] || '售后处理中'
+  }
+
+  if (Number(order.status) === 6 && closeReason === 'commented') {
+    return '订单已评价并关闭'
+  }
+
+  if (Number(order.status) === 6 && closeReason === 'cancelled') {
+    return '订单已取消并关闭'
+  }
+
+  return {
+    1: '请尽快完成支付',
+    2: '商家正在备货中',
+    3: '商品已发出，请注意查收',
+    4: '订单已完成，等待评价',
+    6: '订单已关闭',
+  }[Number(order.status)] || ''
+}
+
+function normalizeOrder(order = {}) {
+  return {
+    ...order,
+    statusLabel: getOrderStatusLabel(order.status),
+    statusDesc: getOrderStatusDesc(order),
+    closeReason: getOrderCloseReason(order),
+    commentAnonymous: Boolean(order.commentAnonymous),
+    commentImages: Array.isArray(order.commentImages) ? order.commentImages : [],
+    appendCommentTime: String(order.appendCommentTime || ''),
+    appendCommentContent: String(order.appendCommentContent || ''),
+    appendCommentImages: Array.isArray(order.appendCommentImages) ? order.appendCommentImages : [],
+    afterSaleStatus: order.afterSaleStatus || 'none',
+    afterSaleType: String(order.afterSaleType || ''),
+    afterSaleReason: String(order.afterSaleReason || ''),
+    afterSaleApplyTime: String(order.afterSaleApplyTime || ''),
+    afterSaleHandleTime: String(order.afterSaleHandleTime || ''),
+    afterSaleCompleteTime: String(order.afterSaleCompleteTime || ''),
+    afterSaleRejectReason: String(order.afterSaleRejectReason || ''),
+    afterSaleTimeline: Array.isArray(order.afterSaleTimeline) ? order.afterSaleTimeline : [],
+  }
+}
+
+function createOrderStatePatch(status, extra = {}) {
+  return {
+    status: Number(status),
+    statusLabel: getOrderStatusLabel(status),
+    payTime: '',
+    deliveryTime: '',
+    finishTime: '',
+    cancelTime: '',
+    commentTime: '',
+    closeReason: '',
+    commentScore: 0,
+    commentContent: '',
+    commentAnonymous: false,
+    commentImages: [],
+    appendCommentTime: '',
+    appendCommentContent: '',
+    appendCommentImages: [],
+    logisticsCompany: '',
+    logisticsNo: '',
+    logisticsStatusText: '暂无物流信息',
+    afterSaleStatus: 'none',
+    afterSaleType: '',
+    afterSaleReason: '',
+    afterSaleApplyTime: '',
+    afterSaleHandleTime: '',
+    afterSaleCompleteTime: '',
+    afterSaleRejectReason: '',
+    afterSaleTimeline: [],
+    ...extra,
+  }
+}
+
+function generateOrderNum(db) {
+  const orders = db.get('orders').value() || []
+  const now = new Date()
+  const pad = value => String(value).padStart(2, '0')
+  const ymd = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`
+  const todayOrders = orders.filter(item => String(item.orderNum || '').startsWith(`ORD${ymd}`))
+  return `ORD${ymd}${String(todayOrders.length + 1).padStart(4, '0')}`
+}
+
+function appendCartItem(db, goods, count) {
+  db.get('cart')
+    .push({
+      id: goods.id,
+      name: goods.name,
+      price: goods.price,
+      count,
+      image: goods.image,
+      stock: goods.stock,
+      checked: true,
+    })
+    .write()
+}
+
+function createAfterSaleTimeline(order, status, extra = {}) {
+  const applyTime = extra.afterSaleApplyTime || order.afterSaleApplyTime || ''
+  const handleTime = extra.afterSaleHandleTime || order.afterSaleHandleTime || ''
+  const completeTime = extra.afterSaleCompleteTime || order.afterSaleCompleteTime || ''
+  const rejectReason = extra.afterSaleRejectReason || order.afterSaleRejectReason || ''
+
+  return [
+    {
+      key: 'apply',
+      title: '提交售后申请',
+      description: '申请已创建，等待平台受理。',
+      time: applyTime,
+      status: ['applying', 'reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? 'finished' : 'pending',
+    },
+    {
+      key: 'review',
+      title: '平台审核',
+      description: status === 'rejected' ? `平台已驳回申请${rejectReason ? `：${rejectReason}` : '。'}` : '平台正在审核申请材料。',
+      time: ['reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime || applyTime : '',
+      status: status === 'applying' ? 'pending' : status === 'reviewing' ? 'current' : 'finished',
+    },
+    {
+      key: 'result',
+      title: status === 'rejected' ? '审核结果' : '审核通过',
+      description: status === 'rejected' ? rejectReason || '本次售后申请未通过。' : '审核通过，进入后续处理阶段。',
+      time: ['approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime : '',
+      status: status === 'rejected' ? 'finished' : status === 'approved' ? 'current' : ['refunding', 'completed'].includes(status) ? 'finished' : 'pending',
+    },
+    {
+      key: 'refund',
+      title: '退款处理',
+      description: '平台将根据审核结果发起退款或补偿。',
+      time: ['refunding', 'completed'].includes(status) ? completeTime || handleTime : '',
+      status: status === 'refunding' ? 'current' : status === 'completed' ? 'finished' : 'pending',
+    },
+    {
+      key: 'finish',
+      title: '售后完成',
+      description: status === 'rejected' ? '售后流程已结束。' : '售后流程全部完成。',
+      time: ['completed', 'rejected'].includes(status) ? completeTime || handleTime : '',
+      status: ['completed', 'rejected'].includes(status) ? 'finished' : 'pending',
+    },
+  ]
+}
+
+function getNextAfterSaleStatus(status) {
+  return {
+    applying: 'reviewing',
+    reviewing: 'approved',
+    approved: 'refunding',
+    refunding: 'completed',
+  }[status] || status
+}
+
+function syncGoodsComment(db, order, payload) {
+  const goodsList = db.get('goods').value() || []
+
+  for (const item of order.goods || []) {
+    const goods = goodsList.find(goodsItem => Number(goodsItem.id) === Number(item.id))
+    if (!goods) continue
+
+    const comments = Array.isArray(goods.comments) ? goods.comments.map(normalizeGoodsComment) : []
+    const index = comments.findIndex(comment => String(comment.orderId || '') === String(order.id))
+
+    if (payload.mode === 'append') {
+      if (index >= 0) {
+        comments[index] = {
+          ...comments[index],
+          appendTime: payload.time.split(' ')[0],
+          appendContent: payload.content,
+          appendImages: payload.images,
+        }
+      }
+    } else {
+      const nextComment = normalizeGoodsComment({
+        id: Date.now() + Number(item.id),
+        orderId: String(order.id),
+        userName: payload.anonymous ? '匿名用户' : 'Wine 用户',
+        avatar: 'https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U',
+        score: Number(payload.score),
+        content: payload.content,
+        time: payload.time.split(' ')[0],
+        anonymous: Boolean(payload.anonymous),
+        images: payload.images,
+      })
+
+      if (index >= 0) {
+        comments[index] = nextComment
+      } else {
+        comments.unshift(nextComment)
+      }
+    }
+
+    db.get('goods')
+      .find({ id: Number(item.id) })
+      .assign({
+        comments,
+        comment: comments.length,
+      })
+      .write()
+  }
+}
+
+function isAfterSaleEligible(order) {
+  const closeReason = getOrderCloseReason(order)
+  return [2, 3, 4].includes(Number(order.status)) || (Number(order.status) === 6 && closeReason === 'commented')
+}
+
+function ensureSingleDefaultAddress(db, preferredId) {
+  const list = db.get('addresses').value() || []
+  if (list.length === 0) return
+
+  const targetId = preferredId || list.find(item => item.isDefault)?.id || list[0].id
+  db.set(
+    'addresses',
+    list.map(item => ({
+      ...item,
+      isDefault: item.id === targetId,
+    }))
+  ).write()
+}
+
+function normalizeAddressPayload(payload = {}) {
+  return {
+    name: String(payload.name || '').trim(),
+    phone: String(payload.phone || '').trim(),
+    province: String(payload.province || '').trim(),
+    city: String(payload.city || '').trim(),
+    district: String(payload.district || '').trim(),
+    detail: String(payload.detail || '').trim(),
+    isDefault: Boolean(payload.isDefault),
+  }
+}
+
+function validateAddressPayload(address) {
+  if (!address.name) return '请填写收货人'
+  if (!address.phone) return '请填写手机号'
+  if (!address.province) return '请填写省份'
+  if (!address.city) return '请填写城市'
+  if (!address.district) return '请填写区县'
+  if (!address.detail) return '请填写详细地址'
+  return ''
 }
 
 server.get('/goods/:id', (req, res) => {
@@ -84,14 +384,13 @@ server.get('/goods/:id', (req, res) => {
     return
   }
 
-  const db = router.db
-  const goods = db.get('goods').find({ id }).value()
+  const goods = getDb().get('goods').find({ id }).value()
   if (!goods) {
     res.status(200).jsonp(fail('商品不存在'))
     return
   }
 
-  res.status(200).jsonp(ok(buildGoodsDetail(goods)))
+  res.status(200).jsonp(ok(normalizeGoodsDetail(goods)))
 })
 
 server.get('/member_coupons', (req, res) => {
@@ -124,140 +423,80 @@ server.get('/member_realname', (req, res) => {
   router(req, res)
 })
 
-function handleAddToCart(req, res) {
-  const { id, count } = req.body || {}
-  const goodsId = Number(id)
-  const addCount = Number(count)
-
-  if (!Number.isFinite(goodsId) || !Number.isFinite(addCount) || addCount < 1) {
+server.post('/cart', (req, res) => {
+  const id = Number(req.body?.id)
+  const count = Number(req.body?.count)
+  if (!Number.isFinite(id) || !Number.isFinite(count) || count < 1) {
     res.status(200).jsonp(fail('参数错误'))
     return
   }
 
-  const db = router.db
-  const goods = db.get('goods').find({ id: goodsId }).value()
-
+  const db = getDb()
+  const goods = db.get('goods').find({ id }).value()
   if (!goods) {
     res.status(200).jsonp(fail('商品不存在'))
     return
   }
 
-  const existing = db.get('cart').find({ id: goodsId }).value()
+  const existing = db.get('cart').find({ id }).value()
   if (existing) {
-    db.get('cart').find({ id: goodsId }).assign({ count: existing.count + addCount, stock: goods.stock, checked: true }).write()
+    db.get('cart').find({ id }).assign({ count: existing.count + count, stock: goods.stock, checked: true }).write()
   } else {
-    appendCartItem(db, goods, addCount)
+    appendCartItem(db, goods, count)
   }
 
   res.status(200).jsonp(ok(db.get('cart').value(), '加入购物车成功'))
-}
+})
 
-function handleUpdateCartCount(req, res, cartId, nextCount) {
-  if (!Number.isFinite(cartId) || !Number.isFinite(nextCount) || nextCount < 1) {
+server.post('/cart/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const count = Number(req.body?.count)
+  if (!Number.isFinite(id) || !Number.isFinite(count) || count < 1) {
     res.status(200).jsonp(fail('商品数量不能小于 1'))
     return
   }
 
-  const db = router.db
-
-  const goods = db.get('goods').find({ id: cartId }).value()
-
-  const existing = db.get('cart').find({ id: cartId }).value()
+  const db = getDb()
+  const goods = db.get('goods').find({ id }).value()
+  const existing = db.get('cart').find({ id }).value()
   if (!existing) {
     res.status(200).jsonp(fail('购物车商品不存在'))
     return
   }
 
-  db.get('cart').find({ id: cartId }).assign({ count: nextCount, stock: goods?.stock ?? existing.stock, }).write()
+  db.get('cart').find({ id }).assign({ count, stock: goods?.stock ?? existing.stock }).write()
   res.status(200).jsonp(ok(db.get('cart').value(), '数量更新成功'))
-}
+})
 
-function handleDeleteCartItem(req, res, cartId) {
-  if (!Number.isFinite(cartId)) {
+server.patch('/cart/:id', (req, res) => {
+  req.method = 'POST'
+  server.handle({ ...req, url: `/cart/${req.params.id}` }, res)
+})
+
+server.delete('/cart/:id', (req, res) => {
+  const id = Number(req.params.id)
+  if (!Number.isFinite(id)) {
     res.status(200).jsonp(fail('参数错误'))
     return
   }
 
-  const db = router.db
-  db.get('cart').remove({ id: cartId }).write()
+  const db = getDb()
+  db.get('cart').remove({ id }).write()
   res.status(200).jsonp(ok(db.get('cart').value(), '删除成功'))
-}
-
-server.post('/cart', handleAddToCart)
-
-server.post('/cart/:id', (req, res) => {
-  const cartId = Number(req.params.id)
-  const { count } = req.body || {}
-  const nextCount = Number(count)
-  handleUpdateCartCount(req, res, cartId, nextCount)
-})
-
-server.patch('/cart/:id', (req, res) => {
-  const cartId = Number(req.params.id)
-  const { count } = req.body || {}
-  const nextCount = Number(count)
-  handleUpdateCartCount(req, res, cartId, nextCount)
-})
-
-server.delete('/cart/:id', (req, res) => {
-  const cartId = Number(req.params.id)
-  handleDeleteCartItem(req, res, cartId)
 })
 
 server.delete('/cart', (req, res) => {
-  const db = router.db
-  db.set('cart', []).write()
+  getDb().set('cart', []).write()
   res.status(200).jsonp(ok(null, '购物车已清空'))
 })
 
 server.get('/addresses/default', (req, res) => {
-  const db = router.db
-  const address = db.get('addresses').find({ isDefault: true }).value() || null
+  const address = getDb().get('addresses').find({ isDefault: true }).value() || null
   res.status(200).jsonp(ok(address))
 })
 
-function normalizeAddressPayload(payload) {
-  const data = payload || {}
-  return {
-    name: typeof data.name === 'string' ? data.name.trim() : '',
-    phone: typeof data.phone === 'string' ? data.phone.trim() : '',
-    province: typeof data.province === 'string' ? data.province.trim() : '',
-    city: typeof data.city === 'string' ? data.city.trim() : '',
-    district: typeof data.district === 'string' ? data.district.trim() : '',
-    detail: typeof data.detail === 'string' ? data.detail.trim() : '',
-    isDefault: Boolean(data.isDefault),
-  }
-}
-
-function validateAddressPayload(address) {
-  if (!address.name) return '请填写收货人'
-  if (!address.phone) return '请填写手机号'
-  if (!address.province) return '请填写省份'
-  if (!address.city) return '请填写城市'
-  if (!address.district) return '请填写区县'
-  if (!address.detail) return '请填写详细地址'
-  return ''
-}
-
-function ensureSingleDefault(db, preferredId) {
-  const list = db.get('addresses').value() || []
-  if (list.length === 0) return
-
-  const targetId =
-    preferredId ??
-    (list.find(item => item.isDefault)?.id ?? list[0].id)
-
-  db.set(
-    'addresses',
-    list.map(item => ({
-      ...item,
-      isDefault: item.id === targetId,
-    }))
-  ).write()
-}
-
 server.post('/addresses', (req, res) => {
-  const db = router.db
+  const db = getDb()
   const payload = normalizeAddressPayload(req.body)
   const error = validateAddressPayload(payload)
   if (error) {
@@ -266,34 +505,23 @@ server.post('/addresses', (req, res) => {
   }
 
   const list = db.get('addresses').value() || []
-  const maxId = list.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0)
-  const nextId = maxId + 1
+  const nextId = list.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1
+  const isDefault = payload.isDefault || list.length === 0
 
-  const shouldBeDefault = payload.isDefault || list.length === 0
-  payload.isDefault = shouldBeDefault
-
-  db.get('addresses')
-    .push({ id: nextId, ...payload, isDefault: shouldBeDefault })
-    .write()
-
-  if (shouldBeDefault) {
-    ensureSingleDefault(db, nextId)
-  } else {
-    ensureSingleDefault(db)
-  }
-
+  db.get('addresses').push({ id: nextId, ...payload, isDefault }).write()
+  ensureSingleDefaultAddress(db, isDefault ? nextId : undefined)
   res.status(200).jsonp(ok(db.get('addresses').value(), '新增地址成功'))
 })
 
 server.post('/addresses/:id', (req, res) => {
-  const addressId = Number(req.params.id)
-  if (!Number.isFinite(addressId)) {
+  const id = Number(req.params.id)
+  if (!Number.isFinite(id)) {
     res.status(200).jsonp(fail('参数错误'))
     return
   }
 
-  const db = router.db
-  const existing = db.get('addresses').find({ id: addressId }).value()
+  const db = getDb()
+  const existing = db.get('addresses').find({ id }).value()
   if (!existing) {
     res.status(200).jsonp(fail('地址不存在'))
     return
@@ -306,261 +534,45 @@ server.post('/addresses/:id', (req, res) => {
     return
   }
 
-  db.get('addresses')
-    .find({ id: addressId })
-    .assign(payload)
-    .write()
-
-  if (payload.isDefault) {
-    ensureSingleDefault(db, addressId)
-  } else {
-    ensureSingleDefault(db)
-  }
-
+  db.get('addresses').find({ id }).assign(payload).write()
+  ensureSingleDefaultAddress(db, payload.isDefault ? id : undefined)
   res.status(200).jsonp(ok(db.get('addresses').value(), '编辑地址成功'))
 })
 
 server.post('/addresses/:id/default', (req, res) => {
-  const addressId = Number(req.params.id)
-  if (!Number.isFinite(addressId)) {
+  const id = Number(req.params.id)
+  if (!Number.isFinite(id)) {
     res.status(200).jsonp(fail('参数错误'))
     return
   }
 
-  const db = router.db
-  const existing = db.get('addresses').find({ id: addressId }).value()
+  const db = getDb()
+  const existing = db.get('addresses').find({ id }).value()
   if (!existing) {
     res.status(200).jsonp(fail('地址不存在'))
     return
   }
 
-  ensureSingleDefault(db, addressId)
+  ensureSingleDefaultAddress(db, id)
   res.status(200).jsonp(ok(db.get('addresses').value(), '默认地址已更新'))
 })
 
 server.delete('/addresses/:id', (req, res) => {
-  const addressId = Number(req.params.id)
-  if (!Number.isFinite(addressId)) {
+  const id = Number(req.params.id)
+  if (!Number.isFinite(id)) {
     res.status(200).jsonp(fail('参数错误'))
     return
   }
 
-  const db = router.db
-  db.get('addresses').remove({ id: addressId }).write()
-  ensureSingleDefault(db)
-
+  const db = getDb()
+  db.get('addresses').remove({ id }).write()
+  ensureSingleDefaultAddress(db)
   res.status(200).jsonp(ok(db.get('addresses').value(), '删除地址成功'))
 })
 
-function formatDateTime(date = new Date()) {
-  const pad = (n) => String(n).padStart(2, '0')
-  const y = date.getFullYear()
-  const m = pad(date.getMonth() + 1)
-  const d = pad(date.getDate())
-  const h = pad(date.getHours())
-  const min = pad(date.getMinutes())
-  return `${y}-${m}-${d} ${h}:${min}`
-}
-
-function generateOrderNum(db) {
-  const list = db.get('orders').value() || []
-  const date = new Date()
-  const pad = (n) => String(n).padStart(2, '0')
-  const ymd = `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}`
-  const todayOrders = list.filter(item => String(item.orderNum || '').startsWith(`ORD${ymd}`))
-  const seq = String(todayOrders.length + 1).padStart(4, '0')
-  return `ORD${ymd}${seq}`
-}
-
-function getOrderCloseReason(order) {
-  if (order.closeReason) return order.closeReason
-  if (Number(order.status) !== 6) return ''
-  return order.commentTime ? 'commented' : 'cancelled'
-}
-
-function isAfterSaleEligible(order) {
-  const closeReason = getOrderCloseReason(order)
-  return [2, 3, 4].includes(Number(order.status)) || (Number(order.status) === 6 && closeReason === 'commented')
-}
-
-function createOrderStatePatch(status, extra = {}) {
-  return {
-    status,
-    statusLabel: {
-      1: '待付款',
-      2: '待发货',
-      3: '待收货',
-      4: '待评价',
-      6: '已关闭',
-    }[status] || '',
-    payTime: '',
-    deliveryTime: '',
-    finishTime: '',
-    cancelTime: '',
-    commentTime: '',
-    closeReason: '',
-    commentScore: 0,
-    commentContent: '',
-    commentAnonymous: false,
-    commentImages: [],
-    appendCommentTime: '',
-    appendCommentContent: '',
-    appendCommentImages: [],
-    logisticsCompany: '',
-    logisticsNo: '',
-    logisticsStatusText: '暂无物流信息',
-    afterSaleStatus: 'none',
-    afterSaleType: '',
-    afterSaleReason: '',
-    afterSaleApplyTime: '',
-    afterSaleHandleTime: '',
-    afterSaleCompleteTime: '',
-    afterSaleRejectReason: '',
-    afterSaleTimeline: [],
-    ...extra,
-  }
-}
-
-function createAfterSaleTimeline(order, status, extra = {}) {
-  const timeline = []
-  const applyTime = extra.afterSaleApplyTime || order.afterSaleApplyTime || ''
-  const handleTime = extra.afterSaleHandleTime || order.afterSaleHandleTime || ''
-  const completeTime = extra.afterSaleCompleteTime || order.afterSaleCompleteTime || ''
-  const rejectReason = extra.afterSaleRejectReason || order.afterSaleRejectReason || ''
-
-  timeline.push({
-    key: 'apply',
-    title: '提交售后申请',
-    description: '申请已创建，等待平台受理。',
-    time: applyTime,
-    status: ['applying', 'reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? 'finished' : 'pending',
-  })
-
-  timeline.push({
-    key: 'review',
-    title: '平台审核',
-    description: status === 'rejected' ? `平台已驳回申请${rejectReason ? `：${rejectReason}` : '。'}` : '平台正在审核申请材料。',
-    time: ['reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime || applyTime : '',
-    status: status === 'applying' ? 'pending' : status === 'reviewing' ? 'current' : 'finished',
-  })
-
-  timeline.push({
-    key: 'result',
-    title: status === 'rejected' ? '审核结果' : '审核通过',
-    description:
-      status === 'rejected'
-        ? rejectReason || '本次售后申请未通过。'
-        : '审核通过，进入后续处理阶段。',
-    time: ['approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime : '',
-    status:
-      status === 'rejected'
-        ? 'finished'
-        : status === 'approved'
-          ? 'current'
-          : ['refunding', 'completed'].includes(status)
-            ? 'finished'
-            : 'pending',
-  })
-
-  timeline.push({
-    key: 'refund',
-    title: '退款处理',
-    description: '退款或补偿处理中，请耐心等待。',
-    time: ['refunding', 'completed'].includes(status) ? completeTime || handleTime : '',
-    status: status === 'refunding' ? 'current' : status === 'completed' ? 'finished' : 'pending',
-  })
-
-  timeline.push({
-    key: 'finish',
-    title: '售后完成',
-    description: status === 'rejected' ? '售后流程已结束。' : '售后流程已完成。',
-    time: status === 'completed' || status === 'rejected' ? completeTime || handleTime : '',
-    status: status === 'completed' || status === 'rejected' ? 'finished' : 'pending',
-  })
-
-  return timeline
-}
-
-function getNextAfterSaleStatus(status) {
-  const flow = {
-    applying: 'reviewing',
-    reviewing: 'approved',
-    approved: 'refunding',
-    refunding: 'completed',
-  }
-
-  return flow[status] || status
-}
-
-function syncGoodsComment(db, order, payload) {
-  const goodsList = db.get('goods').value() || []
-
-  for (const item of order.goods || []) {
-    const goods = goodsList.find(g => Number(g.id) === Number(item.id))
-    if (!goods) continue
-
-    const comments = Array.isArray(goods.comments) ? [...goods.comments] : []
-    const commentIndex = comments.findIndex(comment => String(comment.orderId || '') === String(order.id))
-
-    if (payload.mode === 'append') {
-      if (commentIndex >= 0) {
-        comments[commentIndex] = {
-          ...comments[commentIndex],
-          appendTime: payload.time.split(' ')[0],
-          appendContent: payload.content,
-          appendImages: payload.images,
-        }
-      }
-    } else {
-      const nextComment = {
-        id: Date.now() + Number(item.id),
-        orderId: String(order.id),
-        userName: payload.anonymous ? '????' : 'Wine ??',
-        avatar: 'https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U',
-        score: Number(payload.score),
-        content: payload.content,
-        time: payload.time.split(' ')[0],
-        images: payload.images,
-        anonymous: Boolean(payload.anonymous),
-        appendTime: '',
-        appendContent: '',
-        appendImages: [],
-      }
-
-      if (commentIndex >= 0) {
-        comments[commentIndex] = nextComment
-      } else {
-        comments.unshift(nextComment)
-      }
-    }
-
-    db.get('goods')
-      .find({ id: Number(item.id) })
-      .assign({
-        comments,
-        comment: comments.length,
-      })
-      .write()
-  }
-}
-
-function appendCartItem(db, goods, count) {
-  db.get('cart')
-    .push({
-      id: goods.id,
-      name: goods.name,
-      price: goods.price,
-      count,
-      image: goods.image,
-      stock: goods.stock,
-      checked: true,
-    })
-    .write()
-}
-
 server.post('/orders/submit', (req, res) => {
-  const db = router.db
-  const { goods, address, remark = '', from = 'buyNow' } = req.body || {}
+  const db = getDb()
+  const { goods = [], address, remark = '', from = 'buyNow' } = req.body || {}
 
   if (!Array.isArray(goods) || goods.length === 0) {
     res.status(200).jsonp(fail('暂无可提交商品'))
@@ -572,32 +584,26 @@ server.post('/orders/submit', (req, res) => {
     return
   }
 
-  const goodsSource = db.get('goods').value() || []
+  const sourceGoods = db.get('goods').value() || []
   for (const item of goods) {
-    const source = goodsSource.find(g => Number(g.id) === Number(item.id))
+    const source = sourceGoods.find(goodsItem => Number(goodsItem.id) === Number(item.id))
     if (!source) {
-      res.status(200).jsonp(fail(`${item.name || '商品'} 不存在`))
+      res.status(200).jsonp(fail(`${item.name || '商品'}不存在`))
       return
     }
 
     if (Number(item.count || 0) > Number(source.stock || 0)) {
-      res.status(200).jsonp(fail(`${item.name || source.name} 库存不足`))
+      res.status(200).jsonp(fail(`${item.name || source.name}库存不足`))
       return
     }
   }
 
-  const totalPrice = goods.reduce((sum, item) => {
-    return sum + Number(item.price || 0) * Number(item.count || 0)
-  }, 0)
-
-  const totalCount = goods.reduce((sum, item) => {
-    return sum + Number(item.count || 0)
-  }, 0)
-
+  const totalPrice = goods.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.count || 0), 0)
+  const totalCount = goods.reduce((sum, item) => sum + Number(item.count || 0), 0)
   const freight = 0
   const payPrice = totalPrice + freight
 
-  const order = {
+  const order = normalizeOrder({
     id: String(Date.now()),
     orderNum: generateOrderNum(db),
     createTime: formatDateTime(),
@@ -618,54 +624,51 @@ server.post('/orders/submit', (req, res) => {
     remark,
     payType: '',
     ...createOrderStatePatch(1),
-  }
+  })
 
   db.get('orders').unshift(order).write()
   db.set('order_confirm_list', []).write()
 
   if (from === 'cart') {
-    const checkedIds = goods.map(item => item.id)
-    db.get('cart').remove(item => checkedIds.includes(item.id)).write()
+    const ids = goods.map(item => Number(item.id))
+    db.get('cart').remove(item => ids.includes(Number(item.id))).write()
   }
 
   res.status(200).jsonp(ok(order, '订单提交成功'))
 })
 
 server.post('/orders/:id/cancel', (req, res) => {
-  const orderId = String(req.params.id)
-  const db = router.db
-  const order = db.get('orders').find({ id: orderId }).value()
-
+  const id = String(req.params.id)
+  const db = getDb()
+  const order = db.get('orders').find({ id }).value()
   if (!order) {
     res.status(200).jsonp(fail('订单不存在'))
     return
   }
 
-  if (order.status !== 1) {
+  if (Number(order.status) !== 1) {
     res.status(200).jsonp(fail('当前订单不可取消'))
     return
   }
 
   const cancelTime = formatDateTime()
+  const nextOrder = normalizeOrder({
+    ...order,
+    ...createOrderStatePatch(6, {
+      payTime: order.payTime || '',
+      deliveryTime: order.deliveryTime || '',
+      finishTime: order.finishTime || '',
+      cancelTime,
+      closeReason: 'cancelled',
+      logisticsCompany: order.logisticsCompany || '',
+      logisticsNo: order.logisticsNo || '',
+      logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
+    }),
+  })
 
-  db.get('orders')
-    .find({ id: orderId })
-    .assign({
-      ...createOrderStatePatch(6, {
-        payTime: order.payTime || '',
-        deliveryTime: order.deliveryTime || '',
-        finishTime: order.finishTime || '',
-        cancelTime,
-        closeReason: 'cancelled',
-        logisticsCompany: order.logisticsCompany || '',
-        logisticsNo: order.logisticsNo || '',
-        logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
-      }),
-    })
-    .write()
-
+  db.get('orders').find({ id }).assign(nextOrder).write()
   res.status(200).jsonp(ok({
-    id: orderId,
+    id,
     status: 6,
     statusLabel: '已关闭',
     cancelTime,
@@ -674,38 +677,35 @@ server.post('/orders/:id/cancel', (req, res) => {
 })
 
 server.post('/orders/:id/confirm', (req, res) => {
-  const orderId = String(req.params.id)
-  const db = router.db
-  const order = db.get('orders').find({ id: orderId }).value()
-
+  const id = String(req.params.id)
+  const db = getDb()
+  const order = db.get('orders').find({ id }).value()
   if (!order) {
     res.status(200).jsonp(fail('订单不存在'))
     return
   }
 
-  if (order.status !== 3) {
+  if (Number(order.status) !== 3) {
     res.status(200).jsonp(fail('当前订单不可确认收货'))
     return
   }
 
   const finishTime = formatDateTime()
+  const nextOrder = normalizeOrder({
+    ...order,
+    ...createOrderStatePatch(4, {
+      payTime: order.payTime || '',
+      deliveryTime: order.deliveryTime || '',
+      finishTime,
+      logisticsCompany: order.logisticsCompany || '',
+      logisticsNo: order.logisticsNo || '',
+      logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
+    }),
+  })
 
-  db.get('orders')
-    .find({ id: orderId })
-    .assign({
-      ...createOrderStatePatch(4, {
-        payTime: order.payTime || '',
-        deliveryTime: order.deliveryTime || '',
-        finishTime,
-        logisticsCompany: order.logisticsCompany || '',
-        logisticsNo: order.logisticsNo || '',
-        logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
-      }),
-    })
-    .write()
-
+  db.get('orders').find({ id }).assign(nextOrder).write()
   res.status(200).jsonp(ok({
-    id: orderId,
+    id,
     status: 4,
     statusLabel: '待评价',
     finishTime,
@@ -713,55 +713,51 @@ server.post('/orders/:id/confirm', (req, res) => {
 })
 
 server.delete('/orders/:id', (req, res) => {
-  const orderId = String(req.params.id)
-  const db = router.db
-  const order = db.get('orders').find({ id: orderId }).value()
-
+  const id = String(req.params.id)
+  const db = getDb()
+  const order = db.get('orders').find({ id }).value()
   if (!order) {
     res.status(200).jsonp(fail('订单不存在'))
     return
   }
 
-  if (Number(order.status) !== 6 || order.afterSaleStatus === 'applying') {
+  if (Number(order.status) !== 6 || ['applying', 'reviewing', 'approved', 'refunding'].includes(order.afterSaleStatus)) {
     res.status(200).jsonp(fail('当前订单不可删除'))
     return
   }
 
-  db.get('orders').remove({ id: orderId }).write()
+  db.get('orders').remove({ id }).write()
   res.status(200).jsonp(ok(null, '订单已删除'))
 })
 
 server.post('/orders/:id/rebuy', (req, res) => {
-  const orderId = String(req.params.id)
-  const db = router.db
-  const order = db.get('orders').find({ id: orderId }).value()
-
+  const id = String(req.params.id)
+  const db = getDb()
+  const order = db.get('orders').find({ id }).value()
   if (!order) {
     res.status(200).jsonp(fail('订单不存在'))
     return
   }
 
-  const goodsSource = db.get('goods').value() || []
+  const goodsList = db.get('goods').value() || []
   const affectedIds = []
 
   for (const item of order.goods || []) {
-    const goods = goodsSource.find(g => Number(g.id) === Number(item.id))
+    const goods = goodsList.find(goodsItem => Number(goodsItem.id) === Number(item.id))
     if (!goods) {
-      res.status(200).jsonp(fail(`${item.name || '商品'} 不存在`))
+      res.status(200).jsonp(fail(`${item.name || '商品'}不存在`))
       return
     }
 
-    const nextCount = Number(item.count || 0)
-    if (nextCount > Number(goods.stock || 0)) {
-      res.status(200).jsonp(fail(`${goods.name} 库存不足`))
+    if (Number(item.count || 0) > Number(goods.stock || 0)) {
+      res.status(200).jsonp(fail(`${goods.name}库存不足`))
       return
     }
   }
 
   for (const item of order.goods || []) {
-    const goods = goodsSource.find(g => Number(g.id) === Number(item.id))
+    const goods = goodsList.find(goodsItem => Number(goodsItem.id) === Number(item.id))
     const existing = db.get('cart').find({ id: Number(item.id) }).value()
-
     if (existing) {
       db.get('cart')
         .find({ id: Number(item.id) })
@@ -777,26 +773,22 @@ server.post('/orders/:id/rebuy', (req, res) => {
     affectedIds.push(Number(item.id))
   }
 
-  res.status(200).jsonp(ok({
-    id: orderId,
-    affectedIds,
-  }, '已同步到购物车'))
+  res.status(200).jsonp(ok({ id, affectedIds }, '已同步到购物车'))
 })
 
 server.post('/orders/:id/comment', (req, res) => {
-  const orderId = String(req.params.id)
+  const id = String(req.params.id)
   const { score = 0, content = '', anonymous = false, images = [], mode = 'initial' } = req.body || {}
-  const db = router.db
-  const order = db.get('orders').find({ id: orderId }).value()
-
+  const db = getDb()
+  const order = db.get('orders').find({ id }).value()
   if (!order) {
     res.status(200).jsonp(fail('订单不存在'))
     return
   }
 
-  const commentContent = String(content).trim()
-  const commentImages = Array.isArray(images) ? images.slice(0, 3) : []
   const commentTime = formatDateTime()
+  const commentContent = String(content || '').trim()
+  const commentImages = Array.isArray(images) ? images.slice(0, 3) : []
 
   if (mode === 'append') {
     if (Number(order.status) !== 6 || getOrderCloseReason(order) !== 'commented') {
@@ -818,17 +810,14 @@ server.post('/orders/:id/comment', (req, res) => {
       anonymous: Boolean(order.commentAnonymous),
     })
 
-    db.get('orders')
-      .find({ id: orderId })
-      .assign({
-        appendCommentTime: commentTime,
-        appendCommentContent: commentContent,
-        appendCommentImages: commentImages,
-      })
-      .write()
+    db.get('orders').find({ id }).assign({
+      appendCommentTime: commentTime,
+      appendCommentContent: commentContent,
+      appendCommentImages: commentImages,
+    }).write()
 
     res.status(200).jsonp(ok({
-      id: orderId,
+      id,
       status: 6,
       statusLabel: '已关闭',
       closeReason: 'commented',
@@ -853,119 +842,44 @@ server.post('/orders/:id/comment', (req, res) => {
     anonymous: Boolean(anonymous),
   })
 
-  db.get('orders')
-    .find({ id: orderId })
-    .assign({
-      ...createOrderStatePatch(6, {
-        payTime: order.payTime || '',
-        deliveryTime: order.deliveryTime || '',
-        finishTime: order.finishTime || '',
-        cancelTime: order.cancelTime || '',
-        closeReason: 'commented',
-        commentTime,
-        commentScore: Number(score),
-        commentContent: commentContent,
-        commentAnonymous: Boolean(anonymous),
-        commentImages,
-        logisticsCompany: order.logisticsCompany || '',
-        logisticsNo: order.logisticsNo || '',
-        logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
-      }),
-    })
-    .write()
+  const nextOrder = normalizeOrder({
+    ...order,
+    ...createOrderStatePatch(6, {
+      payTime: order.payTime || '',
+      deliveryTime: order.deliveryTime || '',
+      finishTime: order.finishTime || '',
+      cancelTime: order.cancelTime || '',
+      closeReason: 'commented',
+      commentTime,
+      commentScore: Number(score),
+      commentContent,
+      commentAnonymous: Boolean(anonymous),
+      commentImages,
+      logisticsCompany: order.logisticsCompany || '',
+      logisticsNo: order.logisticsNo || '',
+      logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
+    }),
+  })
 
+  db.get('orders').find({ id }).assign(nextOrder).write()
   res.status(200).jsonp(ok({
-    id: orderId,
+    id,
     status: 6,
     statusLabel: '已关闭',
     closeReason: 'commented',
     commentTime,
     commentScore: Number(score),
-    commentContent: commentContent,
+    commentContent,
     commentAnonymous: Boolean(anonymous),
     commentImages,
   }, '评价提交成功'))
 })
 
-server.post('/orders/:id/comment-legacy', (req, res) => {
-  const orderId = String(req.params.id)
-  const { score = 0, content = '' } = req.body || {}
-  const db = router.db
-  const order = db.get('orders').find({ id: orderId }).value()
-
-  if (!order) {
-    res.status(200).jsonp(fail('订单不存在'))
-    return
-  }
-
-  if (Number(order.status) !== 4) {
-    res.status(200).jsonp(fail('当前订单不可评价'))
-    return
-  }
-
-  const commentTime = formatDateTime()
-  const goodsList = db.get('goods').value() || []
-
-  for (const item of order.goods || []) {
-    const goods = goodsList.find(g => Number(g.id) === Number(item.id))
-    if (!goods) continue
-
-    const nextComments = Array.isArray(goods.comments) ? [...goods.comments] : []
-    nextComments.unshift({
-      id: Date.now() + Number(item.id),
-      userName: 'Wine 用户',
-      avatar: 'https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U',
-      score: Number(score),
-      content: String(content).trim(),
-      time: commentTime.split(' ')[0],
-      images: [],
-    })
-
-    db.get('goods')
-      .find({ id: Number(item.id) })
-      .assign({
-        comments: nextComments,
-        comment: nextComments.length,
-      })
-      .write()
-  }
-
-  db.get('orders')
-    .find({ id: orderId })
-    .assign({
-      ...createOrderStatePatch(6, {
-        payTime: order.payTime || '',
-        deliveryTime: order.deliveryTime || '',
-        finishTime: order.finishTime || '',
-        cancelTime: order.cancelTime || '',
-        closeReason: 'commented',
-        commentTime,
-        commentScore: Number(score),
-        commentContent: String(content).trim(),
-        logisticsCompany: order.logisticsCompany || '',
-        logisticsNo: order.logisticsNo || '',
-        logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
-      }),
-    })
-    .write()
-
-  res.status(200).jsonp(ok({
-    id: orderId,
-    status: 6,
-    statusLabel: '已关闭',
-    closeReason: 'commented',
-    commentTime,
-    commentScore: Number(score),
-    commentContent: String(content).trim(),
-  }, '评价提交成功'))
-})
-
 server.post('/orders/:id/after-sale', (req, res) => {
-  const orderId = String(req.params.id)
+  const id = String(req.params.id)
   const { type = '', reason = '' } = req.body || {}
-  const db = router.db
-  const order = db.get('orders').find({ id: orderId }).value()
-
+  const db = getDb()
+  const order = db.get('orders').find({ id }).value()
   if (!order) {
     res.status(200).jsonp(fail('订单不存在'))
     return
@@ -982,40 +896,36 @@ server.post('/orders/:id/after-sale', (req, res) => {
   }
 
   const afterSaleApplyTime = formatDateTime()
-  const nextStatus = 'applying'
   const nextPatch = {
-    afterSaleStatus: nextStatus,
-    afterSaleType: String(type).trim(),
-    afterSaleReason: String(reason).trim(),
+    afterSaleStatus: 'applying',
+    afterSaleType: String(type || '').trim(),
+    afterSaleReason: String(reason || '').trim(),
     afterSaleApplyTime,
     afterSaleHandleTime: '',
     afterSaleCompleteTime: '',
     afterSaleRejectReason: '',
   }
+  const nextTimeline = createAfterSaleTimeline(order, nextPatch.afterSaleStatus, nextPatch)
 
-  db.get('orders')
-    .find({ id: orderId })
-    .assign({
-      ...nextPatch,
-      afterSaleTimeline: createAfterSaleTimeline(order, nextStatus, nextPatch),
-    })
-    .write()
+  db.get('orders').find({ id }).assign({
+    ...nextPatch,
+    afterSaleTimeline: nextTimeline,
+  }).write()
 
   res.status(200).jsonp(ok({
-    id: orderId,
+    id,
     status: Number(order.status),
-    statusLabel: Number(order.status) === 6 ? '已关闭' : order.statusLabel,
+    statusLabel: getOrderStatusLabel(order.status),
     closeReason: getOrderCloseReason(order),
     ...nextPatch,
-    afterSaleTimeline: createAfterSaleTimeline(order, nextStatus, nextPatch),
+    afterSaleTimeline: nextTimeline,
   }, '售后申请已提交'))
 })
 
 server.post('/orders/:id/after-sale/advance', (req, res) => {
-  const orderId = String(req.params.id)
-  const db = router.db
-  const order = db.get('orders').find({ id: orderId }).value()
-
+  const id = String(req.params.id)
+  const db = getDb()
+  const order = db.get('orders').find({ id }).value()
   if (!order) {
     res.status(200).jsonp(fail('订单不存在'))
     return
@@ -1039,144 +949,76 @@ server.post('/orders/:id/after-sale/advance', (req, res) => {
     afterSaleCompleteTime: ['refunding', 'completed'].includes(nextStatus) ? now : order.afterSaleCompleteTime || '',
     afterSaleRejectReason: order.afterSaleRejectReason || '',
   }
+  const nextTimeline = createAfterSaleTimeline(order, nextStatus, { ...order, ...nextPatch })
 
-  const nextTimeline = createAfterSaleTimeline(order, nextStatus, {
-    ...order,
+  db.get('orders').find({ id }).assign({
     ...nextPatch,
-  })
-
-  db.get('orders')
-    .find({ id: orderId })
-    .assign({
-      ...nextPatch,
-      afterSaleTimeline: nextTimeline,
-    })
-    .write()
+    afterSaleTimeline: nextTimeline,
+  }).write()
 
   res.status(200).jsonp(ok({
-    id: orderId,
+    id,
     status: Number(order.status),
-    statusLabel: Number(order.status) === 6 ? '已关闭' : order.statusLabel,
+    statusLabel: getOrderStatusLabel(order.status),
     closeReason: getOrderCloseReason(order),
-    ...nextPatch,
     afterSaleType: order.afterSaleType || '',
     afterSaleReason: order.afterSaleReason || '',
     afterSaleApplyTime: order.afterSaleApplyTime || '',
+    ...nextPatch,
     afterSaleTimeline: nextTimeline,
   }, '售后进度已更新'))
 })
 
-server.post('/orders/:id/after-sale-legacy', (req, res) => {
-  const orderId = String(req.params.id)
-  const { type = '', reason = '' } = req.body || {}
-  const db = router.db
-  const order = db.get('orders').find({ id: orderId }).value()
-
-  if (!order) {
-    res.status(200).jsonp(fail('订单不存在'))
-    return
-  }
-
-  if (!isAfterSaleEligible(order)) {
-    res.status(200).jsonp(fail('当前订单不可申请售后'))
-    return
-  }
-
-  if (order.afterSaleStatus === 'applying') {
-    res.status(200).jsonp(fail('售后申请已提交'))
-    return
-  }
-
-  const afterSaleApplyTime = formatDateTime()
-
-  db.get('orders')
-    .find({ id: orderId })
-    .assign({
-      afterSaleStatus: 'applying',
-      afterSaleType: String(type).trim(),
-      afterSaleReason: String(reason).trim(),
-      afterSaleApplyTime,
-    })
-    .write()
-
-  res.status(200).jsonp(ok({
-    id: orderId,
-    status: Number(order.status),
-    statusLabel: Number(order.status) === 6 ? '已关闭' : order.statusLabel,
-    closeReason: getOrderCloseReason(order),
-    afterSaleStatus: 'applying',
-    afterSaleType: String(type).trim(),
-    afterSaleReason: String(reason).trim(),
-    afterSaleApplyTime,
-  }, '售后申请已提交'))
-})
-
 server.get('/order/:id/detail', (req, res) => {
   const id = String(req.params.id)
-  const db = router.db
-
-  const order = db.get('orders').find({ id }).value()
-
+  const order = getDb().get('orders').find({ id }).value()
   if (!order) {
     res.status(200).jsonp(fail('订单不存在'))
     return
   }
 
   res.status(200).jsonp(ok({
-    order: {
-      ...order,
-      statusLabel: Number(order.status) === 6 ? '已关闭' : order.statusLabel,
-      closeReason: getOrderCloseReason(order),
-      afterSaleStatus: order.afterSaleStatus || 'none',
-      commentImages: Array.isArray(order.commentImages) ? order.commentImages : [],
-      appendCommentImages: Array.isArray(order.appendCommentImages) ? order.appendCommentImages : [],
-      afterSaleTimeline: Array.isArray(order.afterSaleTimeline) ? order.afterSaleTimeline : [],
-    },
+    order: normalizeOrder(order),
   }))
 })
 
 server.post('/order/pay', (req, res) => {
-  const { id, payType = 'wechat' } = req.body || {}
-
+  const id = String(req.body?.id || '')
+  const payType = String(req.body?.payType || 'wechat')
   if (!id) {
     res.status(200).jsonp(fail('参数错误'))
     return
   }
 
-  const db = router.db
-  const order = db.get('orders').find({ id: String(id) }).value()
-
+  const db = getDb()
+  const order = db.get('orders').find({ id }).value()
   if (!order) {
     res.status(200).jsonp(fail('订单不存在'))
     return
   }
 
-  if (order.status !== 1) {
+  if (Number(order.status) !== 1) {
     res.status(200).jsonp(fail('订单不可支付'))
     return
   }
 
   const payTime = formatDateTime()
-
-  db.get('orders')
-    .find({ id: String(id) })
-    .assign({
-      ...createOrderStatePatch(2, {
-        payTime,
-        logisticsStatusText: '商家已收款，待安排发货',
-      }),
-      payType,
-    })
-    .write()
-
-  res.status(200).jsonp(
-    ok({
-      id,
-      status: 2,
-      statusLabel: '待发货',
+  const nextOrder = normalizeOrder({
+    ...order,
+    ...createOrderStatePatch(2, {
       payTime,
-    })
-  )
+      logisticsStatusText: '商家已收款，待安排发货',
+    }),
+    payType,
+  })
+
+  db.get('orders').find({ id }).assign(nextOrder).write()
+  res.status(200).jsonp(ok({
+    id,
+    status: 2,
+    statusLabel: '待发货',
+    payTime,
+  }, '支付成功'))
 })
 
 server.use(router)

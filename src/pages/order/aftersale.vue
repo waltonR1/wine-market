@@ -69,6 +69,13 @@
             </view>
           </view>
         </view>
+
+        <view
+          v-if="isAfterSaleFinalized"
+          class="mt-4 rounded-2xl border border-[#E8DED6] bg-[#FCFAF8] px-4 py-3 text-[12px] leading-6 text-[#6F6258]"
+        >
+          {{ finalStatusText }}
+        </view>
       </view>
 
       <view v-else class="mx-3 mt-3 rounded-2xl bg-white p-4">
@@ -148,8 +155,29 @@ const canAdvanceAfterSale = computed(() => {
   return ['applying', 'reviewing', 'approved', 'refunding'].includes(status || '')
 })
 
+const isAfterSaleFinalized = computed(() => {
+  const status = orderDetail.value?.afterSaleStatus
+  return status === 'completed' || status === 'rejected'
+})
+
 const afterSaleStatusText = computed(() => getAfterSaleStatusText(orderDetail.value?.afterSaleStatus))
 const timeline = computed(() => orderDetail.value?.afterSaleTimeline || [])
+const finalStatusText = computed(() => {
+  if (!orderDetail.value) return ''
+  if (orderDetail.value.afterSaleStatus === 'completed') {
+    return orderDetail.value.afterSaleCompleteTime
+      ? `售后已完成，完成时间：${orderDetail.value.afterSaleCompleteTime}`
+      : '售后已完成。'
+  }
+
+  if (orderDetail.value.afterSaleStatus === 'rejected') {
+    return orderDetail.value.afterSaleRejectReason
+      ? `售后申请未通过，原因：${orderDetail.value.afterSaleRejectReason}`
+      : '售后申请未通过。'
+  }
+
+  return ''
+})
 
 async function init() {
   if (!orderId.value) return

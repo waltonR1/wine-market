@@ -29,7 +29,12 @@ export interface GoodsComment {
     score: number
     content: string
     time: string
+    anonymous?: boolean
+    orderId?: string
     images?: string[]
+    appendTime?: string
+    appendContent?: string
+    appendImages?: string[]
 }
 
 export interface ProductDetail extends ProductItem {
