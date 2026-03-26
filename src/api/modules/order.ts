@@ -1,29 +1,30 @@
 import { request } from '@/utils/request'
 import { API_PATHS } from '@/config/api'
 import type {
-  OrderItem,
-  PayOrderParams,
-  GetOrderDetailData,
-  PayOrderData,
-  OrderConfirmItem,
-  UpdateOrderStatusData,
-  CommentOrderParams,
   ApplyAfterSaleParams,
+  CommentOrderParams,
+  GetOrderDetailData,
+  OrderConfirmItem,
+  OrderItem,
+  PayOrderData,
+  PayOrderParams,
   RebuyOrderData,
+  UpdateOrderStatusData,
 } from '@/types/model/order'
 import type {
-  GetConfirmOrderListResponse,
-  GetOrderListResponse,
+  AdvanceAfterSaleResponse,
+  ApplyAfterSaleResponse,
+  CommentOrderResponse,
+  ConfirmReceiveOrderResponse,
   CreateOrderRequest,
   CreateOrderResponse,
-  CancelOrderResponse,
-  ConfirmReceiveOrderResponse,
   DeleteOrderResponse,
+  GetConfirmOrderListResponse,
   GetOrderDetailResponse,
+  GetOrderListResponse,
   PayOrderResponse,
   RebuyOrderResponse,
-  CommentOrderResponse,
-  ApplyAfterSaleResponse,
+  CancelOrderResponse,
 } from '@/types/api/order'
 
 export function getConfirmOrderList(): Promise<GetConfirmOrderListResponse> {
@@ -104,5 +105,12 @@ export function applyAfterSale(data: ApplyAfterSaleParams): Promise<ApplyAfterSa
     url: API_PATHS.ORDER.AFTER_SALE(data.id),
     method: 'POST',
     data,
+  })
+}
+
+export function advanceAfterSale(id: string | number): Promise<AdvanceAfterSaleResponse> {
+  return request<UpdateOrderStatusData>({
+    url: API_PATHS.ORDER.AFTER_SALE_ADVANCE(id),
+    method: 'POST',
   })
 }

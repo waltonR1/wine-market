@@ -13,6 +13,7 @@ import {
   rebuyOrder as rebuyOrderApi,
   commentOrder as commentOrderApi,
   applyAfterSale as applyAfterSaleApi,
+  advanceAfterSale as advanceAfterSaleApi,
 } from '@/api'
 import { useOrderStore } from '@/store/order'
 import { useCart } from '@/hooks/useCart'
@@ -337,6 +338,25 @@ export function useOrder() {
     }
   }
 
+  async function advanceAfterSale(id: string | number) {
+    actionLoading.value = true
+    try {
+      const res = await advanceAfterSaleApi(id)
+      if (res.code === 0) {
+        patchOrderState(id, res.data.status, res.data)
+        return true
+      }
+
+      uni.showToast({ title: res.message || '售后状态推进失败', icon: 'none' })
+      return false
+    } catch {
+      uni.showToast({ title: '售后状态推进失败', icon: 'none' })
+      return false
+    } finally {
+      actionLoading.value = false
+    }
+  }
+
   return {
     pageLoading,
     actionLoading,
@@ -357,5 +377,6 @@ export function useOrder() {
     rebuyOrder,
     submitComment,
     applyAfterSale,
+    advanceAfterSale,
   }
 }

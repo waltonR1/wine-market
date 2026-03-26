@@ -2,7 +2,15 @@ import type { AddressInfo } from './address'
 
 export type OrderStatus = 1 | 2 | 3 | 4 | 6
 export type OrderCloseReason = 'cancelled' | 'commented'
-export type AfterSaleStatus = 'none' | 'applying' | 'approved' | 'rejected' | 'completed'
+export type CommentMode = 'initial' | 'append'
+export type AfterSaleStatus =
+  | 'none'
+  | 'applying'
+  | 'reviewing'
+  | 'approved'
+  | 'refunding'
+  | 'completed'
+  | 'rejected'
 
 export type OrderAction =
   | 'cancel'
@@ -23,9 +31,14 @@ export interface OrderGoodsItem {
   stock?: number
 }
 
-/**
- * 订单列表项
- */
+export interface AfterSaleTimelineItem {
+  key: string
+  title: string
+  description: string
+  time?: string
+  status: 'finished' | 'current' | 'pending'
+}
+
 export interface OrderItem {
   id: string
   orderNum: string
@@ -44,23 +57,26 @@ export interface OrderItem {
   closeReason?: OrderCloseReason
   commentScore?: number
   commentContent?: string
+  commentAnonymous?: boolean
+  commentImages?: string[]
+  appendCommentTime?: string
+  appendCommentContent?: string
+  appendCommentImages?: string[]
   afterSaleStatus?: AfterSaleStatus
   afterSaleType?: string
   afterSaleReason?: string
   afterSaleApplyTime?: string
+  afterSaleHandleTime?: string
+  afterSaleCompleteTime?: string
+  afterSaleRejectReason?: string
+  afterSaleTimeline?: AfterSaleTimelineItem[]
 }
 
-/**
- * 订单详情
- * 比列表项更完整，后续可继续扩展
- */
 export interface OrderDetail extends OrderItem {
   payTime?: string
   deliveryTime?: string
   finishTime?: string
-
   payType?: string
-
   logisticsCompany?: string
   logisticsNo?: string
   logisticsStatusText?: string
@@ -76,24 +92,15 @@ export interface OrderConfirmItem {
   stock: number
 }
 
-/**
- * 订单详情响应
- */
 export interface GetOrderDetailData {
   order: OrderDetail
 }
 
-/**
- * 支付订单请求参数
- */
 export interface PayOrderParams {
   id: string
   payType?: string
 }
 
-/**
- * 支付订单响应
- */
 export interface PayOrderData {
   id: string
   status: OrderStatus
@@ -111,22 +118,25 @@ export interface UpdateOrderStatusData {
   closeReason?: OrderCloseReason
   commentScore?: number
   commentContent?: string
+  commentAnonymous?: boolean
+  commentImages?: string[]
+  appendCommentTime?: string
+  appendCommentContent?: string
+  appendCommentImages?: string[]
   afterSaleStatus?: AfterSaleStatus
   afterSaleType?: string
   afterSaleReason?: string
   afterSaleApplyTime?: string
+  afterSaleHandleTime?: string
+  afterSaleCompleteTime?: string
+  afterSaleRejectReason?: string
+  afterSaleTimeline?: AfterSaleTimelineItem[]
 }
 
-/**
- * 取消订单请求参数
- */
 export interface CancelOrderParams {
   id: string
 }
 
-/**
- * 确认收货请求参数
- */
 export interface ConfirmReceiveParams {
   id: string
 }
@@ -148,10 +158,17 @@ export interface CommentOrderParams {
   id: string
   score: number
   content: string
+  anonymous?: boolean
+  images?: string[]
+  mode?: CommentMode
 }
 
 export interface ApplyAfterSaleParams {
   id: string
   type: string
   reason: string
+}
+
+export interface AdvanceAfterSaleParams {
+  id: string
 }

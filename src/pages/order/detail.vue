@@ -37,9 +37,89 @@
             <view class="line-clamp-2 text-[14px] font-medium text-text-main">{{ item.name }}</view>
             <view v-if="item.spec" class="mt-1 text-[12px] text-text-secondary">{{ item.spec }}</view>
             <view class="mt-3 flex items-center justify-between">
-              <view class="text-[15px] font-bold text-accent">¥{{ item.price }}</view>
+              <view class="text-[15px] font-bold text-accent">￥{{ item.price }}</view>
               <view class="text-[12px] text-text-secondary">x{{ item.count }}</view>
             </view>
+          </view>
+        </view>
+      </view>
+
+      <view v-if="hasCommentSection" class="mx-3 mt-3 rounded-2xl bg-white p-4">
+        <view class="mb-3 flex items-center justify-between">
+          <view class="text-[15px] font-bold text-text-main">评价信息</view>
+          <view
+            v-if="canAppendCurrentOrder"
+            class="rounded-full border border-[#C40000] px-3 py-1 text-[12px] text-[#C40000]"
+            @click="goAppendComment"
+          >
+            追加评价
+          </view>
+        </view>
+
+        <view v-if="orderDetail.commentTime" class="space-y-3 text-[13px]">
+          <view class="flex justify-between">
+            <text class="text-text-secondary">评价时间</text>
+            <text class="text-text-main">{{ formatOrderTime(orderDetail.commentTime) }}</text>
+          </view>
+          <view class="flex justify-between">
+            <text class="text-text-secondary">评价星级</text>
+            <text class="text-text-main">{{ orderDetail.commentScore ?? 0 }}/5</text>
+          </view>
+          <view class="flex justify-between">
+            <text class="text-text-secondary">评价方式</text>
+            <text class="text-text-main">{{ orderDetail.commentAnonymous ? '匿名评价' : '实名评价' }}</text>
+          </view>
+          <view v-if="orderDetail.commentContent">
+            <view class="text-text-secondary">评价内容</view>
+            <view class="mt-2 rounded-2xl bg-[#F8F8F8] p-3 leading-6 text-text-main">
+              {{ orderDetail.commentContent }}
+            </view>
+          </view>
+          <view v-if="orderDetail.commentImages?.length">
+            <view class="text-text-secondary">评价图片</view>
+            <view class="mt-2 flex flex-wrap gap-3">
+              <image
+                v-for="image in orderDetail.commentImages"
+                :key="image"
+                :src="image"
+                class="h-[76px] w-[76px] rounded-2xl bg-[#F7F7F7]"
+                mode="aspectFill"
+              />
+            </view>
+          </view>
+          <view v-else>
+            <view class="text-text-secondary">评价图片</view>
+            <view class="mt-2 rounded-2xl border border-dashed border-[#E5E5E5] px-3 py-4 text-[12px] text-[#999]">
+              暂未上传图片
+            </view>
+          </view>
+        </view>
+
+        <view v-if="orderDetail.appendCommentTime" class="mt-5 border-t border-[#F3F3F3] pt-4">
+          <view class="mb-2 text-[14px] font-semibold text-text-main">追评内容</view>
+          <view class="text-[12px] text-text-secondary">
+            追评时间：{{ formatOrderTime(orderDetail.appendCommentTime) }}
+          </view>
+          <view
+            v-if="orderDetail.appendCommentContent"
+            class="mt-2 rounded-2xl bg-[#F8F8F8] p-3 leading-6 text-text-main"
+          >
+            {{ orderDetail.appendCommentContent }}
+          </view>
+          <view v-if="orderDetail.appendCommentImages?.length" class="mt-3 flex flex-wrap gap-3">
+            <image
+              v-for="image in orderDetail.appendCommentImages"
+              :key="image"
+              :src="image"
+              class="h-[76px] w-[76px] rounded-2xl bg-[#F7F7F7]"
+              mode="aspectFill"
+            />
+          </view>
+          <view
+            v-else
+            class="mt-2 rounded-2xl border border-dashed border-[#E5E5E5] px-3 py-4 text-[12px] text-[#999]"
+          >
+            本次追评未附带图片
           </view>
         </view>
       </view>
@@ -75,21 +155,9 @@
             <text class="text-text-secondary">关闭时间</text>
             <text class="text-text-main">{{ formatOrderTime(orderDetail.cancelTime) }}</text>
           </view>
-          <view v-if="orderDetail.commentTime" class="flex justify-between">
-            <text class="text-text-secondary">评价时间</text>
-            <text class="text-text-main">{{ formatOrderTime(orderDetail.commentTime) }}</text>
-          </view>
-          <view v-if="orderDetail.commentTime" class="flex justify-between">
-            <text class="text-text-secondary">评价星级</text>
-            <text class="text-text-main">{{ orderDetail.commentScore ?? 0 }}/5</text>
-          </view>
-          <view v-if="orderDetail.commentContent" class="flex justify-between">
-            <text class="text-text-secondary">评价内容</text>
-            <text class="ml-4 flex-1 text-right text-text-main">{{ orderDetail.commentContent }}</text>
-          </view>
           <view v-if="orderDetail.afterSaleStatus && orderDetail.afterSaleStatus !== 'none'" class="flex justify-between">
             <text class="text-text-secondary">售后状态</text>
-            <text class="text-text-main">{{ afterSaleStatusText }}</text>
+            <text class="text-text-main">{{ getAfterSaleStatusText(orderDetail.afterSaleStatus) }}</text>
           </view>
           <view v-if="orderDetail.remark" class="flex justify-between">
             <text class="text-text-secondary">订单备注</text>
@@ -103,15 +171,15 @@
         <view class="space-y-3 text-[13px]">
           <view class="flex justify-between">
             <text class="text-text-secondary">商品总额</text>
-            <text class="text-text-main">¥{{ orderDetail.totalPrice }}</text>
+            <text class="text-text-main">￥{{ orderDetail.totalPrice }}</text>
           </view>
           <view class="flex justify-between">
             <text class="text-text-secondary">运费</text>
-            <text class="text-text-main">¥{{ orderDetail.freight }}</text>
+            <text class="text-text-main">￥{{ orderDetail.freight }}</text>
           </view>
           <view class="flex justify-between text-[15px] font-bold">
             <text class="text-text-main">实付款</text>
-            <text class="text-accent">¥{{ orderDetail.payPrice }}</text>
+            <text class="text-accent">￥{{ orderDetail.payPrice }}</text>
           </view>
         </view>
       </view>
@@ -162,7 +230,13 @@ import { onLoad } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
 import { useOrder } from '@/hooks/useOrder'
 import { formatDateTime } from '@/utils/format'
-import { getOrderActions, getOrderPayTypeText, getOrderStatusDescByOrder } from '@/utils/order'
+import {
+  canAppendComment,
+  getAfterSaleStatusText,
+  getOrderActions,
+  getOrderPayTypeText,
+  getOrderStatusDescByOrder,
+} from '@/utils/order'
 import type { OrderAction } from '@/types/model/order'
 
 const orderId = ref('')
@@ -182,16 +256,23 @@ const actionList = computed(() => {
   return getOrderActions(orderDetail.value)
 })
 
-const afterSaleStatusText = computed(() => {
-  if (!orderDetail.value?.afterSaleStatus || orderDetail.value.afterSaleStatus === 'none') return '-'
-  return orderDetail.value.afterSaleStatus === 'applying' ? '申请中' : orderDetail.value.afterSaleStatus
+const canAppendCurrentOrder = computed(() => {
+  if (!orderDetail.value) return false
+  return canAppendComment(orderDetail.value)
+})
+
+const hasCommentSection = computed(() => {
+  if (!orderDetail.value) return false
+  return Boolean(orderDetail.value.commentTime || orderDetail.value.commentContent || canAppendCurrentOrder.value)
 })
 
 const statusExtraText = computed(() => {
   if (!orderDetail.value) return ''
 
-  if (orderDetail.value.afterSaleStatus === 'applying' && orderDetail.value.afterSaleApplyTime) {
-    return `售后申请时间：${formatOrderTime(orderDetail.value.afterSaleApplyTime)}`
+  if (orderDetail.value.afterSaleStatus && orderDetail.value.afterSaleStatus !== 'none') {
+    const timeline = orderDetail.value.afterSaleTimeline || []
+    const currentNode = timeline.find(item => item.status === 'current') || timeline[timeline.length - 1]
+    return currentNode?.description || `售后状态：${getAfterSaleStatusText(orderDetail.value.afterSaleStatus)}`
   }
 
   if (orderDetail.value.status === 6 && orderDetail.value.commentTime) {
@@ -315,6 +396,13 @@ function goComment() {
   if (!orderDetail.value) return
   uni.navigateTo({
     url: `/pages/order/comment?id=${orderDetail.value.id}`,
+  })
+}
+
+function goAppendComment() {
+  if (!orderDetail.value) return
+  uni.navigateTo({
+    url: `/pages/order/comment?id=${orderDetail.value.id}&mode=append`,
   })
 }
 

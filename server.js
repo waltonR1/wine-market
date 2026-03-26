@@ -401,6 +401,11 @@ function createOrderStatePatch(status, extra = {}) {
     closeReason: '',
     commentScore: 0,
     commentContent: '',
+    commentAnonymous: false,
+    commentImages: [],
+    appendCommentTime: '',
+    appendCommentContent: '',
+    appendCommentImages: [],
     logisticsCompany: '',
     logisticsNo: '',
     logisticsStatusText: '暂无物流信息',
@@ -408,7 +413,134 @@ function createOrderStatePatch(status, extra = {}) {
     afterSaleType: '',
     afterSaleReason: '',
     afterSaleApplyTime: '',
+    afterSaleHandleTime: '',
+    afterSaleCompleteTime: '',
+    afterSaleRejectReason: '',
+    afterSaleTimeline: [],
     ...extra,
+  }
+}
+
+function createAfterSaleTimeline(order, status, extra = {}) {
+  const timeline = []
+  const applyTime = extra.afterSaleApplyTime || order.afterSaleApplyTime || ''
+  const handleTime = extra.afterSaleHandleTime || order.afterSaleHandleTime || ''
+  const completeTime = extra.afterSaleCompleteTime || order.afterSaleCompleteTime || ''
+  const rejectReason = extra.afterSaleRejectReason || order.afterSaleRejectReason || ''
+
+  timeline.push({
+    key: 'apply',
+    title: '提交售后申请',
+    description: '申请已创建，等待平台受理。',
+    time: applyTime,
+    status: ['applying', 'reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? 'finished' : 'pending',
+  })
+
+  timeline.push({
+    key: 'review',
+    title: '平台审核',
+    description: status === 'rejected' ? `平台已驳回申请${rejectReason ? `：${rejectReason}` : '。'}` : '平台正在审核申请材料。',
+    time: ['reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime || applyTime : '',
+    status: status === 'applying' ? 'pending' : status === 'reviewing' ? 'current' : 'finished',
+  })
+
+  timeline.push({
+    key: 'result',
+    title: status === 'rejected' ? '审核结果' : '审核通过',
+    description:
+      status === 'rejected'
+        ? rejectReason || '本次售后申请未通过。'
+        : '审核通过，进入后续处理阶段。',
+    time: ['approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime : '',
+    status:
+      status === 'rejected'
+        ? 'finished'
+        : status === 'approved'
+          ? 'current'
+          : ['refunding', 'completed'].includes(status)
+            ? 'finished'
+            : 'pending',
+  })
+
+  timeline.push({
+    key: 'refund',
+    title: '退款处理',
+    description: '退款或补偿处理中，请耐心等待。',
+    time: ['refunding', 'completed'].includes(status) ? completeTime || handleTime : '',
+    status: status === 'refunding' ? 'current' : status === 'completed' ? 'finished' : 'pending',
+  })
+
+  timeline.push({
+    key: 'finish',
+    title: '售后完成',
+    description: status === 'rejected' ? '售后流程已结束。' : '售后流程已完成。',
+    time: status === 'completed' || status === 'rejected' ? completeTime || handleTime : '',
+    status: status === 'completed' || status === 'rejected' ? 'finished' : 'pending',
+  })
+
+  return timeline
+}
+
+function getNextAfterSaleStatus(status) {
+  const flow = {
+    applying: 'reviewing',
+    reviewing: 'approved',
+    approved: 'refunding',
+    refunding: 'completed',
+  }
+
+  return flow[status] || status
+}
+
+function syncGoodsComment(db, order, payload) {
+  const goodsList = db.get('goods').value() || []
+
+  for (const item of order.goods || []) {
+    const goods = goodsList.find(g => Number(g.id) === Number(item.id))
+    if (!goods) continue
+
+    const comments = Array.isArray(goods.comments) ? [...goods.comments] : []
+    const commentIndex = comments.findIndex(comment => String(comment.orderId || '') === String(order.id))
+
+    if (payload.mode === 'append') {
+      if (commentIndex >= 0) {
+        comments[commentIndex] = {
+          ...comments[commentIndex],
+          appendTime: payload.time.split(' ')[0],
+          appendContent: payload.content,
+          appendImages: payload.images,
+        }
+      }
+    } else {
+      const nextComment = {
+        id: Date.now() + Number(item.id),
+        orderId: String(order.id),
+        userName: payload.anonymous ? '????' : 'Wine ??',
+        avatar: 'https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U',
+        score: Number(payload.score),
+        content: payload.content,
+        time: payload.time.split(' ')[0],
+        images: payload.images,
+        anonymous: Boolean(payload.anonymous),
+        appendTime: '',
+        appendContent: '',
+        appendImages: [],
+      }
+
+      if (commentIndex >= 0) {
+        comments[commentIndex] = nextComment
+      } else {
+        comments.unshift(nextComment)
+      }
+    }
+
+    db.get('goods')
+      .find({ id: Number(item.id) })
+      .assign({
+        comments,
+        comment: comments.length,
+      })
+      .write()
   }
 }
 
@@ -653,6 +785,110 @@ server.post('/orders/:id/rebuy', (req, res) => {
 
 server.post('/orders/:id/comment', (req, res) => {
   const orderId = String(req.params.id)
+  const { score = 0, content = '', anonymous = false, images = [], mode = 'initial' } = req.body || {}
+  const db = router.db
+  const order = db.get('orders').find({ id: orderId }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  const commentContent = String(content).trim()
+  const commentImages = Array.isArray(images) ? images.slice(0, 3) : []
+  const commentTime = formatDateTime()
+
+  if (mode === 'append') {
+    if (Number(order.status) !== 6 || getOrderCloseReason(order) !== 'commented') {
+      res.status(200).jsonp(fail('当前订单不可追评'))
+      return
+    }
+
+    if (order.appendCommentTime) {
+      res.status(200).jsonp(fail('该订单已完成追评'))
+      return
+    }
+
+    syncGoodsComment(db, order, {
+      mode: 'append',
+      content: commentContent,
+      images: commentImages,
+      time: commentTime,
+      score: Number(order.commentScore || score || 0),
+      anonymous: Boolean(order.commentAnonymous),
+    })
+
+    db.get('orders')
+      .find({ id: orderId })
+      .assign({
+        appendCommentTime: commentTime,
+        appendCommentContent: commentContent,
+        appendCommentImages: commentImages,
+      })
+      .write()
+
+    res.status(200).jsonp(ok({
+      id: orderId,
+      status: 6,
+      statusLabel: '已关闭',
+      closeReason: 'commented',
+      appendCommentTime: commentTime,
+      appendCommentContent: commentContent,
+      appendCommentImages: commentImages,
+    }, '追评提交成功'))
+    return
+  }
+
+  if (Number(order.status) !== 4) {
+    res.status(200).jsonp(fail('当前订单不可评价'))
+    return
+  }
+
+  syncGoodsComment(db, order, {
+    mode: 'initial',
+    content: commentContent,
+    images: commentImages,
+    time: commentTime,
+    score: Number(score),
+    anonymous: Boolean(anonymous),
+  })
+
+  db.get('orders')
+    .find({ id: orderId })
+    .assign({
+      ...createOrderStatePatch(6, {
+        payTime: order.payTime || '',
+        deliveryTime: order.deliveryTime || '',
+        finishTime: order.finishTime || '',
+        cancelTime: order.cancelTime || '',
+        closeReason: 'commented',
+        commentTime,
+        commentScore: Number(score),
+        commentContent: commentContent,
+        commentAnonymous: Boolean(anonymous),
+        commentImages,
+        logisticsCompany: order.logisticsCompany || '',
+        logisticsNo: order.logisticsNo || '',
+        logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
+      }),
+    })
+    .write()
+
+  res.status(200).jsonp(ok({
+    id: orderId,
+    status: 6,
+    statusLabel: '已关闭',
+    closeReason: 'commented',
+    commentTime,
+    commentScore: Number(score),
+    commentContent: commentContent,
+    commentAnonymous: Boolean(anonymous),
+    commentImages,
+  }, '评价提交成功'))
+})
+
+server.post('/orders/:id/comment-legacy', (req, res) => {
+  const orderId = String(req.params.id)
   const { score = 0, content = '' } = req.body || {}
   const db = router.db
   const order = db.get('orders').find({ id: orderId }).value()
@@ -740,6 +976,112 @@ server.post('/orders/:id/after-sale', (req, res) => {
     return
   }
 
+  if (order.afterSaleStatus && order.afterSaleStatus !== 'none') {
+    res.status(200).jsonp(fail('售后申请已存在'))
+    return
+  }
+
+  const afterSaleApplyTime = formatDateTime()
+  const nextStatus = 'applying'
+  const nextPatch = {
+    afterSaleStatus: nextStatus,
+    afterSaleType: String(type).trim(),
+    afterSaleReason: String(reason).trim(),
+    afterSaleApplyTime,
+    afterSaleHandleTime: '',
+    afterSaleCompleteTime: '',
+    afterSaleRejectReason: '',
+  }
+
+  db.get('orders')
+    .find({ id: orderId })
+    .assign({
+      ...nextPatch,
+      afterSaleTimeline: createAfterSaleTimeline(order, nextStatus, nextPatch),
+    })
+    .write()
+
+  res.status(200).jsonp(ok({
+    id: orderId,
+    status: Number(order.status),
+    statusLabel: Number(order.status) === 6 ? '已关闭' : order.statusLabel,
+    closeReason: getOrderCloseReason(order),
+    ...nextPatch,
+    afterSaleTimeline: createAfterSaleTimeline(order, nextStatus, nextPatch),
+  }, '售后申请已提交'))
+})
+
+server.post('/orders/:id/after-sale/advance', (req, res) => {
+  const orderId = String(req.params.id)
+  const db = router.db
+  const order = db.get('orders').find({ id: orderId }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  if (!order.afterSaleStatus || order.afterSaleStatus === 'none') {
+    res.status(200).jsonp(fail('当前订单暂无售后流程'))
+    return
+  }
+
+  const nextStatus = getNextAfterSaleStatus(order.afterSaleStatus)
+  if (nextStatus === order.afterSaleStatus) {
+    res.status(200).jsonp(fail('当前售后状态不可继续推进'))
+    return
+  }
+
+  const now = formatDateTime()
+  const nextPatch = {
+    afterSaleStatus: nextStatus,
+    afterSaleHandleTime: ['reviewing', 'approved'].includes(nextStatus) ? now : order.afterSaleHandleTime || now,
+    afterSaleCompleteTime: ['refunding', 'completed'].includes(nextStatus) ? now : order.afterSaleCompleteTime || '',
+    afterSaleRejectReason: order.afterSaleRejectReason || '',
+  }
+
+  const nextTimeline = createAfterSaleTimeline(order, nextStatus, {
+    ...order,
+    ...nextPatch,
+  })
+
+  db.get('orders')
+    .find({ id: orderId })
+    .assign({
+      ...nextPatch,
+      afterSaleTimeline: nextTimeline,
+    })
+    .write()
+
+  res.status(200).jsonp(ok({
+    id: orderId,
+    status: Number(order.status),
+    statusLabel: Number(order.status) === 6 ? '已关闭' : order.statusLabel,
+    closeReason: getOrderCloseReason(order),
+    ...nextPatch,
+    afterSaleType: order.afterSaleType || '',
+    afterSaleReason: order.afterSaleReason || '',
+    afterSaleApplyTime: order.afterSaleApplyTime || '',
+    afterSaleTimeline: nextTimeline,
+  }, '售后进度已更新'))
+})
+
+server.post('/orders/:id/after-sale-legacy', (req, res) => {
+  const orderId = String(req.params.id)
+  const { type = '', reason = '' } = req.body || {}
+  const db = router.db
+  const order = db.get('orders').find({ id: orderId }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  if (!isAfterSaleEligible(order)) {
+    res.status(200).jsonp(fail('当前订单不可申请售后'))
+    return
+  }
+
   if (order.afterSaleStatus === 'applying') {
     res.status(200).jsonp(fail('售后申请已提交'))
     return
@@ -786,6 +1128,9 @@ server.get('/order/:id/detail', (req, res) => {
       statusLabel: Number(order.status) === 6 ? '已关闭' : order.statusLabel,
       closeReason: getOrderCloseReason(order),
       afterSaleStatus: order.afterSaleStatus || 'none',
+      commentImages: Array.isArray(order.commentImages) ? order.commentImages : [],
+      appendCommentImages: Array.isArray(order.appendCommentImages) ? order.appendCommentImages : [],
+      afterSaleTimeline: Array.isArray(order.afterSaleTimeline) ? order.afterSaleTimeline : [],
     },
   }))
 })

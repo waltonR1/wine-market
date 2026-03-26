@@ -1,18 +1,18 @@
 import type { ApiResponse } from '@/types/common'
+import type { AddressInfo } from '@/types/model/address'
 import type {
+  AdvanceAfterSaleParams,
+  ApplyAfterSaleParams,
+  CommentOrderParams,
+  GetOrderDetailData,
   OrderConfirmItem,
   OrderItem,
-  GetOrderDetailData,
   PayOrderData,
   PayOrderParams,
-  DeleteOrderParams,
+  RebuyOrderData,
   RebuyOrderParams,
   UpdateOrderStatusData,
-  RebuyOrderData,
-  CommentOrderParams,
-  ApplyAfterSaleParams,
 } from '@/types/model/order'
-import type { AddressInfo } from '@/types/model/address'
 
 export type GetConfirmOrderListResponse = ApiResponse<OrderConfirmItem[]>
 
@@ -30,8 +30,6 @@ export type CreateOrderResponse = ApiResponse<OrderItem>
 export type CancelOrderResponse = ApiResponse<UpdateOrderStatusData>
 
 export type ConfirmReceiveOrderResponse = ApiResponse<UpdateOrderStatusData>
-
-export interface DeleteOrderRequest extends DeleteOrderParams {}
 
 export type DeleteOrderResponse = ApiResponse<null>
 
@@ -52,3 +50,7 @@ export type CommentOrderResponse = ApiResponse<UpdateOrderStatusData>
 export interface ApplyAfterSaleRequest extends ApplyAfterSaleParams {}
 
 export type ApplyAfterSaleResponse = ApiResponse<UpdateOrderStatusData>
+
+export interface AdvanceAfterSaleRequest extends AdvanceAfterSaleParams {}
+
+export type AdvanceAfterSaleResponse = ApiResponse<UpdateOrderStatusData>

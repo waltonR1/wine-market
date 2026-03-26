@@ -22,49 +22,30 @@ interface OrderStatusConfigItem {
 
 type OrderActionTarget = Pick<
   OrderDetail,
-  'status' | 'cancelTime' | 'commentTime' | 'closeReason' | 'afterSaleStatus'
+  'status' | 'cancelTime' | 'commentTime' | 'closeReason' | 'afterSaleStatus' | 'appendCommentTime'
 >
 
 const PAY_TYPE_TEXT_MAP: Record<string, string> = {
   wechat: '微信支付',
 }
 
+const AFTER_SALE_STATUS_TEXT_MAP: Record<Exclude<AfterSaleStatus, 'none'>, string> = {
+  applying: '申请已提交',
+  reviewing: '平台审核中',
+  approved: '审核通过',
+  refunding: '退款处理中',
+  completed: '售后完成',
+  rejected: '售后已拒绝',
+}
+
 const ORDER_ACTION_META: Record<OrderAction, Omit<OrderActionConfigItem, 'text'>> = {
-  delete: {
-    type: 'delete',
-    style: 'danger',
-    priority: 100,
-  },
-  pay: {
-    type: 'pay',
-    style: 'primary',
-    priority: 90,
-  },
-  confirm: {
-    type: 'confirm',
-    style: 'primary',
-    priority: 80,
-  },
-  comment: {
-    type: 'comment',
-    style: 'secondary',
-    priority: 70,
-  },
-  aftersale: {
-    type: 'aftersale',
-    style: 'secondary',
-    priority: 60,
-  },
-  rebuy: {
-    type: 'rebuy',
-    style: 'rebuy',
-    priority: 50,
-  },
-  cancel: {
-    type: 'cancel',
-    style: 'secondary',
-    priority: 40,
-  },
+  delete: { type: 'delete', style: 'danger', priority: 100 },
+  pay: { type: 'pay', style: 'primary', priority: 90 },
+  confirm: { type: 'confirm', style: 'primary', priority: 80 },
+  comment: { type: 'comment', style: 'secondary', priority: 70 },
+  aftersale: { type: 'aftersale', style: 'secondary', priority: 60 },
+  rebuy: { type: 'rebuy', style: 'rebuy', priority: 50 },
+  cancel: { type: 'cancel', style: 'secondary', priority: 40 },
 }
 
 export const ORDER_STATUS_CONFIG: Record<OrderStatus, OrderStatusConfigItem> = {
@@ -113,7 +94,9 @@ export function getOrderStatusDesc(status: OrderStatus) {
   return ORDER_STATUS_CONFIG[status].desc
 }
 
-export function getOrderDisplayStatusLabel(order: Pick<OrderDetail, 'status' | 'statusLabel' | 'commentTime' | 'closeReason'>) {
+export function getOrderDisplayStatusLabel(
+  order: Pick<OrderDetail, 'status' | 'statusLabel' | 'commentTime' | 'closeReason'>
+) {
   if (order.status === 6) {
     return '已关闭'
   }
@@ -121,12 +104,37 @@ export function getOrderDisplayStatusLabel(order: Pick<OrderDetail, 'status' | '
   return order.statusLabel || getOrderStatusText(order.status)
 }
 
+export function getAfterSaleStatusText(status?: AfterSaleStatus) {
+  if (!status || status === 'none') return '-'
+  return AFTER_SALE_STATUS_TEXT_MAP[status]
+}
+
 export function getOrderStatusDescByOrder(order: OrderActionTarget) {
   const closeReason = inferCloseReason(order)
   const afterSaleStatus = getAfterSaleStatus(order)
 
   if (afterSaleStatus === 'applying') {
-    return '售后申请已提交，等待平台处理'
+    return '售后申请已提交，等待平台受理'
+  }
+
+  if (afterSaleStatus === 'reviewing') {
+    return '平台正在审核售后申请'
+  }
+
+  if (afterSaleStatus === 'approved') {
+    return '售后申请已通过，请等待后续处理'
+  }
+
+  if (afterSaleStatus === 'refunding') {
+    return '退款处理中，请留意进度'
+  }
+
+  if (afterSaleStatus === 'completed') {
+    return '售后已完成'
+  }
+
+  if (afterSaleStatus === 'rejected') {
+    return '售后申请未通过'
   }
 
   if (order.status === 6 && closeReason === 'commented') {
@@ -146,18 +154,22 @@ export function getOrderPayTypeText(payType?: string) {
 }
 
 export function canDeleteOrder(order: OrderActionTarget) {
-  return order.status === 6 && getAfterSaleStatus(order) !== 'applying'
+  return order.status === 6 && !['applying', 'reviewing', 'approved', 'refunding'].includes(getAfterSaleStatus(order))
 }
 
 export function canApplyAfterSale(order: OrderActionTarget) {
   const closeReason = inferCloseReason(order)
-  if (getAfterSaleStatus(order) === 'applying') return true
+  if (getAfterSaleStatus(order) !== 'none') return true
   if (order.status === 2 || order.status === 3 || order.status === 4) return true
   return order.status === 6 && closeReason === 'commented'
 }
 
 export function canCommentOrder(order: OrderActionTarget) {
   return order.status === 4
+}
+
+export function canAppendComment(order: OrderActionTarget) {
+  return order.status === 6 && inferCloseReason(order) === 'commented' && !order.appendCommentTime
 }
 
 export function canRebuyOrder(order: OrderActionTarget) {
@@ -198,7 +210,7 @@ function isActionEnabled(order: OrderActionTarget, action: OrderAction) {
 }
 
 function getActionText(order: OrderActionTarget, action: OrderAction) {
-  if (action === 'aftersale' && getAfterSaleStatus(order) === 'applying') {
+  if (action === 'aftersale' && getAfterSaleStatus(order) !== 'none') {
     return '售后进度'
   }
 
@@ -243,5 +255,9 @@ export function normalizeOrder<T extends OrderItem | OrderDetail>(order: T): T {
     statusLabel: getOrderDisplayStatusLabel(order),
     closeReason: inferCloseReason(order as OrderDetail),
     afterSaleStatus: order.afterSaleStatus || 'none',
+    commentAnonymous: Boolean(order.commentAnonymous),
+    commentImages: order.commentImages || [],
+    appendCommentImages: order.appendCommentImages || [],
+    afterSaleTimeline: order.afterSaleTimeline || [],
   } as T
 }
