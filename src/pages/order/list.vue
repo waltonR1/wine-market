@@ -1,37 +1,34 @@
 <template>
   <view class="min-h-screen bg-[#F8F8F8] pb-6">
-    <!-- 状态切换栏 -->
-    <view class="sticky top-0 z-[90] bg-white flex items-center justify-around h-[44px] border-b border-[#F0F0F0]">
+    <view class="sticky top-0 z-[90] flex h-[44px] items-center justify-around border-b border-[#F0F0F0] bg-white">
       <view
-          v-for="tab in tabs"
-          :key="tab.status"
-          class="h-full flex items-center px-2 relative text-[14px]"
-          :class="activeStatus === tab.status ? 'text-[#C40000] font-medium' : 'text-[#666]'"
-          @click="changeTab(tab.status)"
+        v-for="tab in tabs"
+        :key="tab.status"
+        class="relative flex h-full items-center px-2 text-[14px]"
+        :class="activeStatus === tab.status ? 'font-medium text-[#C40000]' : 'text-[#666]'"
+        @click="changeTab(tab.status)"
       >
         {{ tab.label }}
         <view
-            v-if="activeStatus === tab.status"
-            class="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C40000] rounded-full"
+          v-if="activeStatus === tab.status"
+          class="absolute bottom-0 left-0 right-0 h-[2px] rounded-full bg-[#C40000]"
         ></view>
       </view>
     </view>
 
-    <!-- 订单列表 -->
     <view class="p-4">
       <template v-if="orderList.length > 0">
         <OrderCard
-            v-for="order in orderList"
-            :key="order.id"
-            :order="order"
-            @action="handleOrderAction"
-            @click="goOrderDetail"
+          v-for="order in orderList"
+          :key="order.id"
+          :order="order"
+          @action="handleOrderAction"
+          @click="goOrderDetail"
         />
       </template>
 
-      <!-- 空状态 -->
       <view v-else class="flex flex-col items-center pt-20">
-        <view class="text-[60px] mb-4 opacity-20">📦</view>
+        <view class="mb-4 text-[60px] opacity-20">📦</view>
         <view class="text-[14px] text-[#999]">暂无相关订单</view>
       </view>
     </view>
@@ -42,11 +39,19 @@
 import { ref } from 'vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
 import OrderCard from '@/components/business/OrderCard.vue'
-import type { OrderItem } from '@/types/model/order'
+import type { OrderAction, OrderItem } from '@/types/model/order'
 import { useOrder } from '@/hooks/useOrder'
 
 const activeStatus = ref(0)
-const { orderList, actionLoading, fetchOrderList, cancelOrder, confirmReceiveOrder } = useOrder()
+const {
+  orderList,
+  actionLoading,
+  fetchOrderList,
+  cancelOrder,
+  confirmReceiveOrder,
+  deleteOrder,
+  rebuyOrder,
+} = useOrder()
 
 const tabs = [
   { label: '全部', status: 0 },
@@ -54,7 +59,7 @@ const tabs = [
   { label: '待发货', status: 2 },
   { label: '待收货', status: 3 },
   { label: '待评价', status: 4 },
-  { label: '已取消', status: 6 },
+  { label: '已关闭', status: 6 },
 ]
 
 const fetchList = async () => {
@@ -71,57 +76,57 @@ onShow(() => {
   fetchList()
 })
 
-const changeTab = (status: number) => {
+function changeTab(status: number) {
   activeStatus.value = status
   fetchList()
 }
 
-async function handleCancelOrder(order: OrderItem) {
-  if (actionLoading.value) return
-
+async function showConfirmModal(content: string) {
   const res = await new Promise<UniApp.ShowModalRes>((resolve) => {
     uni.showModal({
       title: '提示',
-      content: `确定取消订单 ${order.orderNum} 吗？`,
+      content,
       success: resolve,
+      fail: () => resolve({ confirm: false, cancel: true, errMsg: 'showModal:fail' }),
     })
   })
 
-  if (!res.confirm) return
+  return res.confirm
+}
+
+async function handleCancelOrder(order: OrderItem) {
+  if (actionLoading.value) return
+  const confirmed = await showConfirmModal(`确定取消订单 ${order.orderNum} 吗？`)
+  if (!confirmed) return
 
   const ok = await cancelOrder(order.id)
   if (!ok) return
 
-  uni.showToast({
-    title: '订单已取消',
-    icon: 'success',
-  })
-
+  uni.showToast({ title: '订单已关闭', icon: 'success' })
   fetchList()
 }
 
 async function handleConfirmOrder(order: OrderItem) {
   if (actionLoading.value) return
-
-  const res = await new Promise<UniApp.ShowModalRes>((resolve) => {
-    uni.showModal({
-      title: '提示',
-      content: '确认已收到商品？',
-      success: resolve,
-    })
-  })
-
-  if (!res.confirm) return
+  const confirmed = await showConfirmModal('确认已收到商品？')
+  if (!confirmed) return
 
   const ok = await confirmReceiveOrder(order.id)
   if (!ok) return
 
-  uni.showToast({
-    title: '已确认收货',
-    icon: 'success',
-  })
-
+  uni.showToast({ title: '已确认收货', icon: 'success' })
   fetchList()
+}
+
+async function handleDeleteOrder(order: OrderItem) {
+  if (actionLoading.value) return
+  const confirmed = await showConfirmModal(`确定删除订单 ${order.orderNum} 吗？`)
+  if (!confirmed) return
+
+  const ok = await deleteOrder(order.id)
+  if (!ok) return
+
+  uni.showToast({ title: '订单已删除', icon: 'success' })
 }
 
 function handlePayOrder(order: OrderItem) {
@@ -131,14 +136,32 @@ function handlePayOrder(order: OrderItem) {
 }
 
 function handleCommentOrder(order: OrderItem) {
-  uni.showToast({
-    title: '评价功能暂未接入',
-    icon: 'none',
+  uni.navigateTo({
+    url: `/pages/order/comment?id=${order.id}`,
   })
 }
 
-const handleOrderAction = async (type: string, order: OrderItem) => {
-  if (actionLoading.value && (type === 'cancel' || type === 'confirm')) return
+async function handleRebuyOrder(order: OrderItem) {
+  if (actionLoading.value) return
+  const ok = await rebuyOrder(order.id)
+  if (!ok) return
+
+  uni.showToast({ title: '已同步到购物车', icon: 'success' })
+  setTimeout(() => {
+    uni.switchTab({
+      url: '/pages/cart/index',
+    })
+  }, 300)
+}
+
+function handleAfterSale(order: OrderItem) {
+  uni.navigateTo({
+    url: `/pages/order/aftersale?id=${order.id}`,
+  })
+}
+
+const handleOrderAction = async (type: OrderAction, order: OrderItem) => {
+  if (actionLoading.value && type !== 'pay' && type !== 'comment' && type !== 'aftersale') return
 
   switch (type) {
     case 'cancel':
@@ -152,6 +175,15 @@ const handleOrderAction = async (type: string, order: OrderItem) => {
       break
     case 'comment':
       handleCommentOrder(order)
+      break
+    case 'delete':
+      await handleDeleteOrder(order)
+      break
+    case 'rebuy':
+      await handleRebuyOrder(order)
+      break
+    case 'aftersale':
+      handleAfterSale(order)
       break
     default:
       break
@@ -167,6 +199,6 @@ function goOrderDetail(order: OrderItem) {
 
 <style scoped>
 page {
-  background-color: #F8F8F8;
+  background-color: #f8f8f8;
 }
 </style>

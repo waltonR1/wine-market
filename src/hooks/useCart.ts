@@ -21,33 +21,21 @@ export function useCart() {
   const { cartList, checkedList, isAllChecked, totalPrice, totalCount } = storeToRefs(cartStore)
 
   /**
-   * 用接口返回的数据统一同步 store
+   * 用接口返回的数据统一同步 store。
    */
   function syncCartList(list: CartItem[]) {
     cartStore.setCartList(list)
   }
 
   /**
-   * 将服务器返回的购物车数据转换为前端使用的 CartItem 列表
-   *
-   * 主要作用：
-   * 1. 将 CartServerItem 转换为前端 CartItem 结构
-   * 2. 保留当前本地购物车中的 checked 状态（用户勾选状态）
-   *
-   * 处理逻辑：
-   * - 服务器返回的数据通常不包含 checked 字段
-   * - 因此需要从 current（当前 store 中的购物车列表）中恢复对应商品的 checked 状态
-   * - 如果该商品之前不存在于 current 中，则默认 checked = true
-   *
-   * @param serverList 服务器返回的购物车数据
-   * @param current 当前 store 中已有的购物车列表
-   * @returns 转换后的前端购物车列表
+   * 将服务端购物车数据转换成前端使用的 CartItem，
+   * 并尽量保留当前本地的勾选状态。
    */
   function toClientList(serverList: CartServerItem[] | undefined, current: CartItem[]) {
     const checkedMap = new Map<number, boolean>()
     current.forEach(item => checkedMap.set(item.id, item.checked))
 
-    return (serverList || []).map((item) => ({
+    return (serverList || []).map(item => ({
       id: item.id,
       name: item.name,
       price: item.price,
@@ -59,9 +47,9 @@ export function useCart() {
   }
 
   /**
-   * 获取购物车列表
-   * 未登录时：直接使用本地购物车
-   * 已登录时：拉取服务端购物车
+   * 获取购物车列表。
+   * 未登录时直接使用本地购物车；
+   * 已登录时拉取服务端数据并同步到 store。
    */
   async function getCartList() {
     if (!isLogin.value) {
@@ -92,20 +80,18 @@ export function useCart() {
   }
 
   /**
-   * 添加到购物车
-   * 未登录：只更新本地
-   * 已登录：先本地更新，再同步后端，失败回滚
+   * 添加到购物车。
+   * 未登录只更新本地；
+   * 已登录时先乐观更新，失败后回滚。
    */
   async function addToCart(goods: CartItem) {
     const oldList = cartList.value.map(item => ({ ...item }))
 
-    // 先本地更新
     cartStore.addToCart(goods)
 
-    // 未登录时只保留本地购物车
     if (!isLogin.value) {
       uni.showToast({
-        title: '已添加到购物车',
+        title: '已加入购物车',
         icon: 'success',
       })
       return true
@@ -123,23 +109,22 @@ export function useCart() {
         }
 
         uni.showToast({
-          title: '已添加到购物车',
+          title: '已加入购物车',
           icon: 'success',
         })
         return true
       }
 
-      // 失败回滚
       cartStore.setCartList(oldList)
       uni.showToast({
-        title: res.message || '添加失败',
+        title: res.message || '加入失败',
         icon: 'none',
       })
       return false
     } catch (error) {
       cartStore.setCartList(oldList)
       uni.showToast({
-        title: '添加失败',
+        title: '加入失败',
         icon: 'none',
       })
       return false
@@ -147,11 +132,10 @@ export function useCart() {
   }
 
   /**
-   * 商品转购物车项后添加
+   * 从商品详情添加到购物车。
    */
   async function addProductToCart(product: ProductItem) {
-
-    if (!APP_CONFIG.ALLOW_ADD_OUT_OF_STOCK)
+    if (!APP_CONFIG.ALLOW_ADD_OUT_OF_STOCK) {
       if (product.stock <= 0) {
         uni.showToast({
           title: '该商品已售罄',
@@ -159,6 +143,7 @@ export function useCart() {
         })
         return false
       }
+    }
 
     const goods: CartItem = {
       id: product.id,
@@ -174,9 +159,7 @@ export function useCart() {
   }
 
   /**
-   * 更新商品数量
-   * 未登录：只更新本地
-   * 已登录：乐观更新 + 失败回滚
+   * 更新商品数量。
    */
   async function updateCount(id: number, count: number) {
     const target = cartList.value.find(item => item.id === id)
@@ -184,12 +167,10 @@ export function useCart() {
 
     const oldCount = target.count
 
-    // 数量没变，不处理
     if (oldCount === count) {
       return true
     }
 
-    // 简单校验
     if (count < 1) {
       uni.showToast({
         title: '商品数量不能小于 1',
@@ -208,7 +189,6 @@ export function useCart() {
 
     cartStore.updateCount(id, count)
 
-    // 未登录时只改本地
     if (!isLogin.value) {
       return true
     }
@@ -221,7 +201,6 @@ export function useCart() {
         return true
       }
 
-      // 失败回滚
       cartStore.updateCount(id, oldCount)
       uni.showToast({
         title: res.message || '更新数量失败',
@@ -239,7 +218,7 @@ export function useCart() {
   }
 
   /**
-   * 数量 +1
+   * 数量 +1。
    */
   async function increaseCount(id: number) {
     const target = cartList.value.find(item => item.id === id)
@@ -249,7 +228,7 @@ export function useCart() {
   }
 
   /**
-   * 数量 -1
+   * 数量 -1。
    */
   async function decreaseCount(id: number) {
     const target = cartList.value.find(item => item.id === id)
@@ -259,9 +238,7 @@ export function useCart() {
   }
 
   /**
-   * 切换单个商品选中状态
-   * 未登录：只更新本地
-   * 已登录：乐观更新 + 失败回滚
+   * 切换单个商品勾选状态。
    */
   async function toggleChecked(id: number) {
     const target = cartList.value.find(item => item.id === id)
@@ -272,19 +249,29 @@ export function useCart() {
   }
 
   /**
-   * 切换全选状态
-   * 未登录：只更新本地
-   * 已登录：乐观更新 + 失败回滚
+   * 切换全选状态。
    */
   async function toggleAllChecked() {
     cartStore.toggleAllChecked()
     return true
   }
 
+  function setCheckedItems(ids: number[], exclusive = false) {
+    cartStore.setCheckedByIds(ids, exclusive)
+  }
+
+  async function refreshCartWithCheckedIds(ids: number[], exclusive = false) {
+    const nextList = await getCartList()
+    if (nextList.length === 0) {
+      return nextList
+    }
+
+    cartStore.setCheckedByIds(ids, exclusive)
+    return cartList.value
+  }
+
   /**
-   * 删除单个商品
-   * 未登录：只更新本地
-   * 已登录：乐观更新 + 失败回滚
+   * 删除单个商品。
    */
   async function removeFromCart(id: number) {
     const target = cartList.value.find(item => item.id === id)
@@ -292,10 +279,8 @@ export function useCart() {
 
     const oldList = cartList.value.map(item => ({ ...item }))
 
-    // 先本地删除
     cartStore.removeFromCart(id)
 
-    // 未登录时只改本地
     if (!isLogin.value) {
       return true
     }
@@ -308,7 +293,6 @@ export function useCart() {
         return true
       }
 
-      // 失败回滚
       cartStore.setCartList(oldList)
       uni.showToast({
         title: res.message || '删除失败',
@@ -326,9 +310,7 @@ export function useCart() {
   }
 
   /**
-   * 删除已选商品
-   * 未登录：直接删本地已选项
-   * 已登录：先本地删，再同步后端，失败回滚
+   * 删除已勾选商品。
    */
   async function clearChecked() {
     const ids = checkedList.value.map(item => item.id)
@@ -339,10 +321,8 @@ export function useCart() {
 
     const oldList = cartList.value.map(item => ({ ...item }))
 
-    // 先本地删除已选商品
     cartStore.clearChecked()
 
-    // 未登录时只改本地
     if (!isLogin.value) {
       return true
     }
@@ -372,18 +352,14 @@ export function useCart() {
   }
 
   /**
-   * 清空购物车
-   * 未登录：只清本地
-   * 已登录：先清本地，再同步后端，失败回滚
+   * 清空购物车。
    */
   async function clearCart() {
     const oldList = cartList.value.map(item => ({ ...item }))
     const ids = oldList.map(item => item.id)
 
-    // 先本地清空
     cartStore.resetCart()
 
-    // 未登录时只改本地
     if (!isLogin.value) {
       return true
     }
@@ -423,6 +399,8 @@ export function useCart() {
     decreaseCount,
     toggleChecked,
     toggleAllChecked,
+    setCheckedItems,
+    refreshCartWithCheckedIds,
     removeFromCart,
     clearChecked,
     clearCart,

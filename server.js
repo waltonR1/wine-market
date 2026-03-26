@@ -144,19 +144,9 @@ function handleAddToCart(req, res) {
 
   const existing = db.get('cart').find({ id: goodsId }).value()
   if (existing) {
-    db.get('cart').find({ id: goodsId }).assign({ count: existing.count + addCount, stock: goods.stock }).write()
+    db.get('cart').find({ id: goodsId }).assign({ count: existing.count + addCount, stock: goods.stock, checked: true }).write()
   } else {
-    db.get('cart')
-      .push({
-        id: goods.id,
-        name: goods.name,
-        price: goods.price,
-        count: addCount,
-        image: goods.image,
-        stock: goods.stock,
-      })
-      .write()
-    console.log(goods)
+    appendCartItem(db, goods, addCount)
   }
 
   res.status(200).jsonp(ok(db.get('cart').value(), '加入购物车成功'))
@@ -382,6 +372,60 @@ function generateOrderNum(db) {
   return `ORD${ymd}${seq}`
 }
 
+function getOrderCloseReason(order) {
+  if (order.closeReason) return order.closeReason
+  if (Number(order.status) !== 6) return ''
+  return order.commentTime ? 'commented' : 'cancelled'
+}
+
+function isAfterSaleEligible(order) {
+  const closeReason = getOrderCloseReason(order)
+  return [2, 3, 4].includes(Number(order.status)) || (Number(order.status) === 6 && closeReason === 'commented')
+}
+
+function createOrderStatePatch(status, extra = {}) {
+  return {
+    status,
+    statusLabel: {
+      1: '待付款',
+      2: '待发货',
+      3: '待收货',
+      4: '待评价',
+      6: '已关闭',
+    }[status] || '',
+    payTime: '',
+    deliveryTime: '',
+    finishTime: '',
+    cancelTime: '',
+    commentTime: '',
+    closeReason: '',
+    commentScore: 0,
+    commentContent: '',
+    logisticsCompany: '',
+    logisticsNo: '',
+    logisticsStatusText: '暂无物流信息',
+    afterSaleStatus: 'none',
+    afterSaleType: '',
+    afterSaleReason: '',
+    afterSaleApplyTime: '',
+    ...extra,
+  }
+}
+
+function appendCartItem(db, goods, count) {
+  db.get('cart')
+    .push({
+      id: goods.id,
+      name: goods.name,
+      price: goods.price,
+      count,
+      image: goods.image,
+      stock: goods.stock,
+      checked: true,
+    })
+    .write()
+}
+
 server.post('/orders/submit', (req, res) => {
   const db = router.db
   const { goods, address, remark = '', from = 'buyNow' } = req.body || {}
@@ -424,8 +468,6 @@ server.post('/orders/submit', (req, res) => {
   const order = {
     id: String(Date.now()),
     orderNum: generateOrderNum(db),
-    status: 1,
-    statusLabel: '待付款',
     createTime: formatDateTime(),
     totalPrice,
     totalCount,
@@ -437,17 +479,13 @@ server.post('/orders/submit', (req, res) => {
       price: item.price,
       count: item.count,
       image: item.image,
+      spec: item.spec || '',
+      stock: item.stock,
     })),
     address,
     remark,
     payType: '',
-    payTime: '',
-    deliveryTime: '',
-    finishTime: '',
-    cancelTime: '',
-    logisticsCompany: '',
-    logisticsNo: '',
-    logisticsStatusText: '暂无物流信息',
+    ...createOrderStatePatch(1),
   }
 
   db.get('orders').unshift(order).write()
@@ -476,16 +514,31 @@ server.post('/orders/:id/cancel', (req, res) => {
     return
   }
 
+  const cancelTime = formatDateTime()
+
   db.get('orders')
     .find({ id: orderId })
     .assign({
-      status: 6,
-      cancelTime: formatDateTime(),
-      statusLabel: '已取消',
+      ...createOrderStatePatch(6, {
+        payTime: order.payTime || '',
+        deliveryTime: order.deliveryTime || '',
+        finishTime: order.finishTime || '',
+        cancelTime,
+        closeReason: 'cancelled',
+        logisticsCompany: order.logisticsCompany || '',
+        logisticsNo: order.logisticsNo || '',
+        logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
+      }),
     })
     .write()
 
-  res.status(200).jsonp(ok(null, '订单已取消'))
+  res.status(200).jsonp(ok({
+    id: orderId,
+    status: 6,
+    statusLabel: '已关闭',
+    cancelTime,
+    closeReason: 'cancelled',
+  }, '订单已关闭'))
 })
 
 server.post('/orders/:id/confirm', (req, res) => {
@@ -503,16 +556,217 @@ server.post('/orders/:id/confirm', (req, res) => {
     return
   }
 
+  const finishTime = formatDateTime()
+
   db.get('orders')
     .find({ id: orderId })
     .assign({
-      status: 4,
-      finishTime: formatDateTime(),
-      statusLabel: '待评价',
+      ...createOrderStatePatch(4, {
+        payTime: order.payTime || '',
+        deliveryTime: order.deliveryTime || '',
+        finishTime,
+        logisticsCompany: order.logisticsCompany || '',
+        logisticsNo: order.logisticsNo || '',
+        logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
+      }),
     })
     .write()
 
-  res.status(200).jsonp(ok(null, '已确认收货'))
+  res.status(200).jsonp(ok({
+    id: orderId,
+    status: 4,
+    statusLabel: '待评价',
+    finishTime,
+  }, '已确认收货'))
+})
+
+server.delete('/orders/:id', (req, res) => {
+  const orderId = String(req.params.id)
+  const db = router.db
+  const order = db.get('orders').find({ id: orderId }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  if (Number(order.status) !== 6 || order.afterSaleStatus === 'applying') {
+    res.status(200).jsonp(fail('当前订单不可删除'))
+    return
+  }
+
+  db.get('orders').remove({ id: orderId }).write()
+  res.status(200).jsonp(ok(null, '订单已删除'))
+})
+
+server.post('/orders/:id/rebuy', (req, res) => {
+  const orderId = String(req.params.id)
+  const db = router.db
+  const order = db.get('orders').find({ id: orderId }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  const goodsSource = db.get('goods').value() || []
+  const affectedIds = []
+
+  for (const item of order.goods || []) {
+    const goods = goodsSource.find(g => Number(g.id) === Number(item.id))
+    if (!goods) {
+      res.status(200).jsonp(fail(`${item.name || '商品'} 不存在`))
+      return
+    }
+
+    const nextCount = Number(item.count || 0)
+    if (nextCount > Number(goods.stock || 0)) {
+      res.status(200).jsonp(fail(`${goods.name} 库存不足`))
+      return
+    }
+  }
+
+  for (const item of order.goods || []) {
+    const goods = goodsSource.find(g => Number(g.id) === Number(item.id))
+    const existing = db.get('cart').find({ id: Number(item.id) }).value()
+
+    if (existing) {
+      db.get('cart')
+        .find({ id: Number(item.id) })
+        .assign({
+          count: Number(item.count || 0),
+          stock: Number(goods.stock || 0),
+          checked: true,
+        })
+        .write()
+    } else {
+      appendCartItem(db, goods, Number(item.count || 0))
+    }
+    affectedIds.push(Number(item.id))
+  }
+
+  res.status(200).jsonp(ok({
+    id: orderId,
+    affectedIds,
+  }, '已同步到购物车'))
+})
+
+server.post('/orders/:id/comment', (req, res) => {
+  const orderId = String(req.params.id)
+  const { score = 0, content = '' } = req.body || {}
+  const db = router.db
+  const order = db.get('orders').find({ id: orderId }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  if (Number(order.status) !== 4) {
+    res.status(200).jsonp(fail('当前订单不可评价'))
+    return
+  }
+
+  const commentTime = formatDateTime()
+  const goodsList = db.get('goods').value() || []
+
+  for (const item of order.goods || []) {
+    const goods = goodsList.find(g => Number(g.id) === Number(item.id))
+    if (!goods) continue
+
+    const nextComments = Array.isArray(goods.comments) ? [...goods.comments] : []
+    nextComments.unshift({
+      id: Date.now() + Number(item.id),
+      userName: 'Wine 用户',
+      avatar: 'https://placehold.co/80x80/6B0F1A/FFFFFF.png?text=U',
+      score: Number(score),
+      content: String(content).trim(),
+      time: commentTime.split(' ')[0],
+      images: [],
+    })
+
+    db.get('goods')
+      .find({ id: Number(item.id) })
+      .assign({
+        comments: nextComments,
+        comment: nextComments.length,
+      })
+      .write()
+  }
+
+  db.get('orders')
+    .find({ id: orderId })
+    .assign({
+      ...createOrderStatePatch(6, {
+        payTime: order.payTime || '',
+        deliveryTime: order.deliveryTime || '',
+        finishTime: order.finishTime || '',
+        cancelTime: order.cancelTime || '',
+        closeReason: 'commented',
+        commentTime,
+        commentScore: Number(score),
+        commentContent: String(content).trim(),
+        logisticsCompany: order.logisticsCompany || '',
+        logisticsNo: order.logisticsNo || '',
+        logisticsStatusText: order.logisticsStatusText || '暂无物流信息',
+      }),
+    })
+    .write()
+
+  res.status(200).jsonp(ok({
+    id: orderId,
+    status: 6,
+    statusLabel: '已关闭',
+    closeReason: 'commented',
+    commentTime,
+    commentScore: Number(score),
+    commentContent: String(content).trim(),
+  }, '评价提交成功'))
+})
+
+server.post('/orders/:id/after-sale', (req, res) => {
+  const orderId = String(req.params.id)
+  const { type = '', reason = '' } = req.body || {}
+  const db = router.db
+  const order = db.get('orders').find({ id: orderId }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  if (!isAfterSaleEligible(order)) {
+    res.status(200).jsonp(fail('当前订单不可申请售后'))
+    return
+  }
+
+  if (order.afterSaleStatus === 'applying') {
+    res.status(200).jsonp(fail('售后申请已提交'))
+    return
+  }
+
+  const afterSaleApplyTime = formatDateTime()
+
+  db.get('orders')
+    .find({ id: orderId })
+    .assign({
+      afterSaleStatus: 'applying',
+      afterSaleType: String(type).trim(),
+      afterSaleReason: String(reason).trim(),
+      afterSaleApplyTime,
+    })
+    .write()
+
+  res.status(200).jsonp(ok({
+    id: orderId,
+    status: Number(order.status),
+    statusLabel: Number(order.status) === 6 ? '已关闭' : order.statusLabel,
+    closeReason: getOrderCloseReason(order),
+    afterSaleStatus: 'applying',
+    afterSaleType: String(type).trim(),
+    afterSaleReason: String(reason).trim(),
+    afterSaleApplyTime,
+  }, '售后申请已提交'))
 })
 
 server.get('/order/:id/detail', (req, res) => {
@@ -526,7 +780,14 @@ server.get('/order/:id/detail', (req, res) => {
     return
   }
 
-  res.status(200).jsonp(ok({ order }))
+  res.status(200).jsonp(ok({
+    order: {
+      ...order,
+      statusLabel: Number(order.status) === 6 ? '已关闭' : order.statusLabel,
+      closeReason: getOrderCloseReason(order),
+      afterSaleStatus: order.afterSaleStatus || 'none',
+    },
+  }))
 })
 
 server.post('/order/pay', (req, res) => {
@@ -555,11 +816,11 @@ server.post('/order/pay', (req, res) => {
   db.get('orders')
     .find({ id: String(id) })
     .assign({
-      status: 2,
-      statusLabel: '待发货',
+      ...createOrderStatePatch(2, {
+        payTime,
+        logisticsStatusText: '商家已收款，待安排发货',
+      }),
       payType,
-      payTime,
-      logisticsStatusText: '商家已收款，待安排发货',
     })
     .write()
 

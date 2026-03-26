@@ -1,6 +1,17 @@
 import type { AddressInfo } from './address'
 
 export type OrderStatus = 1 | 2 | 3 | 4 | 6
+export type OrderCloseReason = 'cancelled' | 'commented'
+export type AfterSaleStatus = 'none' | 'applying' | 'approved' | 'rejected' | 'completed'
+
+export type OrderAction =
+  | 'cancel'
+  | 'pay'
+  | 'confirm'
+  | 'comment'
+  | 'delete'
+  | 'rebuy'
+  | 'aftersale'
 
 export interface OrderGoodsItem {
   id: number
@@ -9,6 +20,7 @@ export interface OrderGoodsItem {
   price: number
   count: number
   spec?: string
+  stock?: number
 }
 
 /**
@@ -27,6 +39,15 @@ export interface OrderItem {
   goods: OrderGoodsItem[]
   address: AddressInfo
   remark?: string
+  cancelTime?: string
+  commentTime?: string
+  closeReason?: OrderCloseReason
+  commentScore?: number
+  commentContent?: string
+  afterSaleStatus?: AfterSaleStatus
+  afterSaleType?: string
+  afterSaleReason?: string
+  afterSaleApplyTime?: string
 }
 
 /**
@@ -37,7 +58,6 @@ export interface OrderDetail extends OrderItem {
   payTime?: string
   deliveryTime?: string
   finishTime?: string
-  cancelTime?: string
 
   payType?: string
 
@@ -81,6 +101,22 @@ export interface PayOrderData {
   payTime?: string
 }
 
+export interface UpdateOrderStatusData {
+  id: string
+  status: OrderStatus
+  statusLabel: string
+  cancelTime?: string
+  finishTime?: string
+  commentTime?: string
+  closeReason?: OrderCloseReason
+  commentScore?: number
+  commentContent?: string
+  afterSaleStatus?: AfterSaleStatus
+  afterSaleType?: string
+  afterSaleReason?: string
+  afterSaleApplyTime?: string
+}
+
 /**
  * 取消订单请求参数
  */
@@ -93,4 +129,29 @@ export interface CancelOrderParams {
  */
 export interface ConfirmReceiveParams {
   id: string
+}
+
+export interface DeleteOrderParams {
+  id: string
+}
+
+export interface RebuyOrderParams {
+  id: string
+}
+
+export interface RebuyOrderData {
+  id: string
+  affectedIds: number[]
+}
+
+export interface CommentOrderParams {
+  id: string
+  score: number
+  content: string
+}
+
+export interface ApplyAfterSaleParams {
+  id: string
+  type: string
+  reason: string
 }

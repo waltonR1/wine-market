@@ -148,6 +148,20 @@
         "navigationBarTitleText": "支付订单",
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path": "pages/order/comment",
+      "style": {
+        "navigationBarTitleText": "订单评价",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/order/aftersale",
+      "style": {
+        "navigationBarTitleText": "退款/售后",
+        "enablePullDownRefresh": false
+      }
     }
   ],
   "tabBar": {

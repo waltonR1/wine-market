@@ -1,16 +1,16 @@
 <template>
   <view
-      v-if="product"
-      class="min-h-screen bg-background pb-[100px]"
+    v-if="product"
+    class="min-h-screen bg-background pb-[100px]"
   >
     <image
-        :src="product.image"
-        class="w-full h-[320px] bg-[#EFE7DE] mb-5"
-        mode="aspectFill"
+      :src="product.image"
+      class="mb-5 h-[320px] w-full bg-[#EFE7DE]"
+      mode="aspectFill"
     />
 
-    <view class="bg-white rounded-t-3xl -mt-6 p-5">
-      <view class="text-[20px] font-bold text-text-main leading-6">
+    <view class="-mt-6 rounded-t-3xl bg-white p-5">
+      <view class="text-[20px] font-bold leading-6 text-text-main">
         {{ product.name }}
       </view>
 
@@ -21,7 +21,7 @@
       <view class="mt-3 flex items-center justify-between">
         <view class="text-[12px] text-text-secondary">
           库存：
-          <text class="text-accent font-medium">{{ product.stock }}</text>
+          <text class="font-medium text-accent">{{ product.stock }}</text>
         </view>
         <view v-if="product.sales" class="text-[12px] text-text-secondary">
           {{ product.sales }} 人已购买
@@ -32,34 +32,34 @@
         ¥{{ product.price }}
       </view>
 
-      <view class="h-[1px] bg-[#EEE] my-1"></view>
+      <view class="my-1 h-[1px] bg-[#EEE]"></view>
 
       <view class="mt-6">
         <view class="flex border-b border-[#EEE]">
           <view
-            class="flex-1 text-center py-3 text-[13px]"
-            :class="activeTab === 'detail' ? 'text-text-main font-medium' : 'text-text-secondary'"
+            class="flex-1 py-3 text-center text-[13px]"
+            :class="activeTab === 'detail' ? 'font-medium text-text-main' : 'text-text-secondary'"
             @click="activeTab = 'detail'"
           >
             图文详情
           </view>
           <view
-            class="flex-1 text-center py-3 text-[13px]"
-            :class="activeTab === 'params' ? 'text-text-main font-medium' : 'text-text-secondary'"
+            class="flex-1 py-3 text-center text-[13px]"
+            :class="activeTab === 'params' ? 'font-medium text-text-main' : 'text-text-secondary'"
             @click="activeTab = 'params'"
           >
             商品参数
           </view>
           <view
-            class="flex-1 text-center py-3 text-[13px]"
-            :class="activeTab === 'comments' ? 'text-text-main font-medium' : 'text-text-secondary'"
+            class="flex-1 py-3 text-center text-[13px]"
+            :class="activeTab === 'comments' ? 'font-medium text-text-main' : 'text-text-secondary'"
             @click="activeTab = 'comments'"
           >
             买家评论({{ commentCount }})
           </view>
         </view>
 
-        <view class="mt-4" v-if="activeTab === 'detail'">
+        <view v-if="activeTab === 'detail'" class="mt-4">
           <view v-for="(block, idx) in product.detail" :key="idx">
             <view
               v-if="block.type === 'title'"
@@ -69,25 +69,25 @@
             </view>
             <view
               v-else-if="block.type === 'text'"
-              class="mt-3 text-[13px] text-[#6F6258] leading-6"
+              class="mt-3 text-[13px] leading-6 text-[#6F6258]"
             >
               {{ block.value }}
             </view>
             <image
               v-else
               :src="block.value"
-              class="w-full rounded-2xl mt-4 bg-[#EFE7DE]"
+              class="mt-4 w-full rounded-2xl bg-[#EFE7DE]"
               mode="widthFix"
             />
           </view>
         </view>
 
-        <view class="mt-4" v-else-if="activeTab === 'params'">
-          <view class="bg-[#F8F5F2] rounded-2xl overflow-hidden">
+        <view v-else-if="activeTab === 'params'" class="mt-4">
+          <view class="overflow-hidden rounded-2xl bg-[#F8F5F2]">
             <view
               v-for="(p, idx) in product.params"
               :key="idx"
-              class="flex px-4 py-3 border-b border-white"
+              class="flex border-b border-white px-4 py-3"
             >
               <view class="w-[90px] text-[12px] text-text-secondary">{{ p.label }}</view>
               <view class="flex-1 text-[12px] text-text-main">{{ p.value }}</view>
@@ -101,17 +101,17 @@
           </view>
         </view>
 
-        <view class="mt-4" v-else>
+        <view v-else class="mt-4">
           <view
             v-for="c in product.comments"
             :key="c.id"
-            class="bg-[#F8F5F2] rounded-2xl p-4 mb-4"
+            class="mb-4 rounded-2xl bg-[#F8F5F2] p-4"
           >
             <view class="flex items-center justify-between">
               <view class="flex items-center">
                 <image
                   :src="c.avatar"
-                  class="w-[34px] h-[34px] rounded-full bg-white"
+                  class="h-[34px] w-[34px] rounded-full bg-white"
                   mode="aspectFill"
                 />
                 <view class="ml-3">
@@ -120,11 +120,11 @@
                 </view>
               </view>
               <view class="text-[12px] text-accent">
-                {{ '★★★★★'.slice(0, c.score) }}{{ '☆☆☆☆☆'.slice(0, 5 - c.score) }}
+                {{ renderStars(c.score) }}
               </view>
             </view>
 
-            <view class="mt-3 text-[13px] text-[#6F6258] leading-6">
+            <view class="mt-3 text-[13px] leading-6 text-[#6F6258]">
               {{ c.content }}
             </view>
 
@@ -133,7 +133,7 @@
                 v-for="(img, idx) in c.images"
                 :key="idx"
                 :src="img"
-                class="w-full h-[90px] rounded-xl bg-white"
+                class="h-[90px] w-full rounded-xl bg-white"
                 mode="aspectFill"
               />
             </view>
@@ -141,7 +141,7 @@
 
           <view
             v-if="product.comments.length === 0"
-            class="text-center text-[13px] text-text-secondary py-8"
+            class="py-8 text-center text-[13px] text-text-secondary"
           >
             暂无评论
           </view>
@@ -150,7 +150,7 @@
     </view>
 
     <view
-        class="fixed bottom-0 left-0 right-0 bg-white border-t border-[#eee] px-4 py-3 flex items-center justify-between"
+      class="fixed bottom-0 left-0 right-0 flex items-center justify-between border-t border-[#eee] bg-white px-4 py-3"
     >
       <view class="text-[20px] font-bold text-accent">
         ¥{{ product.price }}
@@ -158,16 +158,16 @@
 
       <view class="flex gap-3">
         <view
-            class="px-4 py-2 rounded-full border border-accent text-accent text-[13px]"
-            @click="addCart"
+          class="rounded-full border border-accent px-4 py-2 text-[13px] text-accent"
+          @click="addCart"
         >
           加入购物车
         </view>
 
         <view
-            class="px-5 py-2 rounded-full bg-accent text-white text-[13px]"
-            :class="product.stock <= 0 ? 'opacity-50' : ''"
-            @click="buyNow"
+          class="rounded-full bg-accent px-5 py-2 text-[13px] text-white"
+          :class="product.stock <= 0 ? 'opacity-50' : ''"
+          @click="buyNow"
         >
           立即购买
         </view>
@@ -176,8 +176,8 @@
   </view>
 
   <view
-      v-else
-      class="min-h-screen flex items-center justify-center text-text-secondary"
+    v-else
+    class="min-h-screen flex items-center justify-center text-text-secondary"
   >
     商品加载中...
   </view>
@@ -201,6 +201,12 @@ onLoad(async (options) => {
   const id = Number(options?.id)
   await fetchProductDetail(id)
 })
+
+function renderStars(score: number) {
+  const filled = '★'.repeat(Math.max(0, Math.min(5, score)))
+  const empty = '☆'.repeat(Math.max(0, 5 - Math.max(0, Math.min(5, score))))
+  return `${filled}${empty}`
+}
 
 function addCart() {
   if (!product.value) return

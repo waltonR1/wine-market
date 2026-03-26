@@ -83,9 +83,25 @@ export const API_PATHS = {
       (id: Id) => `/orders/${id}/cancel`,
       (id: Id) => `/orders/${id}/cancel`
     ),
+    DELETE: pickPath(
+      (id: Id) => `/orders/${id}`,
+      (id: Id) => `/orders/${id}`
+    ),
     CONFIRM: pickPath(
       (id: Id) => `/orders/${id}/confirm`,
       (id: Id) => `/orders/${id}/confirm`
+    ),
+    REBUY: pickPath(
+      (id: Id) => `/orders/${id}/rebuy`,
+      (id: Id) => `/orders/${id}/rebuy`
+    ),
+    COMMENT: pickPath(
+      (id: Id) => `/orders/${id}/comment`,
+      (id: Id) => `/orders/${id}/comment`
+    ),
+    AFTER_SALE: pickPath(
+      (id: Id) => `/orders/${id}/after-sale`,
+      (id: Id) => `/orders/${id}/after-sale`
     ),
     // 保持现有接口契约：当前 mock 服务为 /order/:id/detail（单数）
     DETAIL: pickPath(

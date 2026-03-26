@@ -7,7 +7,7 @@
     <template v-else-if="orderDetail">
       <view class="bg-accent px-4 py-5 text-white">
         <view class="text-[20px] font-bold">{{ orderDetail.statusLabel }}</view>
-        <view class="mt-2 text-[13px] opacity-90">{{ getOrderStatusDesc(orderDetail.status) }}</view>
+        <view class="mt-2 text-[13px] opacity-90">{{ getOrderStatusDescByOrder(orderDetail) }}</view>
         <view
           v-if="statusExtraText"
           class="mt-3 rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-[12px] leading-5"
@@ -34,14 +34,10 @@
         >
           <image :src="item.image" class="h-[88px] w-[88px] rounded-xl bg-[#F7F7F7]" mode="aspectFill" />
           <view class="ml-3 flex-1">
-            <view class="line-clamp-2 text-[14px] font-medium text-text-main">
-              {{ item.name }}
-            </view>
-            <view v-if="item.spec" class="mt-1 text-[12px] text-text-secondary">
-              {{ item.spec }}
-            </view>
+            <view class="line-clamp-2 text-[14px] font-medium text-text-main">{{ item.name }}</view>
+            <view v-if="item.spec" class="mt-1 text-[12px] text-text-secondary">{{ item.spec }}</view>
             <view class="mt-3 flex items-center justify-between">
-              <view class="text-[15px] font-bold text-accent">￥{{ item.price }}</view>
+              <view class="text-[15px] font-bold text-accent">¥{{ item.price }}</view>
               <view class="text-[12px] text-text-secondary">x{{ item.count }}</view>
             </view>
           </view>
@@ -76,8 +72,24 @@
             <text class="text-text-main">{{ formatOrderTime(orderDetail.finishTime) }}</text>
           </view>
           <view v-if="orderDetail.cancelTime" class="flex justify-between">
-            <text class="text-text-secondary">取消时间</text>
+            <text class="text-text-secondary">关闭时间</text>
             <text class="text-text-main">{{ formatOrderTime(orderDetail.cancelTime) }}</text>
+          </view>
+          <view v-if="orderDetail.commentTime" class="flex justify-between">
+            <text class="text-text-secondary">评价时间</text>
+            <text class="text-text-main">{{ formatOrderTime(orderDetail.commentTime) }}</text>
+          </view>
+          <view v-if="orderDetail.commentTime" class="flex justify-between">
+            <text class="text-text-secondary">评价星级</text>
+            <text class="text-text-main">{{ orderDetail.commentScore ?? 0 }}/5</text>
+          </view>
+          <view v-if="orderDetail.commentContent" class="flex justify-between">
+            <text class="text-text-secondary">评价内容</text>
+            <text class="ml-4 flex-1 text-right text-text-main">{{ orderDetail.commentContent }}</text>
+          </view>
+          <view v-if="orderDetail.afterSaleStatus && orderDetail.afterSaleStatus !== 'none'" class="flex justify-between">
+            <text class="text-text-secondary">售后状态</text>
+            <text class="text-text-main">{{ afterSaleStatusText }}</text>
           </view>
           <view v-if="orderDetail.remark" class="flex justify-between">
             <text class="text-text-secondary">订单备注</text>
@@ -91,15 +103,15 @@
         <view class="space-y-3 text-[13px]">
           <view class="flex justify-between">
             <text class="text-text-secondary">商品总额</text>
-            <text class="text-text-main">￥{{ orderDetail.totalPrice }}</text>
+            <text class="text-text-main">¥{{ orderDetail.totalPrice }}</text>
           </view>
           <view class="flex justify-between">
             <text class="text-text-secondary">运费</text>
-            <text class="text-text-main">￥{{ orderDetail.freight }}</text>
+            <text class="text-text-main">¥{{ orderDetail.freight }}</text>
           </view>
           <view class="flex justify-between text-[15px] font-bold">
             <text class="text-text-main">实付款</text>
-            <text class="text-accent">￥{{ orderDetail.payPrice }}</text>
+            <text class="text-accent">¥{{ orderDetail.payPrice }}</text>
           </view>
         </view>
       </view>
@@ -128,35 +140,18 @@
     </template>
 
     <view
-      v-if="orderDetail"
-      class="fixed bottom-0 left-0 right-0 flex items-center justify-end gap-3 border-t border-[#F3F3F3] bg-white px-4 py-3"
+      v-if="orderDetail && actionList.length > 0"
+      class="fixed bottom-0 left-0 right-0 flex flex-wrap items-center justify-end gap-3 border-t border-[#F3F3F3] bg-white px-4 py-3"
     >
       <button
-        v-if="canCancelOrder(orderDetail.status)"
-        class="h-[38px] rounded-full border border-[#DDDDDD] bg-white px-4 text-[13px] leading-[38px] text-text-main"
-        :loading="actionLoading"
-        :disabled="actionLoading"
-        @click="handleCancel"
+        v-for="action in actionList"
+        :key="action.type"
+        :class="getActionClass(action.style)"
+        :loading="isActionPending(action.type)"
+        :disabled="isActionPending(action.type)"
+        @click="handleAction(action.type)"
       >
-        取消订单
-      </button>
-
-      <button
-        v-if="canPayOrder(orderDetail.status)"
-        class="h-[38px] rounded-full bg-accent px-5 text-[13px] leading-[38px] text-white"
-        @click="goPay"
-      >
-        去支付
-      </button>
-
-      <button
-        v-if="canConfirmReceive(orderDetail.status)"
-        class="h-[38px] rounded-full bg-accent px-5 text-[13px] leading-[38px] text-white"
-        :loading="actionLoading"
-        :disabled="actionLoading"
-        @click="handleConfirmReceive"
-      >
-        确认收货
+        {{ action.text }}
       </button>
     </view>
   </view>
@@ -167,35 +162,46 @@ import { onLoad } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
 import { useOrder } from '@/hooks/useOrder'
 import { formatDateTime } from '@/utils/format'
-import {
-  getOrderStatusDesc,
-  getOrderPayTypeText,
-  canCancelOrder,
-  canPayOrder,
-  canConfirmReceive,
-} from '@/utils/order'
+import { getOrderActions, getOrderPayTypeText, getOrderStatusDescByOrder } from '@/utils/order'
+import type { OrderAction } from '@/types/model/order'
 
 const orderId = ref('')
-const { pageLoading, actionLoading, orderDetail, fetchOrderDetail, cancelOrder, confirmReceiveOrder } = useOrder()
+const {
+  pageLoading,
+  actionLoading,
+  orderDetail,
+  fetchOrderDetail,
+  cancelOrder,
+  confirmReceiveOrder,
+  deleteOrder,
+  rebuyOrder,
+} = useOrder()
 
-function formatOrderTime(time?: string) {
-  if (!time) return '-'
-  return formatDateTime(time) || time
-}
+const actionList = computed(() => {
+  if (!orderDetail.value) return []
+  return getOrderActions(orderDetail.value)
+})
+
+const afterSaleStatusText = computed(() => {
+  if (!orderDetail.value?.afterSaleStatus || orderDetail.value.afterSaleStatus === 'none') return '-'
+  return orderDetail.value.afterSaleStatus === 'applying' ? '申请中' : orderDetail.value.afterSaleStatus
+})
 
 const statusExtraText = computed(() => {
   if (!orderDetail.value) return ''
 
-  if (orderDetail.value.status === 6) {
-    return orderDetail.value.cancelTime
-      ? `取消时间：${formatOrderTime(orderDetail.value.cancelTime)}`
-      : '订单已取消'
+  if (orderDetail.value.afterSaleStatus === 'applying' && orderDetail.value.afterSaleApplyTime) {
+    return `售后申请时间：${formatOrderTime(orderDetail.value.afterSaleApplyTime)}`
   }
 
-  if (orderDetail.value.status === 4) {
-    return orderDetail.value.finishTime
-      ? `完成时间：${formatOrderTime(orderDetail.value.finishTime)}`
-      : '订单已完成'
+  if (orderDetail.value.status === 6 && orderDetail.value.commentTime) {
+    return `订单已评价关闭：${formatOrderTime(orderDetail.value.commentTime)}`
+  }
+
+  if (orderDetail.value.status === 6) {
+    return orderDetail.value.cancelTime
+      ? `订单已关闭：${formatOrderTime(orderDetail.value.cancelTime)}`
+      : '订单已关闭'
   }
 
   if (orderDetail.value.status === 3) {
@@ -205,44 +211,97 @@ const statusExtraText = computed(() => {
   return ''
 })
 
+function formatOrderTime(time?: string) {
+  if (!time) return '-'
+  return formatDateTime(time) || time
+}
+
+function getActionClass(style: 'primary' | 'secondary' | 'rebuy' | 'danger') {
+  switch (style) {
+    case 'primary':
+      return 'h-[38px] rounded-full bg-accent px-5 text-[13px] leading-[38px] text-white'
+    case 'rebuy':
+      return 'h-[38px] rounded-full border border-[#7A4B2F] bg-[#FFF3EA] px-5 text-[13px] leading-[38px] text-[#7A4B2F]'
+    case 'danger':
+      return 'h-[38px] rounded-full border border-[#E5C7C7] bg-white px-4 text-[13px] leading-[38px] text-[#B94C4C]'
+    default:
+      return 'h-[38px] rounded-full border border-[#DDDDDD] bg-white px-4 text-[13px] leading-[38px] text-text-main'
+  }
+}
+
+function isActionPending(type: OrderAction) {
+  return actionLoading.value && ['cancel', 'confirm', 'delete', 'rebuy'].includes(type)
+}
+
 async function init() {
   if (!orderId.value) return
   await fetchOrderDetail(orderId.value)
 }
 
-async function handleCancel() {
-  if (!orderDetail.value || actionLoading.value) return
-
+async function showConfirmModal(content: string) {
   const confirmed = await new Promise<boolean>((resolve) => {
     uni.showModal({
       title: '提示',
-      content: '确定取消该订单吗？',
+      content,
       success: (res) => resolve(res.confirm),
       fail: () => resolve(false),
     })
   })
 
+  return confirmed
+}
+
+async function handleCancel() {
+  if (!orderDetail.value || actionLoading.value) return
+  const confirmed = await showConfirmModal('确定取消该订单吗？')
   if (!confirmed) return
 
   const success = await cancelOrder(orderDetail.value.id)
   if (!success) return
 
-  uni.showToast({
-    title: '订单已取消',
-    icon: 'success',
-  })
+  uni.showToast({ title: '订单已关闭', icon: 'success' })
+  init()
 }
 
 async function handleConfirmReceive() {
   if (!orderDetail.value || actionLoading.value) return
+  const confirmed = await showConfirmModal('确认已收到商品？')
+  if (!confirmed) return
 
   const success = await confirmReceiveOrder(orderDetail.value.id)
   if (!success) return
 
-  uni.showToast({
-    title: '已确认收货',
-    icon: 'success',
-  })
+  uni.showToast({ title: '已确认收货', icon: 'success' })
+  init()
+}
+
+async function handleDelete() {
+  if (!orderDetail.value || actionLoading.value) return
+  const confirmed = await showConfirmModal('删除后订单记录将不再显示，是否继续？')
+  if (!confirmed) return
+
+  const success = await deleteOrder(orderDetail.value.id)
+  if (!success) return
+
+  uni.showToast({ title: '订单已删除', icon: 'success' })
+  setTimeout(() => {
+    uni.redirectTo({
+      url: '/pages/order/list',
+    })
+  }, 300)
+}
+
+async function handleRebuy() {
+  if (!orderDetail.value || actionLoading.value) return
+  const success = await rebuyOrder(orderDetail.value.id)
+  if (!success) return
+
+  uni.showToast({ title: '已同步到购物车', icon: 'success' })
+  setTimeout(() => {
+    uni.switchTab({
+      url: '/pages/cart/index',
+    })
+  }, 300)
 }
 
 function goPay() {
@@ -250,6 +309,48 @@ function goPay() {
   uni.navigateTo({
     url: `/pages/order/pay?id=${orderDetail.value.id}`,
   })
+}
+
+function goComment() {
+  if (!orderDetail.value) return
+  uni.navigateTo({
+    url: `/pages/order/comment?id=${orderDetail.value.id}`,
+  })
+}
+
+function goAfterSale() {
+  if (!orderDetail.value) return
+  uni.navigateTo({
+    url: `/pages/order/aftersale?id=${orderDetail.value.id}`,
+  })
+}
+
+function handleAction(type: OrderAction) {
+  switch (type) {
+    case 'cancel':
+      handleCancel()
+      break
+    case 'pay':
+      goPay()
+      break
+    case 'confirm':
+      handleConfirmReceive()
+      break
+    case 'comment':
+      goComment()
+      break
+    case 'delete':
+      handleDelete()
+      break
+    case 'rebuy':
+      handleRebuy()
+      break
+    case 'aftersale':
+      goAfterSale()
+      break
+    default:
+      break
+  }
 }
 
 onLoad((options) => {

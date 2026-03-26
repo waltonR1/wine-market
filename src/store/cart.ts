@@ -64,6 +64,17 @@ export const useCartStore = defineStore('cart', () => {
     })
   }
 
+  function setCheckedByIds(ids: number[], exclusive = false) {
+    const checkedSet = new Set(ids)
+    cartList.value.forEach(item => {
+      if (exclusive) {
+        item.checked = checkedSet.has(item.id)
+      } else if (checkedSet.has(item.id)) {
+        item.checked = true
+      }
+    })
+  }
+
   // 删除商品
   function removeFromCart(id: number) {
     const index = cartList.value.findIndex(item => item.id === id)
@@ -93,6 +104,7 @@ export const useCartStore = defineStore('cart', () => {
     updateCount,
     toggleChecked,
     toggleAllChecked,
+    setCheckedByIds,
     removeFromCart,
     clearChecked,
   }
