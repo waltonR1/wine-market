@@ -22,15 +22,15 @@ function handleClick() {
 
 <template>
   <view class="flex flex-col items-center justify-center py-20 px-10">
-    <view class="text-[60px] opacity-20 mb-4">
+    <view class="mb-4 text-[60px] text-empty-illustration">
       {{ icon }}
     </view>
-    <view class="text-[14px] text-[#999] mb-8">
+    <view class="mb-8 text-[14px] text-text-muted">
       {{ message }}
     </view>
     <view
         v-if="showButton"
-        class="px-8 py-2.5 rounded-full border border-accent text-accent text-[14px] active:opacity-70 transition-opacity"
+        class="px-8 py-2.5 rounded-full border border-link text-link text-[14px] active:opacity-70 transition-opacity"
         @click="handleClick"
     >
       {{ buttonText }}

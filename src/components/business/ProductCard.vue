@@ -1,19 +1,20 @@
-<template>
+﻿<template>
   <view
-      class="bg-white rounded-3xl overflow-hidden shadow-sm"
+      class="bg-card rounded-3xl overflow-hidden shadow-sm"
       @click="handleClick"
   >
     <view class="relative">
       <image
           :src="product.image"
-          class="w-full h-[180px] bg-[#EFE7DE]"
+          class="w-full h-[180px] bg-primary-soft"
           mode="aspectFill"
-          lazy-load
+          lazy-load="true"
+          @error="APP_CONFIG.COMMON.IMAGE_PLACEHOLDER"
       />
 
       <view
           v-if="product.tag"
-          class="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-[11px] text-white"
+          class="absolute left-3 top-3 rounded-full bg-tag-brand px-3 py-1 text-[11px] text-text-inverse"
       >
         {{ product.tag }}
       </view>
@@ -29,11 +30,11 @@
       </view>
 
       <view class="mt-3 flex items-center justify-between">
-        <view class="text-[18px] font-bold text-accent">
+        <view class="text-[18px] font-bold text-price">
           ¥{{ product.price }}
         </view>
 
-        <view class="rounded-full bg-[#C9A96E] px-3 py-1 text-[12px] text-white">
+        <view class="rounded-full bg-warning px-3 py-1 text-[12px] text-text-inverse">
           购买
         </view>
       </view>
@@ -43,6 +44,7 @@
 
 <script setup lang="ts">
 import type { ProductItem } from '@/types/model/goods'
+import APP_CONFIG from "@/config/app";
 
 const props = defineProps<{
   product: ProductItem

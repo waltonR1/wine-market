@@ -1,22 +1,22 @@
-<template>
+﻿<template>
   <view class="min-h-screen bg-background pb-[120px]">
     <template v-if="pageLoading">
       <view class="p-4 text-[14px] text-text-secondary">加载中...</view>
     </template>
 
     <template v-else-if="orderDetail">
-      <view class="bg-accent px-4 py-5 text-white">
+      <view class="bg-hero px-4 py-5 text-text-inverse">
         <view class="text-[20px] font-bold">{{ orderDetail.statusLabel }}</view>
         <view class="mt-2 text-[13px] opacity-90">{{ getOrderStatusDescByOrder(orderDetail) }}</view>
         <view
           v-if="statusExtraText"
-          class="mt-3 rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-[12px] leading-5"
+          class="mt-3 rounded-xl border border-overlay-strong bg-overlay-light px-3 py-2 text-[12px] leading-5"
         >
           {{ statusExtraText }}
         </view>
       </view>
 
-      <view class="mx-3 -mt-3 rounded-2xl bg-white p-4 shadow-sm">
+      <view class="mx-3 -mt-3 rounded-2xl bg-card p-4 shadow-sm">
         <view class="text-[15px] font-bold text-text-main">
           {{ orderDetail.address.name }} {{ orderDetail.address.phone }}
         </view>
@@ -25,31 +25,31 @@
         </view>
       </view>
 
-      <view class="mx-3 mt-3 rounded-2xl bg-white p-4">
+      <view class="mx-3 mt-3 rounded-2xl bg-card p-4">
         <view class="mb-3 text-[15px] font-bold text-text-main">商品信息</view>
         <view
           v-for="item in orderDetail.goods"
           :key="item.id"
-          class="flex border-b border-[#F5F5F5] py-3 last:border-b-0"
+          class="flex border-b border-divider py-3 last:border-b-0"
         >
-          <image :src="item.image" class="h-[88px] w-[88px] rounded-xl bg-[#F7F7F7]" mode="aspectFill" />
+          <image :src="item.image" class="h-[88px] w-[88px] rounded-xl bg-surface-soft" mode="aspectFill" />
           <view class="ml-3 flex-1">
             <view class="line-clamp-2 text-[14px] font-medium text-text-main">{{ item.name }}</view>
             <view v-if="item.spec" class="mt-1 text-[12px] text-text-secondary">{{ item.spec }}</view>
             <view class="mt-3 flex items-center justify-between">
-              <view class="text-[15px] font-bold text-accent">￥{{ item.price }}</view>
+              <view class="text-[15px] font-bold text-price">￥{{ item.price }}</view>
               <view class="text-[12px] text-text-secondary">x{{ item.count }}</view>
             </view>
           </view>
         </view>
       </view>
 
-      <view v-if="hasCommentSection" class="mx-3 mt-3 rounded-2xl bg-white p-4">
+      <view v-if="hasCommentSection" class="mx-3 mt-3 rounded-2xl bg-card p-4">
         <view class="mb-3 flex items-center justify-between">
           <view class="text-[15px] font-bold text-text-main">评价信息</view>
           <view
             v-if="canAppendCurrentOrder"
-            class="rounded-full border border-[#C40000] px-3 py-1 text-[12px] text-[#C40000]"
+            class="rounded-full border border-status-pending px-3 py-1 text-[12px] text-status-pending"
             @click="goAppendComment"
           >
             追加评价
@@ -71,7 +71,7 @@
           </view>
           <view v-if="orderDetail.commentContent">
             <view class="text-text-secondary">评价内容</view>
-            <view class="mt-2 rounded-2xl bg-[#F8F8F8] p-3 leading-6 text-text-main">
+            <view class="mt-2 rounded-2xl bg-surface-muted p-3 leading-6 text-text-main">
               {{ orderDetail.commentContent }}
             </view>
           </view>
@@ -82,27 +82,27 @@
                 v-for="image in orderDetail.commentImages"
                 :key="image"
                 :src="image"
-                class="h-[76px] w-[76px] rounded-2xl bg-[#F7F7F7]"
+                class="h-[76px] w-[76px] rounded-2xl bg-surface-soft"
                 mode="aspectFill"
               />
             </view>
           </view>
           <view v-else>
             <view class="text-text-secondary">评价图片</view>
-            <view class="mt-2 rounded-2xl border border-dashed border-[#E5E5E5] px-3 py-4 text-[12px] text-[#999]">
+            <view class="mt-2 rounded-2xl border border-dashed border-border px-3 py-4 text-[12px] text-text-muted">
               暂未上传图片
             </view>
           </view>
         </view>
 
-        <view v-if="orderDetail.appendCommentTime" class="mt-5 border-t border-[#F3F3F3] pt-4">
+        <view v-if="orderDetail.appendCommentTime" class="mt-5 border-t border-divider pt-4">
           <view class="mb-2 text-[14px] font-semibold text-text-main">追评内容</view>
           <view class="text-[12px] text-text-secondary">
             追评时间：{{ formatOrderTime(orderDetail.appendCommentTime) }}
           </view>
           <view
             v-if="orderDetail.appendCommentContent"
-            class="mt-2 rounded-2xl bg-[#F8F8F8] p-3 leading-6 text-text-main"
+            class="mt-2 rounded-2xl bg-surface-muted p-3 leading-6 text-text-main"
           >
             {{ orderDetail.appendCommentContent }}
           </view>
@@ -111,20 +111,20 @@
               v-for="image in orderDetail.appendCommentImages"
               :key="image"
               :src="image"
-              class="h-[76px] w-[76px] rounded-2xl bg-[#F7F7F7]"
+              class="h-[76px] w-[76px] rounded-2xl bg-surface-soft"
               mode="aspectFill"
             />
           </view>
           <view
             v-else
-            class="mt-2 rounded-2xl border border-dashed border-[#E5E5E5] px-3 py-4 text-[12px] text-[#999]"
+            class="mt-2 rounded-2xl border border-dashed border-border px-3 py-4 text-[12px] text-text-muted"
           >
             本次追评未附带图片
           </view>
         </view>
       </view>
 
-      <view class="mx-3 mt-3 rounded-2xl bg-white p-4">
+      <view class="mx-3 mt-3 rounded-2xl bg-card p-4">
         <view class="mb-3 text-[15px] font-bold text-text-main">订单信息</view>
         <view class="space-y-3 text-[13px]">
           <view class="flex justify-between">
@@ -166,11 +166,11 @@
         </view>
       </view>
 
-      <view class="mx-3 mt-3 rounded-2xl bg-white p-4">
+      <view class="mx-3 mt-3 rounded-2xl bg-card p-4">
         <view class="mb-3 text-[15px] font-bold text-text-main">金额明细</view>
         <view class="space-y-3 text-[13px]">
           <view class="flex justify-between">
-            <text class="text-text-secondary">商品总额</text>
+            <text class="text-text-secondary">商品总额</text>
             <text class="text-text-main">￥{{ orderDetail.totalPrice }}</text>
           </view>
           <view class="flex justify-between">
@@ -179,12 +179,12 @@
           </view>
           <view class="flex justify-between text-[15px] font-bold">
             <text class="text-text-main">实付款</text>
-            <text class="text-accent">￥{{ orderDetail.payPrice }}</text>
+            <text class="text-price">￥{{ orderDetail.payPrice }}</text>
           </view>
         </view>
       </view>
 
-      <view class="mx-3 mt-3 rounded-2xl bg-white p-4">
+      <view class="mx-3 mt-3 rounded-2xl bg-card p-4">
         <view class="mb-3 text-[15px] font-bold text-text-main">物流信息</view>
         <view class="space-y-3 text-[13px]">
           <view class="flex justify-between">
@@ -209,7 +209,7 @@
 
     <view
       v-if="orderDetail && actionList.length > 0"
-      class="fixed bottom-0 left-0 right-0 flex flex-wrap items-center justify-end gap-3 border-t border-[#F3F3F3] bg-white px-4 py-3"
+      class="fixed bottom-0 left-0 right-0 flex flex-wrap items-center justify-end gap-3 border-t border-divider bg-card px-4 py-3"
     >
       <button
         v-for="action in actionList"
@@ -226,10 +226,10 @@
 </template>
 
 <script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app'
-import { computed, ref } from 'vue'
-import { useOrder } from '@/hooks/useOrder'
-import { formatDateTime } from '@/utils/format'
+import {onLoad} from '@dcloudio/uni-app'
+import {computed, ref} from 'vue'
+import {useOrder} from '@/hooks/useOrder'
+import {formatDateTime} from '@/utils/format'
 import {
   canAppendComment,
   getAfterSaleStatusText,
@@ -237,7 +237,7 @@ import {
   getOrderPayTypeText,
   getOrderStatusDescByOrder,
 } from '@/utils/order'
-import type { OrderAction } from '@/types/model/order'
+import type {OrderAction} from '@/types/model/order'
 
 const orderId = ref('')
 const {
@@ -300,13 +300,13 @@ function formatOrderTime(time?: string) {
 function getActionClass(style: 'primary' | 'secondary' | 'rebuy' | 'danger') {
   switch (style) {
     case 'primary':
-      return 'h-[38px] rounded-full bg-accent px-5 text-[13px] leading-[38px] text-white'
+      return 'h-[38px] rounded-full bg-status-pending px-5 text-[13px] leading-[38px] text-text-inverse'
     case 'rebuy':
-      return 'h-[38px] rounded-full border border-[#7A4B2F] bg-[#FFF3EA] px-5 text-[13px] leading-[38px] text-[#7A4B2F]'
+      return 'h-[38px] rounded-full border border-status-shipping bg-surface-warm px-5 text-[13px] leading-[38px] text-status-shipping'
     case 'danger':
-      return 'h-[38px] rounded-full border border-[#E5C7C7] bg-white px-4 text-[13px] leading-[38px] text-[#B94C4C]'
+      return 'h-[38px] rounded-full border border-danger-border bg-card px-4 text-[13px] leading-[38px] text-status-refunding'
     default:
-      return 'h-[38px] rounded-full border border-[#DDDDDD] bg-white px-4 text-[13px] leading-[38px] text-text-main'
+      return 'h-[38px] rounded-full border border-divider bg-card px-4 text-[13px] leading-[38px] text-text-main'
   }
 }
 
@@ -320,7 +320,7 @@ async function init() {
 }
 
 async function showConfirmModal(content: string) {
-  const confirmed = await new Promise<boolean>((resolve) => {
+  return await new Promise<boolean>((resolve) => {
     uni.showModal({
       title: '提示',
       content,
@@ -328,8 +328,6 @@ async function showConfirmModal(content: string) {
       fail: () => resolve(false),
     })
   })
-
-  return confirmed
 }
 
 async function handleCancel() {

@@ -1,25 +1,25 @@
-<template>
-  <view class="min-h-screen bg-[#F8F8F8] pb-[110px]">
-    <view v-if="pageLoading" class="p-4 text-[14px] text-[#666]">加载中...</view>
+﻿<template>
+  <view class="min-h-screen bg-background pb-[110px]">
+    <view v-if="pageLoading" class="p-4 text-[14px] text-text-secondary">加载中...</view>
 
     <template v-else-if="orderDetail">
-      <view class="mx-3 mt-3 rounded-2xl bg-white p-4">
-        <view class="text-[16px] font-semibold text-[#333]">{{ pageTitle }}</view>
-        <view class="mt-2 text-[12px] text-[#999]">订单号：{{ orderDetail.orderNum }}</view>
+      <view class="mx-3 mt-3 rounded-2xl bg-card p-4">
+        <view class="text-[16px] font-semibold text-text-main">{{ pageTitle }}</view>
+        <view class="mt-2 text-[12px] text-text-muted">订单号：{{ orderDetail.orderNum }}</view>
       </view>
 
-      <view class="mx-3 mt-3 rounded-2xl bg-white p-4">
-        <view class="mb-3 text-[15px] font-semibold text-[#333]">商品信息</view>
+      <view class="mx-3 mt-3 rounded-2xl bg-card p-4">
+        <view class="mb-3 text-[15px] font-semibold text-text-main">商品信息</view>
         <view
           v-for="item in orderDetail.goods"
           :key="item.id"
-          class="flex border-b border-[#F3F3F3] py-3 last:border-b-0"
+          class="flex border-b border-divider py-3 last:border-b-0"
         >
-          <image :src="item.image" class="h-[72px] w-[72px] rounded-xl bg-[#F7F7F7]" mode="aspectFill" />
+          <image :src="item.image" class="h-[72px] w-[72px] rounded-xl bg-surface-soft" mode="aspectFill" />
           <view class="ml-3 flex-1">
-            <view class="text-[14px] font-medium text-[#333]">{{ item.name }}</view>
-            <view v-if="item.spec" class="mt-1 text-[12px] text-[#999]">{{ item.spec }}</view>
-            <view class="mt-2 flex items-center justify-between text-[12px] text-[#999]">
+            <view class="text-[14px] font-medium text-text-main">{{ item.name }}</view>
+            <view v-if="item.spec" class="mt-1 text-[12px] text-text-muted">{{ item.spec }}</view>
+            <view class="mt-2 flex items-center justify-between text-[12px] text-text-muted">
               <text>￥{{ item.price }}</text>
               <text>x{{ item.count }}</text>
             </view>
@@ -27,65 +27,64 @@
         </view>
       </view>
 
-      <view v-if="!isAppendMode" class="mx-3 mt-3 rounded-2xl bg-white p-4">
-        <view class="text-[15px] font-semibold text-[#333]">星级评分</view>
+      <view v-if="!isAppendMode" class="mx-3 mt-3 rounded-2xl bg-card p-4">
+        <view class="text-[15px] font-semibold text-text-main">星级评分</view>
         <view class="mt-4 flex items-center gap-2">
           <view
             v-for="star in 5"
             :key="star"
             class="text-[28px]"
-            :class="star <= score ? 'text-[#F4B83F]' : 'text-[#D8D8D8]'"
+            :class="star <= score ? 'text-warning' : 'text-text-disabled'"
             @click="setScore(star)"
           >
-            ★
-          </view>
-          <text class="ml-2 text-[13px] text-[#999]">{{ score }}/5</text>
+            鈽?          </view>
+          <text class="ml-2 text-[13px] text-text-muted">{{ score }}/5</text>
         </view>
-        <view class="mt-2 text-[12px] text-[#999]">支持 0-5 星，点击星星即可评分。</view>
+        <view class="mt-2 text-[12px] text-text-muted">支持 0-5 星，点击星星即可评分。</view>
       </view>
 
-      <view class="mx-3 mt-3 rounded-2xl bg-white p-4">
-        <view class="text-[15px] font-semibold text-[#333]">{{ contentTitle }}</view>
+      <view class="mx-3 mt-3 rounded-2xl bg-card p-4">
+        <view class="text-[15px] font-semibold text-text-main">{{ contentTitle }}</view>
         <textarea
           v-model="content"
-          class="mt-3 h-[140px] w-full rounded-2xl bg-[#F7F7F7] p-3 text-[14px] text-[#333]"
+          class="mt-3 h-[140px] w-full rounded-2xl bg-surface-soft p-3 text-[14px] text-text-main"
           maxlength="200"
           :placeholder="contentPlaceholder"
         />
-        <view class="mt-2 text-right text-[12px] text-[#999]">{{ content.length }}/200</view>
+        <view class="mt-2 text-right text-[12px] text-text-muted">{{ content.length }}/200</view>
 
-        <view v-if="!isAppendMode" class="mt-4 flex items-center justify-between rounded-2xl bg-[#F8F8F8] px-4 py-3">
+        <view v-if="!isAppendMode" class="mt-4 flex items-center justify-between rounded-2xl bg-surface-muted px-4 py-3">
           <view>
-            <view class="text-[14px] text-[#333]">匿名评价</view>
-            <view class="mt-1 text-[12px] text-[#999]">提交后将以匿名用户展示评价。</view>
+            <view class="text-[14px] text-text-main">匿名评价</view>
+            <view class="mt-1 text-[12px] text-text-muted">提交后将以匿名用户展示评价。</view>
           </view>
-          <switch :checked="anonymous" color="#C40000" @change="handleAnonymousChange" />
+          <switch :checked="anonymous" :color="COLORS['status-pending']" @change="handleAnonymousChange" />
         </view>
 
-        <view class="mt-5 text-[15px] font-semibold text-[#333]">图片占位</view>
+        <view class="mt-5 text-[15px] font-semibold text-text-main">图片占位</view>
         <view class="mt-3 flex flex-wrap gap-3">
           <view
             v-for="image in IMAGE_PLACEHOLDERS"
             :key="image"
             class="relative h-[76px] w-[76px] overflow-hidden rounded-2xl border"
-            :class="selectedImages.includes(image) ? 'border-[#C40000]' : 'border-[#E5E5E5]'"
+            :class="selectedImages.includes(image) ? 'border-status-pending' : 'border-border'"
             @click="toggleImage(image)"
           >
-            <image :src="image" class="h-full w-full bg-[#F7F7F7]" mode="aspectFill" />
-            <view class="absolute inset-x-0 bottom-0 bg-black/45 py-1 text-center text-[11px] text-white">
+            <image :src="image" class="h-full w-full bg-surface-soft" mode="aspectFill" />
+            <view class="absolute inset-x-0 bottom-0 bg-overlay-mask py-1 text-center text-[11px] text-text-inverse">
               {{ selectedImages.includes(image) ? '已选择' : '点击添加' }}
             </view>
           </view>
         </view>
-        <view class="mt-2 text-[12px] text-[#999]">当前阶段使用图片占位，后续可替换为真实上传。</view>
+        <view class="mt-2 text-[12px] text-text-muted">当前阶段使用图片占位，后续可替换为真实上传。</view>
       </view>
     </template>
 
-    <view v-else class="p-4 text-[14px] text-[#666]">订单不存在</view>
+    <view v-else class="p-4 text-[14px] text-text-secondary">订单不存在</view>
 
-    <view class="fixed bottom-0 left-0 right-0 border-t border-[#F0F0F0] bg-white px-4 py-3">
+    <view class="fixed bottom-0 left-0 right-0 border-t border-divider bg-card px-4 py-3">
       <button
-        class="h-[42px] rounded-full bg-[#C40000] text-[14px] leading-[42px] text-white"
+        class="h-[42px] rounded-full bg-status-pending text-[14px] leading-[42px] text-text-inverse"
         :disabled="!orderDetail || actionLoading || pageMode === 'readonly'"
         :loading="actionLoading"
         @click="handleSubmit"
@@ -97,6 +96,7 @@
 </template>
 
 <script setup lang="ts">
+import { COLORS } from '@/constants'
 import { computed, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useOrder } from '@/hooks/useOrder'
@@ -236,8 +236,5 @@ onLoad((options) => {
 })
 </script>
 
-<style scoped>
-page {
-  background-color: #f8f8f8;
-}
-</style>
+
+

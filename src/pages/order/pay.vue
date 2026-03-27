@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <view class="min-h-screen bg-background pb-10">
     <template v-if="pageLoading">
       <view class="p-4 text-[14px] text-text-secondary">加载中...</view>
@@ -7,10 +7,10 @@
     <template v-else-if="orderDetail">
       <view class="px-4 pt-6 text-center">
         <view class="text-[14px] text-text-secondary">需支付</view>
-        <view class="mt-2 text-[32px] font-bold text-accent">￥{{ orderDetail.payPrice }}</view>
+        <view class="mt-2 text-[32px] font-bold text-price">￥{{ orderDetail.payPrice }}</view>
       </view>
 
-      <view class="mx-3 mt-6 rounded-2xl bg-white p-4">
+      <view class="mx-3 mt-6 rounded-2xl bg-card p-4">
         <view class="mb-3 text-[15px] font-bold text-text-main">订单信息</view>
         <view class="space-y-3 text-[13px]">
           <view class="flex justify-between">
@@ -28,17 +28,17 @@
         </view>
       </view>
 
-      <view class="mx-3 mt-3 rounded-2xl bg-white p-4">
+      <view class="mx-3 mt-3 rounded-2xl bg-card p-4">
         <view class="mb-3 text-[15px] font-bold text-text-main">支付方式</view>
         <view
           class="flex items-center justify-between rounded-xl border px-4 py-3"
-          :class="payType === 'wechat' ? 'border-accent' : 'border-[#EEEEEE]'"
+          :class="payType === 'wechat' ? 'border-link' : 'border-divider'"
           @click="payType = 'wechat'"
         >
           <view class="flex items-center">
             <text class="text-[16px]">微信支付</text>
           </view>
-          <view class="text-[13px] text-accent">
+          <view class="text-[13px] text-link">
             {{ payType === 'wechat' ? '已选择' : '' }}
           </view>
         </view>
@@ -46,7 +46,7 @@
 
       <view class="px-4 pt-8">
         <button
-          class="h-[44px] rounded-full bg-accent text-[15px] leading-[44px] text-white"
+          class="h-[44px] rounded-full bg-cta text-[15px] leading-[44px] text-text-inverse"
           :loading="payLoading"
           :disabled="payLoading"
           @click="handlePay"

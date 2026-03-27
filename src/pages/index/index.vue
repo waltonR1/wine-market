@@ -1,20 +1,20 @@
-<template>
+﻿<template>
   <view class="min-h-screen bg-background pb-8">
     <!-- 顶部品牌区 -->
     <view class="px-4 pt-4">
-      <view class="rounded-3xl bg-primary px-5 py-6 text-white shadow-lg">
+      <view class="rounded-3xl bg-primary px-5 py-6 text-text-inverse shadow-lg">
         <view class="text-[24px] font-bold tracking-wide">
           Wine Market
         </view>
-        <view class="mt-2 text-[13px] text-border leading-5">
+        <view class="mt-2 text-[13px] text-primary-soft leading-5">
           精选红酒 · 白葡萄酒 · 香槟 · 烈酒
         </view>
 
-        <view class="mt-5 rounded-2xl bg-accent px-4 py-4">
-          <view class="text-[18px] font-semibold text-secondary">
+        <view class="mt-5 rounded-2xl bg-hero px-4 py-4">
+          <view class="text-[18px] font-semibold text-primary-soft">
             今日推荐
           </view>
-          <view class="mt-1 text-[13px] text-[#F5EBDD]">
+          <view class="mt-1 text-[13px] text-primary-soft">
             为你挑选适合聚会、送礼与日常佐餐的酒款
           </view>
         </view>
@@ -27,12 +27,12 @@
         <view
             v-for="item in categories"
             :key="item.id"
-            class="rounded-2xl bg-white py-4 flex flex-col items-center justify-center shadow-sm"
+            class="rounded-2xl bg-card py-4 flex flex-col items-center justify-center shadow-sm"
         >
           <view class="text-[22px]">
             {{ item.icon }}
           </view>
-          <view class="mt-2 text-[12px] text-[#4B3A2F]">
+          <view class="mt-2 text-[12px] text-status-shipping">
             {{ item.name }}
           </view>
         </view>
@@ -49,7 +49,7 @@
           Boutique Selection
         </view>
       </view>
-      <view class="text-[13px] text-accent font-medium">
+      <view class="text-[13px] text-link font-medium">
         查看全部
       </view>
     </view>

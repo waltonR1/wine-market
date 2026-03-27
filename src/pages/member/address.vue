@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <view class="min-h-screen bg-background pb-20">
     <view class="p-4">
       <template v-if="addressList.length > 0">
@@ -18,14 +18,14 @@
       </template>
 
       <view v-else class="flex flex-col items-center pt-32">
-        <view class="text-[60px] mb-4 opacity-20">📍</view>
-        <view class="text-[14px] text-[#999]">暂无收货地址</view>
+        <view class="mb-4 text-[60px] text-empty-illustration">📍</view>
+        <view class="text-[14px] text-text-muted">暂无收货地址</view>
       </view>
     </view>
 
-    <view class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-[#F0F0F0] safe-area-inset-bottom">
+    <view class="fixed bottom-0 left-0 right-0 p-4 bg-card border-t border-divider safe-area-inset-bottom">
       <view
-        class="bg-accent text-white text-center py-3 rounded-full text-[15px] font-medium shadow-lg active:opacity-90"
+            class="bg-cta text-text-inverse text-center py-3 rounded-full text-[15px] font-medium shadow-lg active:opacity-90"
         @click="handleAdd"
       >
         + 新增收货地址
@@ -123,7 +123,7 @@ function handleSelectAddress(item: AddressInfo) {
 
 <style scoped>
 .safe-area-inset-bottom {
-  padding-bottom: calc(16px + constant(safe-area-inset-bottom));
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
 }
 </style>
+

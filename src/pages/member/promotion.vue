@@ -1,6 +1,6 @@
-<template>
+﻿<template>
   <view class="container">
-    <view class="p-4 text-center text-gray-500">推广中心页面正在开发中...</view>
+    <view class="p-4 text-center text-text-secondary">推广中心页面正在开发中...</view>
   </view>
 </template>
 <script setup lang="ts">

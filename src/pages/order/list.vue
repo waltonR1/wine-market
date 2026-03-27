@@ -1,17 +1,17 @@
-<template>
-  <view class="min-h-screen bg-[#F8F8F8] pb-6">
-    <view class="sticky top-0 z-[90] flex h-[44px] items-center justify-around border-b border-[#F0F0F0] bg-white">
+﻿<template>
+  <view class="min-h-screen bg-background pb-6">
+    <view class="sticky top-0 z-[90] flex h-[44px] items-center justify-around border-b border-divider bg-card">
       <view
         v-for="tab in tabs"
         :key="tab.status"
         class="relative flex h-full items-center px-2 text-[14px]"
-        :class="activeStatus === tab.status ? 'font-medium text-[#C40000]' : 'text-[#666]'"
+        :class="activeStatus === tab.status ? 'font-medium text-status-pending' : 'text-text-secondary'"
         @click="changeTab(tab.status)"
       >
         {{ tab.label }}
         <view
           v-if="activeStatus === tab.status"
-          class="absolute bottom-0 left-0 right-0 h-[2px] rounded-full bg-[#C40000]"
+          class="absolute bottom-0 left-0 right-0 h-[2px] rounded-full bg-status-pending"
         ></view>
       </view>
     </view>
@@ -28,8 +28,8 @@
       </template>
 
       <view v-else class="flex flex-col items-center pt-20">
-        <view class="mb-4 text-[60px] opacity-20">📦</view>
-        <view class="text-[14px] text-[#999]">暂无相关订单</view>
+        <view class="mb-4 text-[60px] text-empty-illustration">📦</view>
+        <view class="text-[14px] text-text-muted">暂无相关订单</view>
       </view>
     </view>
   </view>
@@ -197,8 +197,4 @@ function goOrderDetail(order: OrderItem) {
 }
 </script>
 
-<style scoped>
-page {
-  background-color: #f8f8f8;
-}
-</style>
+

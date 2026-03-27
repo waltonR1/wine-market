@@ -17,4 +17,8 @@ export default {
 @tailwind components;
 @tailwind utilities;
 /*每个页面公共css */
+
+:root {
+  --status-bar-height: 0px;
+}
 </style>

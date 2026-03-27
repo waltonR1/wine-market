@@ -3783,7 +3783,7 @@
       "logisticsCompany": "",
       "logisticsNo": "",
       "logisticsStatusText": "暂无物流信息",
-      "afterSaleStatus": "reviewing",
+      "afterSaleStatus": "completed",
       "afterSaleType": "退货退款",
       "afterSaleReason": "收到后外箱有轻微破损，申请售后处理。",
       "afterSaleApplyTime": "2026-03-25 23:26",
@@ -3801,8 +3801,8 @@
         "https://placehold.co/160x160/E8EEF4/4A5A70.png?text=Pic+2",
         "https://placehold.co/160x160/F1E7E9/8D4F5A.png?text=Pic+3"
       ],
-      "afterSaleHandleTime": "2026-03-26 09:30",
-      "afterSaleCompleteTime": "",
+      "afterSaleHandleTime": "2026-03-28 00:37",
+      "afterSaleCompleteTime": "2026-03-28 00:37",
       "afterSaleRejectReason": "",
       "afterSaleTimeline": [
         {
@@ -3816,29 +3816,29 @@
           "key": "review",
           "title": "平台审核",
           "description": "平台正在审核申请材料。",
-          "time": "2026-03-26 09:30",
-          "status": "current"
+          "time": "2026-03-28 00:37",
+          "status": "finished"
         },
         {
           "key": "result",
           "title": "审核通过",
-          "description": "审核通过后将进入退款处理阶段。",
-          "time": "",
-          "status": "pending"
+          "description": "审核通过，进入后续处理阶段。",
+          "time": "2026-03-28 00:37",
+          "status": "finished"
         },
         {
           "key": "refund",
           "title": "退款处理",
-          "description": "平台将根据审核结果发起退款。",
-          "time": "",
-          "status": "pending"
+          "description": "平台将根据审核结果发起退款或补偿。",
+          "time": "2026-03-28 00:37",
+          "status": "finished"
         },
         {
           "key": "finish",
           "title": "售后完成",
           "description": "售后流程全部完成。",
-          "time": "",
-          "status": "pending"
+          "time": "2026-03-28 00:37",
+          "status": "finished"
         }
       ],
       "commentAnonymous": false
@@ -3964,5 +3964,15 @@
   "realname": {
     "verified": false
   },
-  "cart": []
+  "cart": [
+    {
+      "id": 1,
+      "name": "拉菲罗斯柴尔德古堡干红",
+      "price": 8888,
+      "count": 37,
+      "image": "https://placehold.co/400x400/4A0D12/FFFFFF.png?text=Lafite+2015",
+      "stock": 37,
+      "checked": true
+    }
+  ]
 }

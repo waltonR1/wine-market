@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <view class="min-h-screen bg-background pb-[120px]">
     <!-- 顶部店铺栏 -->
-    <view class="bg-white px-4 py-4 flex items-center justify-between border-b border-[#eee]">
+    <view class="bg-card px-4 py-4 flex items-center justify-between border-b border-divider">
       <view class="flex items-center">
         <view class="text-[16px] mr-2">🏪</view>
         <view class="text-[15px] font-medium text-text-main">
@@ -10,7 +10,7 @@
       </view>
 
       <view
-          class="text-[14px] text-accent"
+          class="text-[14px] text-link"
           @click="isEdit = !isEdit"
       >
         {{ isEdit ? '完成' : '编辑' }}
@@ -20,7 +20,7 @@
     <!-- 游客提示 -->
     <view
         v-if="!isLogin"
-        class="mx-3 mt-3 bg-[#FFF7E8] text-[#8B6B2E] text-[12px] px-3 py-2 rounded-xl"
+        class="mx-3 mt-3 bg-warning-soft text-status-shipping text-[12px] px-3 py-2 rounded-xl"
     >
       当前为游客购物车，登录后可同步购物车并继续结算
     </view>
@@ -31,7 +31,7 @@
           v-if="cartList.length > 0"
           v-for="item in cartList"
           :key="item.id"
-          class="bg-white rounded-2xl p-3 mb-3 flex items-center"
+          class="bg-card rounded-2xl p-3 mb-3 flex items-center"
       >
         <!-- 选择框 -->
         <view
@@ -41,14 +41,14 @@
         >
           <view
               v-if="item.checked"
-              class="w-[8px] h-[8px] rounded-full bg-white"
+              class="w-[8px] h-[8px] rounded-full bg-card"
           />
         </view>
 
         <!-- 图片 -->
         <image
             :src="item.image"
-            class="w-[84px] h-[84px] rounded-xl bg-[#EFE7DE] mr-3"
+            class="w-[84px] h-[84px] rounded-xl bg-primary-soft mr-3"
             mode="aspectFill"
         />
 
@@ -67,7 +67,7 @@
               </view>
             </view>
 
-            <view class="text-[18px] font-bold text-accent whitespace-nowrap">
+            <view class="text-[18px] font-bold text-price whitespace-nowrap">
               ¥ {{ item.price.toFixed(2) }}
             </view>
           </view>
@@ -76,7 +76,7 @@
             <template v-if="!isOutOfStock(item)">
               <view class="flex items-center">
                 <view
-                  class="w-[28px] h-[28px] rounded-full bg-[#F5F1EC] flex items-center justify-center text-accent text-[16px]"
+                  class="w-[28px] h-[28px] rounded-full bg-surface-warm flex items-center justify-center text-link text-[16px]"
                   @click="decreaseCount(item.id)"
                 >
                   −
@@ -87,7 +87,7 @@
                 </view>
 
                 <view
-                  class="w-[28px] h-[28px] rounded-full bg-[#F5F1EC] flex items-center justify-center text-accent text-[16px]"
+                  class="w-[28px] h-[28px] rounded-full bg-surface-warm flex items-center justify-center text-link text-[16px]"
                   @click="increaseCount(item.id)"
                 >
                   +
@@ -97,7 +97,7 @@
 
             <view
               v-else
-              class="text-[12px] text-[#C40000] bg-[#FFF1F0] px-3 py-1 rounded-full"
+              class="text-[12px] text-status-pending bg-danger-soft px-3 py-1 rounded-full"
             >
               库存不足
             </view>
@@ -118,16 +118,16 @@
 
     <!-- 底部栏 -->
     <view
-        class="fixed bottom-0 left-0 right-0 bg-white border-t border-[#eee] px-4 py-3 flex items-center justify-between"
+        class="fixed bottom-0 left-0 right-0 bg-card border-t border-divider px-4 py-3 flex items-center justify-between"
     >
       <view class="flex items-center" @click="handleToggleAllChecked">
         <view
             class="w-[22px] h-[22px] rounded-full border flex items-center justify-center mr-2"
-            :class="displayAllChecked ? 'border-accent bg-accent' : 'border-[#d9d9d9] bg-white'"
+            :class="displayAllChecked ? 'border-link bg-link' : 'border-border bg-card'"
         >
           <view
               v-if="displayAllChecked"
-              class="w-[8px] h-[8px] rounded-full bg-white"
+              class="w-[8px] h-[8px] rounded-full bg-card"
           />
         </view>
         <view class="text-[14px] text-text-main">
@@ -141,13 +141,13 @@
           <view class="text-[14px] text-text-main mr-2">
             合计:
           </view>
-          <view class="text-[22px] font-bold text-accent">
+          <view class="text-[22px] font-bold text-price">
             ¥{{ totalPrice.toFixed(2) }}
           </view>
         </view>
 
         <view
-            class="bg-accent text-white px-6 py-3 rounded-full text-[14px]"
+            class="bg-cta text-text-inverse px-6 py-3 rounded-full text-[14px]"
             @click="goConfirm"
         >
           去结算
@@ -161,7 +161,7 @@
         </view>
 
         <view
-            class="bg-[#C9A96E] text-white px-6 py-3 rounded-full text-[14px]"
+            class="bg-warning text-text-inverse px-6 py-3 rounded-full text-[14px]"
             @click="deleteChecked"
         >
           删除
@@ -240,12 +240,12 @@ function handleToggleChecked(item: typeof cartList.value[number]) {
 
 function getCheckClass(item: typeof cartList.value[number]) {
   if (!isSelectableInCurrentMode(item)) {
-    return 'border-[#e5e5e5] bg-[#f5f5f5] opacity-50'
+    return 'border-border bg-surface-muted opacity-50'
   }
 
   return item.checked
-    ? 'border-accent bg-accent'
-    : 'border-[#d9d9d9] bg-white'
+    ? 'border-link bg-link'
+    : 'border-border bg-card'
 }
 
 function handleToggleAllChecked() {

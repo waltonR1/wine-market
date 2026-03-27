@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <view class="min-h-screen bg-background px-6 pt-16">
     <!-- 顶部品牌区 -->
     <view class="text-center">
@@ -11,7 +11,7 @@
     </view>
 
     <!-- 登录卡片 -->
-    <view class="mt-12 bg-white rounded-3xl px-5 py-6 shadow-sm">
+    <view class="mt-12 bg-card rounded-3xl px-5 py-6 shadow-sm">
       <!-- #ifdef H5 -->
       <view>
         <view class="text-[20px] font-bold text-text-main">
@@ -23,25 +23,25 @@
         </view>
 
         <view class="mt-6">
-          <view class="text-[13px] text-[#4B3A2F] mb-2">
+          <view class="text-[13px] text-status-shipping mb-2">
             用户名
           </view>
           <input
               v-model="username"
-              class="w-full bg-[#F5F1EC] rounded-2xl px-4 py-3 text-[14px] text-text-main"
+              class="w-full bg-surface-warm rounded-2xl px-4 py-3 text-[14px] text-text-main"
               placeholder="请输入用户名"
           />
         </view>
 
         <view class="mt-4">
-          <view class="text-[13px] text-[#4B3A2F] mb-2">
+          <view class="text-[13px] text-status-shipping mb-2">
             密码
           </view>
           <input
               v-model="password"
-              class="w-full bg-[#F5F1EC] rounded-2xl px-4 py-3 text-[14px] text-text-main"
+              class="w-full bg-surface-warm rounded-2xl px-4 py-3 text-[14px] text-text-main"
               placeholder="请输入密码"
-              password
+              password="true"
           />
         </view>
 
@@ -52,7 +52,7 @@
         </view>
 
         <view
-            class="mt-6 bg-accent text-white text-center py-3 rounded-2xl text-[15px] font-medium"
+            class="mt-6 bg-cta text-text-inverse text-center py-3 rounded-2xl text-[15px] font-medium"
             @click="handleAccountLogin"
         >
           {{ loading ? '登录中...' : '立即登录' }}
@@ -71,7 +71,7 @@
         </view>
 
         <view
-            class="mt-8 bg-accent text-white text-center py-3 rounded-2xl text-[15px] font-medium"
+            class="mt-8 bg-cta text-text-inverse text-center py-3 rounded-2xl text-[15px] font-medium"
             @click="handleWechatLogin"
         >
           {{ loading ? '登录中...' : '微信一键登录' }}
@@ -112,10 +112,6 @@ function goAfterLogin() {
 }
 
 async function handleAccountLogin() {
-  // #ifndef H5
-  return
-  // #endif
-
   if (!username.value.trim()) {
     uni.showToast({
       title: '请输入用户名',
@@ -151,10 +147,6 @@ async function handleAccountLogin() {
 }
 
 async function handleWechatLogin() {
-  // #ifndef MP-WEIXIN
-  return
-  // #endif
-
   if (loading.value) return
   loading.value = true
 
