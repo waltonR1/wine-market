@@ -5,7 +5,7 @@
       <view class="flex items-center">
         <view class="text-[16px] mr-2">🏪</view>
         <view class="text-[15px] font-medium text-text-main">
-          {{ APP_CONFIG.APP_NAME }}
+          {{ APP_CONFIG.APP_INFO.APP_NAME }}
         </view>
       </view>
 

@@ -104,7 +104,7 @@ export function useCart() {
       })
 
       if (res.code === 0) {
-        if (APP_CONFIG.USE_SERVER_CART_SYNC) {
+        if (APP_CONFIG.COMMON.USE_SERVER_CART_SYNC) {
           syncCartList(toClientList(res.data, cartList.value))
         }
 
@@ -135,7 +135,7 @@ export function useCart() {
    * 从商品详情添加到购物车。
    */
   async function addProductToCart(product: ProductItem) {
-    if (!APP_CONFIG.ALLOW_ADD_OUT_OF_STOCK) {
+    if (!APP_CONFIG.COMMON.ALLOW_ADD_OUT_OF_STOCK) {
       if (product.stock <= 0) {
         uni.showToast({
           title: '该商品已售罄',
