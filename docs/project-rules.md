@@ -1,1091 +1,249 @@
-# wine-market 项目规范清单
+# Wine Market 项目规则
 
-## 一、目录职责总原则
+更新时间：2026-03-28
 
-每一层只做自己的事，不跨层乱写。
+## 1. 目标
+本文件用于说明当前项目的开发边界、目录职责和实现约束。
 
-数据流尽量保持为：
+核心目标：
+- 保持分层清晰
+- 保持类型边界清晰
+- 保持页面层简单
+- 保持后续可联调、可扩展、可维护
+
+## 2. 总体分层原则
+当前项目默认遵守以下数据流：
 
 ```txt
-pages -> hooks -> api -> request/mock
-             ↓
+pages -> hooks -> api/modules -> request -> mock / real backend
+             |
            store
 ```
 
 含义：
+- `pages` 负责展示与交互
+- `hooks` 负责业务逻辑与状态协调
+- `api/modules` 负责接口请求
+- `store` 负责跨页面共享状态
+- `utils` 负责规则与纯函数
 
-* `pages` 负责页面展示和页面交互
-* `hooks` 负责复用业务逻辑
-* `api` 负责接口调用
-* `mock` 负责本地假数据/本地模拟后端
-* `store` 负责跨页面共享状态
+## 3. 强约束
+以下约束必须持续遵守：
 
----
+### 3.1 页面层约束
+- 页面层不直接调用 `api/modules`
+- 页面层不直接依赖 `API_PATHS`
+- 页面只通过 hooks 调业务
+- 页面层只做展示、交互、页面生命周期处理
 
-## 二、各目录放什么
+### 3.2 API 层约束
+- API 请求只放在 `src/api/modules/*`
+- `src/api/index.ts` 只做统一导出
+- API 模块不写页面逻辑
 
----
+### 3.3 订单域约束
+- 订单状态规则统一放在 `src/utils/order.ts`
+- 订单状态同步统一收口在 `src/hooks/useOrder.ts`
+- 订单页面不要各自散写一套状态判断
 
-### 1. `pages/`
+### 3.4 类型分层约束
+- `src/types/model/*` 只放业务模型
+- `src/types/api/*` 只放接口请求 / 响应契约
+- 不要把接口包装类型塞回 model 层
+- 不要把纯业务模型塞到 api 层
 
-**作用：页面文件，只负责页面级展示和交互。**
+### 3.5 改动原则
+- 优先最小必要改动
+- 不为重构而重构
+- 先兼容现有结构，再考虑扩展
 
-适合放：
+## 4. 目录职责
 
-* 页面结构
-* 页面事件
-* 页面生命周期
-* 调用 hooks / store / api
-* 页面局部状态
+### 4.1 `src/pages/`
+职责：
+- 页面结构
+- 页面事件
+- 页面跳转
+- 页面级 loading / empty / error 展示
 
-不适合放：
+不要放：
+- 大量复用业务逻辑
+- 直接 request
+- 直接 API_PATHS
 
-* 大量可复用业务逻辑
-* 通用工具函数
-* 直接写一堆请求封装
-* 跨页面共享状态
+### 4.2 `src/hooks/`
+职责：
+- 可复用业务逻辑
+- 页面状态协调
+- API 调用收口
+- store 协调
 
-规则：
+命名：
+- 统一使用 `useXxx.ts`
 
-* 一个页面目录下至少有一个 `index.vue` 或具体页面文件
-* 同一业务页面放在同一目录下，例如 `goods/`、`order/`
-* 页面专用的小组件，后期可以放 `pages/xxx/components/`
+### 4.3 `src/api/modules/`
+职责：
+- 按业务模块封装接口
+- 返回统一 `request<T>()`
 
----
+不要放：
+- 页面跳转
+- toast / modal 交互
+- 复杂页面状态同步
 
-### 2. `components/common/`
+### 4.4 `src/store/`
+职责：
+- 跨页面共享状态
+- 跨页面临时业务数据
 
-**作用：通用组件。**
+不要放：
+- 只在单页使用的局部状态
+- 复杂 API 调用逻辑
 
-适合放：
+### 4.5 `src/utils/`
+职责：
+- 纯函数
+- 规则收口
+- 格式化
+- 校验
 
-* `Loading.vue`
-* `Empty.vue`
-* `Navbar.vue`
-* `Tabbar.vue`
+当前关键规则文件：
+- `src/utils/order.ts`
+- `src/utils/orderDebug.ts`
+- `src/utils/request.ts`
+- `src/utils/format.ts`
 
-规则：
-
-* 不依赖具体业务含义
-* 多个页面都可复用
-* 输入输出尽量通用化
-
-不适合放：
-
-* 明显只服务某个业务的组件
-
----
-
-### 3. `components/business/`
-
-**作用：业务通用组件。**
-
-适合放：
-
-* `ProductCard.vue`
-* `ProductList.vue`
-* `OrderCard.vue`
-
-规则：
-
-* 带业务语义，但可在多个页面复用
-* 尽量通过 `props` 控制展示
-* 尽量不要直接耦合具体页面逻辑
-
-不适合放：
-
-* 只在一个页面使用、耦合页面细节很深的组件
-  这种后期应放到 `pages/xxx/components/`
-
----
-
-### 4. `hooks/`
-
-**作用：组合式复用逻辑。**
-
-适合放：
-
-* 商品列表获取逻辑
-* 用户信息读取逻辑
-* 购物车增删改查逻辑
-* loading / error / refresh 等组合逻辑
-
-规则：
-
-* 文件名统一使用 `useXxx.ts`
-* hook 主要返回：
-
-    * 数据
-    * 状态
-    * 方法
-* hook 内可以调 `api`、`store`
-* hook 不负责纯 UI
-
-不适合放：
-
-* 纯工具函数
-* 与 Vue 响应式无关的普通函数
-* 大量静态配置
-
-示例：
-
-```ts
-useGoods()
-useCart()
-useUser()
-```
-
----
-
-### 5. `api/modules/`
-
-**作用：按业务模块封装接口。**
-
-适合放：
-
-* 商品接口
-* 订单接口
-* 用户接口
-* 购物车接口
-* 会员接口
-
-规则：
-
-* 一个文件对应一个业务模块
-* 一个函数对应一个接口能力
-* 命名尽量用动词开头，例如：
-
-    * `getGoodsList`
-    * `getGoodsDetail`
-    * `createOrder`
-    * `login`
-
-不适合放：
-
-* 页面逻辑
-* UI 状态
-* 大量数据格式化逻辑
-
----
-
-### 6. `api/index.ts`
-
-**作用：接口统一出口。**
-
-规则：
-
-* 只做导出聚合
-* 不写具体业务逻辑
+### 4.6 `src/types/model/`
+职责：
+- 业务实体
+- 业务状态
+- 业务字段结构
 
 例如：
+- `OrderItem`
+- `OrderDetail`
+- `AddressInfo`
+- `GoodsItem`
 
-```ts
-export * from './modules'
-```
-
----
-
-### 7. `mock/`
-
-**作用：本地模拟数据或模拟接口。**
-
-本项目的 mock 后端在根目录：
-
-* `db.json`：资源数据
-* `server.js`：包装 json-server，实现统一响应与必要的业务路由
-
-适合放：
-
-* 商品 mock 数据
-* 用户 mock 数据
-* 订单 mock 数据
-* 购物车 mock 数据
-
-规则：
-
-* 与 `api/modules` 尽量按业务一一对应
-* mock 层尽量简单
-* 重点是“提供假数据”，不是模拟完整后端系统
-
-建议：
-
-* 页面不要直接依赖 `mock`
-* 由 `api` 决定当前使用 mock 还是真接口
-
----
-
-### 8. `store/`
-
-**作用：跨页面共享状态。**
-
-适合放：
-
-* 当前登录用户
-* 购物车数量/列表
-* 订单确认临时数据
-
-规则：
-
-* 只有“多个页面共享”的状态才放 store
-* 页面私有状态不要硬塞到 store
-* store 负责状态，不负责接口替代层
-
-不适合放：
-
-* 所有列表数据
-* 一次性页面临时变量
-* 与某个单独组件强绑定的数据
-
----
-
-### 9. `types/model/`
-
-**作用：业务实体类型。**
-
-适合放：
-
-* `Goods`
-* `CartItem`
-* `Order`
-* `User`
-* `Member`
-
-规则：
-
-* 描述“系统里有什么对象”
-* 不关心某个具体接口怎么传
-* 命名清晰，贴近业务
-
-示例：
-
-```ts
-export interface GoodsItem {}
-export interface UserInfo {}
-export interface OrderItem {}
-```
-
----
-
-## 三、接口与实现约定
-
-### 1. 统一响应结构
-
-Mock 服务与前端请求层统一使用：
-
-```ts
-{ code: number; message: string; data: any }
-```
-
-### 2. 资源化与方法约束
-
-* 资源优先使用 REST 风格路径（例如 `/goods/:id`、`/addresses`、`/cart/:id`）
-* **微信小程序不支持 PATCH**：更新类操作统一使用 `POST`（例如更新购物车数量、编辑地址）
-
-### 3. 商品详情数据结构
-
-`GET /goods/:id` 的详情必须包含：
-
-* `stock: number`（库存）
-* `detail: { type: 'title' | 'text' | 'image'; value: string }[]`（图文详情块）
-* `params: { label: string; value: string }[]`（商品参数）
-* `comments: { id; userName; avatar; score; content; time; images? }[]`（买家评论）
-
-前端详情页渲染逻辑依赖以上字段完整存在。
-
-### 4. 立即购买与确认订单
-
-详情页点击“立即购买”：
-
-* 写入 `store/order` 的确认订单临时商品列表
-* 跳转到 `pages/order/confirm`
-* 确认页优先使用 `store/order` 中的临时数据，避免额外请求覆盖
-
----
-
-## 四、常用脚本
-
-```bash
-npm run mock
-npm run dev:mp-weixin
-npm run dev:h5
-npm run build:h5
-```
-
----
-
-### 10. `types/api/`
-
-**作用：接口请求与响应类型。**
-
-适合放：
-
-* 请求参数类型
-* 响应结果类型
-* 分页返回结构
-
-规则：
-
-* 描述“接口怎么收、怎么回”
-* 不和 `model` 混写
-
-示例：
-
-```ts
-export interface GetGoodsListParams {}
-export interface GetGoodsListResponse {}
-export interface LoginParams {}
-export interface LoginResponse {}
-```
-
----
-
-### 11. `types/common.ts`
-
-**作用：公共类型。**
-
-适合放：
-
-* 分页泛型
-* 通用响应结构
-* 可复用枚举类型
-* 统一 ID 类型别名
+### 4.7 `src/types/api/`
+职责：
+- 请求参数契约
+- 响应结果契约
+- API 层包装类型
 
 例如：
-
-```ts
-export interface ApiResponse<T> {
-  code: number
-  message: string
-  data: T
-}
-```
-
----
-
-### 12. `utils/`
-
-**作用：纯工具函数。**
-
-适合放：
-
-* 请求实例封装 `request.ts`
-* 本地存储 `storage.ts`
-* 格式化方法 `format.ts`
-* 校验方法 `validate.ts`
-* 鉴权辅助 `auth.ts`
-
-规则：
-
-* 尽量纯函数化
-* 不依赖页面
-* 少放业务语义太强的内容
-
-不适合放：
-
-* 页面流程逻辑
-* 某个业务专属处理链
-
----
-
-### 13. `config/`
-
-**作用：项目配置。**
-
-适合放：
-
-* 环境变量读取
-* mock 开关
-* baseURL
-* 应用名
-* 版本号
-* 默认配置项
-
-规则：
-
-* 配置集中管理
-* 页面不要写死环境信息
-
----
-
-### 14. `constants/`
-
-**作用：静态常量。**
-
-适合放：
-
-* 路由常量
-* 颜色常量
-* 状态映射
-* tab 配置
-* 文案枚举
-
-规则：
-
-* 静态、固定、不会频繁变化
-* 和运行环境无关
-
-区别于 `config`：
-
-* `config` 更偏“项目配置”
-* `constants` 更偏“静态常量”
-
----
-
-## 三、命名规范
-
-### 文件命名
-
-建议保持统一：
-
-* 页面组件：`index.vue` / `detail.vue`
-* 通用组件：`PascalCase.vue`
-* hook：`useXxx.ts`
-* store：按业务命名，如 `user.ts`
-* api 模块：按业务命名，如 `goods.ts`
-* 类型文件：按业务命名，如 `user.ts`, `order.ts`
-
----
-
-### 方法命名
-
-建议：
-
-* 获取：`getXxx`
-* 创建：`createXxx`
-* 更新：`updateXxx`
-* 删除：`deleteXxx`
-* 登录：`login`
-* 登出：`logout`
-
-不要同一项目里一会儿 `fetchGoods`，一会儿 `getGoodsList`，最好统一风格。
-
----
-
-### 类型命名
-
-建议：
-
-* 实体类型：`UserInfo`、`GoodsItem`、`OrderItem`
-* 请求类型：`GetGoodsListParams`
-* 响应类型：`GetGoodsListResponse`
-
----
-
-## 四、分层边界规则
-
-### 1. 页面不要直接写复杂请求细节
-
-不推荐：
-
-```ts
-uni.request(...)
-```
-
-推荐：
-
-```ts
-import { getGoodsList } from '@/api'
-```
-
----
-
-### 2. 页面不要直接操作 mock
-
-不推荐：
-
-```ts
-import { mockGoodsList } from '@/mock'
-```
-
-推荐由 `api` 决定底层来源。
-
----
-
-### 3. hook 不要沦为杂物间
-
-不是所有函数都丢进 `hooks`。
-只有“可复用的响应式业务逻辑”才进 `hooks`。
-
----
-
-### 4. utils 不写页面业务
-
-`utils` 是工具箱，不是业务层。
-
----
-
-### 5. store 不替代数据库
-
-store 只保存前端共享状态，不负责长期数据管理逻辑。
-
----
-
-## 五、`user` 和 `member` 的边界
-
-### `user`
-
-负责：
-
-* 登录
-* token
-* 当前登录身份
-* 基础用户信息
-* 登出
-
-### `member`
-
-负责：
-
-* 会员中心页展示
-* 收藏、优惠券、地址
-* 积分、等级、权益
-* “我的”页面的扩展业务
-
-规则：
-
-* 身份认证归 `user`
-* 会员中心业务归 `member`
-
----
-
-## 六、mock 切换规范
-
-建议项目统一由配置控制是否启用 mock，例如：
-
-```ts
-// config/env.ts
-export const IS_MOCK = true
-```
-
-然后在 `api` 里决定：
-
-```ts
-if (IS_MOCK) {
-  return mockGetGoodsList()
-}
-return request(...)
-```
-
-这样以后联调时，页面不用改。
-
----
-
-## 七、环境与配置规范
-
-### 1. 环境切换 (`config/env.ts`)
-
-* **禁止**在页面或业务代码中硬编码 `baseURL`。
-* 统一通过 `IS_MOCK` 开关切换后端环境。
-* `BASE_URL` 和 `API_PREFIX` 会根据 `IS_MOCK` 自动计算，无需手动修改。
-
-### 2. 全局配置项 (`APP_CONFIG`)
-
-* 通用业务参数（如客服电话、分页大小、日志开关）应统一维护在 `APP_CONFIG` 中。
-
----
-
-## 八、网络请求规范
-
-### 1. 统一请求函数 (`utils/request.ts`)
-
-* 必须通过 `request` 函数发起网络请求，严禁直接调用 `uni.request`。
-* 自动处理 `401` 登录失效逻辑。
-* 支持 `loading` 参数自动管理页面加载状态。
-
-**代码示例：**
-
-```typescript
-// 简单调用
-const res = await request({ url: API_PATHS.GOODS_LIST })
-
-// 带有 Loading 的调用 (通常用于登录、提交订单等需要遮罩的操作)
-const loginRes = await request({
-    url: API_PATHS.USER_LOGIN,
-    method: 'POST',
-    data: { username, password },
-    loading: true,
-    loadingText: '正在登录...'
-})
-```
-
-* **日志功能**：在开发环境下开启 `APP_CONFIG.ENABLE_LOG` 后，所有的请求参数和响应数据都会在控制台打印，格式为 `[Request] ...` 和 `[Response] ...`。
-* **错误提示**：请求失败时，`request` 会优先寻找后端返回的 `message` 字段进行 Toast 提示。
-
-### 2. 接口路径定义 (`config/api.ts`)
-
-* 所有接口 URL 必须集中定义在 `API_PATHS` 对象中。
-* 适配 `json-server 1.x` 时，使用扁平化命名（如 `/goods_${id}`）。
-
----
-
-## 九、性能优化规范
-
-### 1. 大数据量处理
-
-* **分页加载**：所有列表接口必须支持 `page` 和 `pageSize` 参数。
-* **无缝滚动**：列表页需在 `pages.json` 中配置 `onReachBottomDistance: 200`。
-* **图片加载**：所有列表图片必须开启 `lazy-load`。
-
-### 2. 视觉反馈
-
-* **骨架屏**：列表加载时优先展示骨架屏，而非简单的 Loading 动画。
-
----
-
-## 十、什么时候该新建目录
-
-### 需要新建 `pages/xxx/components/` 的情况
-
-当某页面有很多只属于该页面的组件时。
-
-### 需要考虑 `services/` 的情况
-
-当一个业务动作需要：
-
-* 调多个接口
-* 做复杂数据拼装
-* 不适合写在 page / hook / api 中
-
-当前项目还不一定需要。
-
----
-
-## 八、开发时自检清单
-
-每次新增代码前先问自己：
-
-1. 这是页面展示，还是可复用逻辑？
-2. 这是共享状态，还是页面私有状态？
-3. 这是业务实体类型，还是接口类型？
-4. 这是静态常量，还是项目配置？
-5. 这个组件是通用组件，还是业务组件，还是页面私有组件？
-6. 这个函数该放 `hooks`、`utils`、还是 `api`？
-
-
-```
-## 项目业务规则（Current Implementation Rules）
-```
-
-下面是完整可粘版本。
-
----
-
-# 项目业务规则（Current Implementation Rules）
-
-## 一、库存规则（Stock Rules）
-
-商品库存参与整个下单链路。
-
-### 1 商品接口
-
-接口：
-
-```
-GET /goods/:id
-```
-
-返回数据必须包含：
-
-```
-stock
-params
-detail
-comments
-```
-
-### 2 商品详情页规则
-
-库存展示：
-
-```
-库存：{{ product.stock }}
-```
-
-库存为 0 时：
-
-* 禁止 **立即购买**
-* 是否允许 **加入购物车** 由配置控制
-
-配置：
-
-```
-APP_CONFIG.ALLOW_ADD_OUT_OF_STOCK
-```
-
-行为：
-
-```
-true  → 允许加入购物车
-false → 禁止加入购物车
-```
-
----
-
-### 3 购物车库存规则
-
-购物车商品结构：
-
-```
-{
-  id
-  name
-  price
-  count
-  image
-  stock
-}
-```
-
-库存为 0 时：
-
-普通模式：
-
-```
-不可选中
-不可结算
-数量区域显示 "库存不足"
-```
-
-编辑模式：
-
-```
-允许选中（方便删除）
-仍不可修改数量
-```
-
----
-
-### 4 数量限制
-
-数量增加规则：
-
-```
-count <= stock
-```
-
-超过库存时：
-
-```
-提示：已达到库存上限
-```
-
----
-
-### 5 订单提交库存校验
-
-确认页提交订单前：
-
-```
-count > stock
-→ 阻止提交
-```
-
-Mock Server 也必须做兜底校验。
-
----
-
-# 二、订单确认来源规则
-
-订单确认页有两个入口：
-
-## 1 商品详情页（立即购买）
-
-流程：
-
-```
-商品详情页
-↓
-buyNow()
-↓
-store/order.setConfirmGoods()
-↓
-跳转 confirm
-```
-
-数据结构：
-
-```
-OrderConfirmItem
-```
-
-字段：
-
-```
-id
-name
-spec
-price
-count
-image
-stock
-```
-
----
-
-## 2 购物车结算
-
-流程：
-
-```
-购物车
-↓
-checkedList
-↓
-过滤 stock > 0
-↓
-写入 orderStore.confirmGoods
-↓
-跳转 confirm
-```
-
-规则：
-
-```
-仅允许库存商品进入确认页
-```
-
----
-
-# 三、地址选择规则
-
-确认页地址来源优先级：
-
-```
-1 store/order.currentAddress
-2 默认地址接口
-```
-
-从确认页进入地址页：
-
-```
-/pages/member/address?select=1
-```
-
-选择模式行为：
-
-```
-点击地址卡片 → 选择地址并返回
-编辑按钮 → 保留
-删除 / 设默认 → 隐藏
-```
-
-按钮必须使用：
-
-```
-@click.stop
-```
-
-防止误触发地址选择。
-
----
-
-# 四、订单状态规则
-
-订单状态使用数字编码。
-
-```
-1 待付款
-2 待发货
-3 待收货
-4 待评价
-6 已取消
-```
-
----
-
-## 状态流转
-
-### 创建订单
-
-```
-submitOrder
-↓
-status = 1
-```
-
----
-
-### 取消订单
-
-条件：
-
-```
-status = 1
-```
-
-流转：
-
-```
-1 → 6
-```
-
----
-
-### 确认收货
-
-条件：
-
-```
-status = 3
-```
-
-流转：
-
-```
-3 → 4
-```
-
----
-
-# 五、订单数据结构
-
-订单对象必须包含以下字段：
-
-```
-{
-  id
-  orderNum
-  status
-  statusLabel
-  createTime
-
-  totalPrice
-  freight
-  payPrice
-  totalCount
-
-  goods
-  address
-  remark
-}
-```
-
-字段说明：
-
-```
-totalPrice = 商品总价
-freight    = 运费
-payPrice   = totalPrice + freight
-totalCount = 商品数量
-```
-
----
-
-# 六、购物车与订单关系
-
-订单来源：
-
-```
-cart
-buyNow
-```
-
-### cart 来源
-
-提交订单成功后：
-
-```
-删除购物车中已结算商品
-```
-
-### buyNow 来源
-
-提交订单成功：
-
-```
-不影响购物车
-```
-
----
-
-# 七、支付阶段预留规则（Stage 3）
-
-未来新增功能：
-
-```
-支付页
-订单详情页
-订单支付状态
-```
-
-新增状态：
-
-```
-支付成功 → status 2
-```
-
-订单详情页展示：
-
-```
-订单号
-状态
-商品列表
-地址
-金额
-运费
-备注
-物流
-```
-
----
-
-# 八、API 契约约定
-
-API 返回统一结构：
-
-```
-{
-  code
-  message
-  data
-}
-```
-
-成功：
-
-```
-code = 0
-```
-
-失败：
-
-```
-code ≠ 0
-```
-
----
-
-# 九、分层职责（重要）
-
-页面：
-
-```
-UI + 用户交互
-```
-
-Hooks：
-
-```
-业务逻辑
-```
-
-Store：
-
-```
-全局状态
-```
-
-API：
-
-```
-接口请求
-```
-
-Utils：
-
-```
-纯函数
-```
-
-
-
+- `CreateOrderRequest`
+- `GetOrderDetailResponse`
+- `OrderDebugActionResponse`
+
+### 4.8 `src/config/`
+职责：
+- 显式环境配置
+- 应用业务配置
+- API 路径配置
+
+当前关键文件：
+- `env.ts`
+- `app.ts`
+- `api.ts`
+
+### 4.9 `src/components/`
+职责：
+- 组件复用
+
+分为：
+- `components/common`：通用组件
+- `components/business`：业务通用组件
+- `components/order-debug`：订单调试专用组件
+
+## 5. 配置规则
+
+### 5.1 `config/env.ts`
+职责：
+- 环境事实
+- 底层能力
+- 网络层基础配置
+
+要求：
+- 显式手动控制当前环境
+- 打开文件能直接看出当前项目跑的是哪套环境
+- 不使用 `process.env`
+- 不使用 `import.meta.env`
+
+### 5.2 `config/app.ts`
+职责：
+- 业务配置
+- 功能开关
+- 产品策略配置
+
+要求：
+- 基于 env 能力做组合
+- 不直接承担环境事实
+
+## 6. 颜色与样式规则
+当前项目已建立语义化颜色体系：
+- `src/constants/colors.json`
+- `src/constants/colors.ts`
+
+要求：
+- 优先使用语义化颜色 token
+- 避免页面中继续散写大量魔法色值
+- 页面背景统一使用 `background`
+- 卡片统一使用 `card`
+- 弱背景区按语义使用 `surface-muted / surface-soft / surface-warm`
+
+## 7. 请求层规则
+统一通过：
+- `src/utils/request.ts`
+
+要求：
+- 不直接在页面里使用 `uni.request`
+- 错误处理走统一请求层
+- 请求日志由配置控制
+- `BASE_URL / API_PREFIX / REQUEST_TIMEOUT` 由配置统一控制
+
+## 8. 订单系统专项规则
+
+### 8.1 状态规则
+- 统一在 `src/utils/order.ts`
+- 状态文案、状态说明、按钮逻辑、normalize 逻辑都在这里收口
+
+### 8.2 本地状态同步
+- 统一在 `src/hooks/useOrder.ts`
+- 包括 `orderList` 与 `orderDetail` 同步
+
+### 8.3 调试系统规则
+- 调试系统是开发 / 测试工具，不是正式业务功能
+- 调试系统必须受 `env.ts + app.ts` 双层控制
+- 调试系统直接修改订单真实字段，不允许维护 `debugStatus / debugPayTime` 这类平行字段
+- 如需快照，只允许最小化 `__debugMeta`
+
+## 9. mock 规则
+当前 mock 服务由以下文件提供：
+- `server.js`
+- `db.json`
+
+要求：
+- 页面不要直接依赖 mock 文件
+- mock 结构尽量贴近真实后端
+- mock 数据必须和当前 types / 业务字段保持一致
+
+## 10. 文档维护规则
+以下文档应持续同步更新：
+- `README.md`
+- `docs/project-context.md`
+- `docs/project-rules.md`
+- `docs/mock-api.md`
+- `docs/order-flow.md`
+- `docs/order-debug-toolkit.md`
+- `docs/go-live-checklist.md`
+- `docs/next-phase-todo.md`
+
+## 11. 提交前自检
+改代码前或改完后，至少自检：
+- 是否破坏页面 -> hooks -> api/modules 分层
+- 是否把业务模型和接口契约混写
+- 是否把状态判断散到多个页面
+- 是否把配置写死在页面或 utils 中
+- 是否增加了无必要复杂度
+- 是否仍能通过构建
