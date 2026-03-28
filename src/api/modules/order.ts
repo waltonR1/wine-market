@@ -12,6 +12,11 @@ import type {
   UpdateOrderStatusData,
 } from '@/types/model/order'
 import type {
+  OrderDebugActionPayload,
+  OrderDebugActionResult,
+  OrderDebugInfo,
+} from '@/types/model/order-debug'
+import type {
   AdvanceAfterSaleResponse,
   ApplyAfterSaleResponse,
   CommentOrderResponse,
@@ -20,8 +25,10 @@ import type {
   CreateOrderResponse,
   DeleteOrderResponse,
   GetConfirmOrderListResponse,
+  GetOrderDebugInfoResponse,
   GetOrderDetailResponse,
   GetOrderListResponse,
+  OrderDebugActionResponse,
   PayOrderResponse,
   RebuyOrderResponse,
   CancelOrderResponse,
@@ -112,5 +119,20 @@ export function advanceAfterSale(id: string | number): Promise<AdvanceAfterSaleR
   return request<UpdateOrderStatusData>({
     url: API_PATHS.ORDER.AFTER_SALE_ADVANCE(id),
     method: 'POST',
+  })
+}
+
+export function getOrderDebugInfo(id: string | number): Promise<GetOrderDebugInfoResponse> {
+  return request<OrderDebugInfo>({
+    url: API_PATHS.ORDER.DEBUG_INFO(id),
+    method: 'GET',
+  })
+}
+
+export function debugOrderAction(payload: OrderDebugActionPayload): Promise<OrderDebugActionResponse> {
+  return request<OrderDebugActionResult>({
+    url: API_PATHS.ORDER.DEBUG_ACTION(payload.id),
+    method: 'POST',
+    data: payload,
   })
 }

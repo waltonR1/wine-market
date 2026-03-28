@@ -162,6 +162,13 @@
         "navigationBarTitleText": "退款/售后",
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path": "pages/order/debug",
+      "style": {
+        "navigationBarTitleText": "订单调试",
+        "enablePullDownRefresh": false
+      }
     }
   ],
   "tabBar": {

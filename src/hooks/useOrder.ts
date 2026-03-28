@@ -14,6 +14,8 @@ import {
   commentOrder as commentOrderApi,
   applyAfterSale as applyAfterSaleApi,
   advanceAfterSale as advanceAfterSaleApi,
+  getOrderDebugInfo as getOrderDebugInfoApi,
+  debugOrderAction as debugOrderActionApi,
 } from '@/api'
 import { useOrderStore } from '@/store/order'
 import { useCart } from '@/hooks/useCart'
@@ -28,6 +30,11 @@ import type {
   OrderStatus,
   PayOrderParams,
 } from '@/types/model/order'
+import type {
+  OrderDebugActionPayload,
+  OrderDebugActionResult,
+  OrderDebugInfo,
+} from '@/types/model/order-debug'
 import type { CreateOrderRequest } from '@/types/api/order'
 
 function normalizeOrderList(list: OrderItem[]) {
@@ -70,6 +77,21 @@ export function useOrder() {
             ...item,
             status,
             ...statusPatch,
+          })
+        : item
+    )
+  }
+
+  function syncOrderState(nextOrder: OrderDetail) {
+    const normalized = normalizeOrderDetail(nextOrder)
+
+    orderDetail.value = normalized
+
+    orderList.value = orderList.value.map(item =>
+      String(item.id) === String(normalized.id)
+        ? normalizeOrder({
+            ...item,
+            ...normalized,
           })
         : item
     )
@@ -357,6 +379,58 @@ export function useOrder() {
     }
   }
 
+  async function fetchOrderDebugInfo(id: string | number) {
+    pageLoading.value = true
+    try {
+      const res = await getOrderDebugInfoApi(id)
+      if (res.code === 0) {
+        const data = {
+          ...res.data,
+          order: normalizeOrderDetail(res.data.order),
+        } as OrderDebugInfo
+        syncOrderState(data.order)
+        return data
+      }
+
+      uni.showToast({ title: res.message || '订单调试信息加载失败', icon: 'none' })
+      return null
+    } catch {
+      uni.showToast({ title: '订单调试信息加载失败', icon: 'none' })
+      return null
+    } finally {
+      pageLoading.value = false
+    }
+  }
+
+  async function runOrderDebugAction(payload: OrderDebugActionPayload) {
+    actionLoading.value = true
+    try {
+      const res = await debugOrderActionApi(payload)
+      if (res.code === 0) {
+        const data = {
+          ...res.data,
+          order: res.data.order ? normalizeOrderDetail(res.data.order) : null,
+        } as OrderDebugActionResult
+
+        if (data.deleted) {
+          removeOrderState(payload.id)
+        } else if (data.order) {
+          syncOrderState(data.order)
+        }
+
+        return data
+      }
+
+      uni.showToast({ title: res.message || '订单调试操作失败', icon: 'none' })
+      return null
+    } catch {
+      uni.showToast({ title: '订单调试操作失败', icon: 'none' })
+      return null
+    } finally {
+      actionLoading.value = false
+    }
+  }
+
   return {
     pageLoading,
     actionLoading,
@@ -378,5 +452,7 @@ export function useOrder() {
     submitComment,
     applyAfterSale,
     advanceAfterSale,
+    fetchOrderDebugInfo,
+    runOrderDebugAction,
   }
 }

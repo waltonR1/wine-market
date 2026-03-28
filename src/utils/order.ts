@@ -258,6 +258,9 @@ export function normalizeOrder<T extends OrderItem | OrderDetail>(order: T): T {
     commentAnonymous: Boolean(order.commentAnonymous),
     commentImages: order.commentImages || [],
     appendCommentImages: order.appendCommentImages || [],
+    refundTime: order.refundTime || '',
+    cancelReason: order.cancelReason || '',
+    logisticsTracks: 'logisticsTracks' in order ? order.logisticsTracks || [] : [],
     afterSaleTimeline: order.afterSaleTimeline || [],
   } as T
 }

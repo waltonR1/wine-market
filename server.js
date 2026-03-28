@@ -156,59 +156,59 @@ function getOrderStatusDesc(order = {}) {
   }[Number(order.status)] || ''
 }
 
-function normalizeOrder(order = {}) {
-  return {
-    ...order,
-    statusLabel: getOrderStatusLabel(order.status),
-    statusDesc: getOrderStatusDesc(order),
-    closeReason: getOrderCloseReason(order),
-    commentAnonymous: Boolean(order.commentAnonymous),
-    commentImages: Array.isArray(order.commentImages) ? order.commentImages : [],
-    appendCommentTime: String(order.appendCommentTime || ''),
-    appendCommentContent: String(order.appendCommentContent || ''),
-    appendCommentImages: Array.isArray(order.appendCommentImages) ? order.appendCommentImages : [],
-    afterSaleStatus: order.afterSaleStatus || 'none',
-    afterSaleType: String(order.afterSaleType || ''),
-    afterSaleReason: String(order.afterSaleReason || ''),
-    afterSaleApplyTime: String(order.afterSaleApplyTime || ''),
-    afterSaleHandleTime: String(order.afterSaleHandleTime || ''),
-    afterSaleCompleteTime: String(order.afterSaleCompleteTime || ''),
-    afterSaleRejectReason: String(order.afterSaleRejectReason || ''),
-    afterSaleTimeline: Array.isArray(order.afterSaleTimeline) ? order.afterSaleTimeline : [],
-  }
-}
+// function normalizeOrder(order = {}) {
+//   return {
+//     ...order,
+//     statusLabel: getOrderStatusLabel(order.status),
+//     statusDesc: getOrderStatusDesc(order),
+//     closeReason: getOrderCloseReason(order),
+//     commentAnonymous: Boolean(order.commentAnonymous),
+//     commentImages: Array.isArray(order.commentImages) ? order.commentImages : [],
+//     appendCommentTime: String(order.appendCommentTime || ''),
+//     appendCommentContent: String(order.appendCommentContent || ''),
+//     appendCommentImages: Array.isArray(order.appendCommentImages) ? order.appendCommentImages : [],
+//     afterSaleStatus: order.afterSaleStatus || 'none',
+//     afterSaleType: String(order.afterSaleType || ''),
+//     afterSaleReason: String(order.afterSaleReason || ''),
+//     afterSaleApplyTime: String(order.afterSaleApplyTime || ''),
+//     afterSaleHandleTime: String(order.afterSaleHandleTime || ''),
+//     afterSaleCompleteTime: String(order.afterSaleCompleteTime || ''),
+//     afterSaleRejectReason: String(order.afterSaleRejectReason || ''),
+//     afterSaleTimeline: Array.isArray(order.afterSaleTimeline) ? order.afterSaleTimeline : [],
+//   }
+// }
 
-function createOrderStatePatch(status, extra = {}) {
-  return {
-    status: Number(status),
-    statusLabel: getOrderStatusLabel(status),
-    payTime: '',
-    deliveryTime: '',
-    finishTime: '',
-    cancelTime: '',
-    commentTime: '',
-    closeReason: '',
-    commentScore: 0,
-    commentContent: '',
-    commentAnonymous: false,
-    commentImages: [],
-    appendCommentTime: '',
-    appendCommentContent: '',
-    appendCommentImages: [],
-    logisticsCompany: '',
-    logisticsNo: '',
-    logisticsStatusText: '暂无物流信息',
-    afterSaleStatus: 'none',
-    afterSaleType: '',
-    afterSaleReason: '',
-    afterSaleApplyTime: '',
-    afterSaleHandleTime: '',
-    afterSaleCompleteTime: '',
-    afterSaleRejectReason: '',
-    afterSaleTimeline: [],
-    ...extra,
-  }
-}
+// function createOrderStatePatch(status, extra = {}) {
+//   return {
+//     status: Number(status),
+//     statusLabel: getOrderStatusLabel(status),
+//     payTime: '',
+//     deliveryTime: '',
+//     finishTime: '',
+//     cancelTime: '',
+//     commentTime: '',
+//     closeReason: '',
+//     commentScore: 0,
+//     commentContent: '',
+//     commentAnonymous: false,
+//     commentImages: [],
+//     appendCommentTime: '',
+//     appendCommentContent: '',
+//     appendCommentImages: [],
+//     logisticsCompany: '',
+//     logisticsNo: '',
+//     logisticsStatusText: '暂无物流信息',
+//     afterSaleStatus: 'none',
+//     afterSaleType: '',
+//     afterSaleReason: '',
+//     afterSaleApplyTime: '',
+//     afterSaleHandleTime: '',
+//     afterSaleCompleteTime: '',
+//     afterSaleRejectReason: '',
+//     afterSaleTimeline: [],
+//     ...extra,
+//   }
+// }
 
 function generateOrderNum(db) {
   const orders = db.get('orders').value() || []
@@ -233,50 +233,50 @@ function appendCartItem(db, goods, count) {
     .write()
 }
 
-function createAfterSaleTimeline(order, status, extra = {}) {
-  const applyTime = extra.afterSaleApplyTime || order.afterSaleApplyTime || ''
-  const handleTime = extra.afterSaleHandleTime || order.afterSaleHandleTime || ''
-  const completeTime = extra.afterSaleCompleteTime || order.afterSaleCompleteTime || ''
-  const rejectReason = extra.afterSaleRejectReason || order.afterSaleRejectReason || ''
-
-  return [
-    {
-      key: 'apply',
-      title: '提交售后申请',
-      description: '申请已创建，等待平台受理。',
-      time: applyTime,
-      status: ['applying', 'reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? 'finished' : 'pending',
-    },
-    {
-      key: 'review',
-      title: '平台审核',
-      description: status === 'rejected' ? `平台已驳回申请${rejectReason ? `：${rejectReason}` : '。'}` : '平台正在审核申请材料。',
-      time: ['reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime || applyTime : '',
-      status: status === 'applying' ? 'pending' : status === 'reviewing' ? 'current' : 'finished',
-    },
-    {
-      key: 'result',
-      title: status === 'rejected' ? '审核结果' : '审核通过',
-      description: status === 'rejected' ? rejectReason || '本次售后申请未通过。' : '审核通过，进入后续处理阶段。',
-      time: ['approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime : '',
-      status: status === 'rejected' ? 'finished' : status === 'approved' ? 'current' : ['refunding', 'completed'].includes(status) ? 'finished' : 'pending',
-    },
-    {
-      key: 'refund',
-      title: '退款处理',
-      description: '平台将根据审核结果发起退款或补偿。',
-      time: ['refunding', 'completed'].includes(status) ? completeTime || handleTime : '',
-      status: status === 'refunding' ? 'current' : status === 'completed' ? 'finished' : 'pending',
-    },
-    {
-      key: 'finish',
-      title: '售后完成',
-      description: status === 'rejected' ? '售后流程已结束。' : '售后流程全部完成。',
-      time: ['completed', 'rejected'].includes(status) ? completeTime || handleTime : '',
-      status: ['completed', 'rejected'].includes(status) ? 'finished' : 'pending',
-    },
-  ]
-}
+// function createAfterSaleTimeline(order, status, extra = {}) {
+//   const applyTime = extra.afterSaleApplyTime || order.afterSaleApplyTime || ''
+//   const handleTime = extra.afterSaleHandleTime || order.afterSaleHandleTime || ''
+//   const completeTime = extra.afterSaleCompleteTime || order.afterSaleCompleteTime || ''
+//   const rejectReason = extra.afterSaleRejectReason || order.afterSaleRejectReason || ''
+//
+//   return [
+//     {
+//       key: 'apply',
+//       title: '提交售后申请',
+//       description: '申请已创建，等待平台受理。',
+//       time: applyTime,
+//       status: ['applying', 'reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? 'finished' : 'pending',
+//     },
+//     {
+//       key: 'review',
+//       title: '平台审核',
+//       description: status === 'rejected' ? `平台已驳回申请${rejectReason ? `：${rejectReason}` : '。'}` : '平台正在审核申请材料。',
+//       time: ['reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime || applyTime : '',
+//       status: status === 'applying' ? 'pending' : status === 'reviewing' ? 'current' : 'finished',
+//     },
+//     {
+//       key: 'result',
+//       title: status === 'rejected' ? '审核结果' : '审核通过',
+//       description: status === 'rejected' ? rejectReason || '本次售后申请未通过。' : '审核通过，进入后续处理阶段。',
+//       time: ['approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime : '',
+//       status: status === 'rejected' ? 'finished' : status === 'approved' ? 'current' : ['refunding', 'completed'].includes(status) ? 'finished' : 'pending',
+//     },
+//     {
+//       key: 'refund',
+//       title: '退款处理',
+//       description: '平台将根据审核结果发起退款或补偿。',
+//       time: ['refunding', 'completed'].includes(status) ? completeTime || handleTime : '',
+//       status: status === 'refunding' ? 'current' : status === 'completed' ? 'finished' : 'pending',
+//     },
+//     {
+//       key: 'finish',
+//       title: '售后完成',
+//       description: status === 'rejected' ? '售后流程已结束。' : '售后流程全部完成。',
+//       time: ['completed', 'rejected'].includes(status) ? completeTime || handleTime : '',
+//       status: ['completed', 'rejected'].includes(status) ? 'finished' : 'pending',
+//     },
+//   ]
+// }
 
 function getNextAfterSaleStatus(status) {
   return {
@@ -1019,6 +1019,548 @@ server.post('/order/pay', (req, res) => {
     statusLabel: '待发货',
     payTime,
   }, '支付成功'))
+})
+
+function normalizeOrder(order = {}) {
+  return {
+    ...order,
+    status: Number(order.status || 1),
+    statusLabel: getOrderStatusLabel(order.status),
+    statusDesc: getOrderStatusDesc(order),
+    closeReason: getOrderCloseReason(order),
+    commentAnonymous: Boolean(order.commentAnonymous),
+    commentImages: Array.isArray(order.commentImages) ? order.commentImages : [],
+    appendCommentTime: String(order.appendCommentTime || ''),
+    appendCommentContent: String(order.appendCommentContent || ''),
+    appendCommentImages: Array.isArray(order.appendCommentImages) ? order.appendCommentImages : [],
+    refundTime: String(order.refundTime || ''),
+    cancelReason: String(order.cancelReason || ''),
+    logisticsCompany: String(order.logisticsCompany || ''),
+    logisticsNo: String(order.logisticsNo || ''),
+    logisticsStatusText: String(order.logisticsStatusText || '暂无物流信息'),
+    logisticsTracks: Array.isArray(order.logisticsTracks) ? order.logisticsTracks : [],
+    afterSaleStatus: order.afterSaleStatus || 'none',
+    afterSaleType: String(order.afterSaleType || ''),
+    afterSaleReason: String(order.afterSaleReason || ''),
+    afterSaleApplyTime: String(order.afterSaleApplyTime || ''),
+    afterSaleHandleTime: String(order.afterSaleHandleTime || ''),
+    afterSaleCompleteTime: String(order.afterSaleCompleteTime || ''),
+    afterSaleRejectReason: String(order.afterSaleRejectReason || ''),
+    afterSaleTimeline: Array.isArray(order.afterSaleTimeline) ? order.afterSaleTimeline : [],
+  }
+}
+
+function createOrderStatePatch(status, extra = {}) {
+  return {
+    status: Number(status),
+    statusLabel: getOrderStatusLabel(status),
+    payTime: '',
+    deliveryTime: '',
+    finishTime: '',
+    cancelTime: '',
+    commentTime: '',
+    closeReason: '',
+    cancelReason: '',
+    refundTime: '',
+    commentScore: 0,
+    commentContent: '',
+    commentAnonymous: false,
+    commentImages: [],
+    appendCommentTime: '',
+    appendCommentContent: '',
+    appendCommentImages: [],
+    logisticsCompany: '',
+    logisticsNo: '',
+    logisticsStatusText: '暂无物流信息',
+    logisticsTracks: [],
+    afterSaleStatus: 'none',
+    afterSaleType: '',
+    afterSaleReason: '',
+    afterSaleApplyTime: '',
+    afterSaleHandleTime: '',
+    afterSaleCompleteTime: '',
+    afterSaleRejectReason: '',
+    afterSaleTimeline: [],
+    ...extra,
+  }
+}
+
+function createAfterSaleTimeline(order, status, extra = {}) {
+  const applyTime = extra.afterSaleApplyTime || order.afterSaleApplyTime || ''
+  const handleTime = extra.afterSaleHandleTime || order.afterSaleHandleTime || ''
+  const completeTime = extra.afterSaleCompleteTime || order.afterSaleCompleteTime || ''
+  const rejectReason = extra.afterSaleRejectReason || order.afterSaleRejectReason || ''
+
+  return [
+    {
+      key: 'apply',
+      title: '提交售后申请',
+      description: '售后申请已创建，等待平台受理。',
+      time: applyTime,
+      status: ['applying', 'reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? 'finished' : 'pending',
+    },
+    {
+      key: 'review',
+      title: '平台审核',
+      description: status === 'rejected' ? `平台已驳回申请${rejectReason ? `：${rejectReason}` : ''}` : '平台正在审核申请材料。',
+      time: ['reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime || applyTime : '',
+      status: status === 'applying' ? 'pending' : status === 'reviewing' ? 'current' : 'finished',
+    },
+    {
+      key: 'result',
+      title: status === 'rejected' ? '审核结果' : '审核通过',
+      description: status === 'rejected' ? rejectReason || '本次售后申请未通过。' : '审核通过，进入后续处理阶段。',
+      time: ['approved', 'refunding', 'completed', 'rejected'].includes(status) ? handleTime : '',
+      status: status === 'rejected' ? 'finished' : status === 'approved' ? 'current' : ['refunding', 'completed'].includes(status) ? 'finished' : 'pending',
+    },
+    {
+      key: 'refund',
+      title: '退款处理',
+      description: '平台将根据审核结果发起退款或补偿。',
+      time: ['refunding', 'completed'].includes(status) ? completeTime || handleTime : '',
+      status: status === 'refunding' ? 'current' : status === 'completed' ? 'finished' : 'pending',
+    },
+    {
+      key: 'finish',
+      title: '售后完成',
+      description: status === 'rejected' ? '售后流程已结束。' : '售后流程已全部完成。',
+      time: ['completed', 'rejected'].includes(status) ? completeTime || handleTime : '',
+      status: ['completed', 'rejected'].includes(status) ? 'finished' : 'pending',
+    },
+  ]
+}
+
+function cloneJson(value) {
+  return JSON.parse(JSON.stringify(value))
+}
+
+function getOrderAllowedTransitions(status) {
+  return {
+    1: [2, 6],
+    2: [3, 6],
+    3: [4, 6],
+    4: [6],
+    6: [],
+  }[Number(status)] || []
+}
+
+function buildOrderDebugStateMachine() {
+  return [1, 2, 3, 4, 6].map(status => ({
+    status,
+    label: getOrderStatusLabel(status),
+    description: getOrderStatusDesc({ status, closeReason: status === 6 ? 'cancelled' : '' }),
+  }))
+}
+
+function toDateTimeInput(value, fallback = '') {
+  if (!value) return fallback
+  const normalized = String(value).trim().replace('T', ' ').replace(/-/g, '/')
+  const date = new Date(normalized)
+  if (Number.isNaN(date.getTime())) return fallback
+  return formatDateTime(date)
+}
+
+function ensureOrderDebugSnapshot(db, order) {
+  const current = order || {}
+  if (current.__debugMeta && current.__debugMeta.initialSnapshot) {
+    return current.__debugMeta
+  }
+
+  const snapshot = cloneJson(normalizeOrder({
+    ...current,
+    __debugMeta: undefined,
+  }))
+  const debugMeta = {
+    initialSnapshot: snapshot,
+    snapshotCreatedAt: formatDateTime(),
+  }
+
+  db.get('orders').find({ id: String(current.id) }).assign({ __debugMeta: debugMeta }).write()
+  return debugMeta
+}
+
+function attachDebugMeta(order, debugMeta) {
+  return {
+    ...order,
+    __debugMeta: debugMeta || order.__debugMeta,
+  }
+}
+
+function appendLogisticsTrack(order, logistics = {}) {
+  const hasTrack = logistics.trackTitle || logistics.trackDescription || logistics.trackTime
+  if (!hasTrack) {
+    return Array.isArray(order.logisticsTracks) ? order.logisticsTracks : []
+  }
+
+  const track = {
+    time: logistics.trackTime || formatDateTime(),
+    title: logistics.trackTitle || logistics.statusText || '物流更新',
+    description: logistics.trackDescription || '调试写入物流轨迹',
+  }
+
+  return [track, ...(Array.isArray(order.logisticsTracks) ? order.logisticsTracks : [])]
+}
+
+function buildOrderDebugInfo(order) {
+  return {
+    order: normalizeOrder(order),
+    snapshotReady: Boolean(order.__debugMeta && order.__debugMeta.initialSnapshot),
+    availableTransitions: getOrderAllowedTransitions(order.status),
+    stateMachine: buildOrderDebugStateMachine(),
+  }
+}
+
+function applyStatusScenario(order, targetStatus, options = {}) {
+  const now = formatDateTime()
+  const base = normalizeOrder(order)
+
+  switch (Number(targetStatus)) {
+    case 1:
+      return normalizeOrder({
+        ...base,
+        ...createOrderStatePatch(1),
+      })
+    case 2:
+      return normalizeOrder({
+        ...base,
+        ...createOrderStatePatch(2, {
+          payTime: base.payTime || now,
+          payType: base.payType || 'wechat',
+          logisticsStatusText: '商家已收款，待安排发货',
+        }),
+      })
+    case 3: {
+      const logisticsCompany = options.logisticsCompany || base.logisticsCompany || '顺丰速运'
+      const logisticsNo = options.logisticsNo || base.logisticsNo || `SF${Date.now().toString().slice(-10)}`
+      const logisticsStatusText = options.logisticsStatusText || base.logisticsStatusText || '包裹运输中'
+      const logisticsTracks = options.logisticsTracks || appendLogisticsTrack(base, {
+        statusText: logisticsStatusText,
+        trackTitle: '商家已发货',
+        trackDescription: `${logisticsCompany} ${logisticsNo}`,
+        trackTime: base.deliveryTime || now,
+      })
+
+      return normalizeOrder({
+        ...base,
+        ...createOrderStatePatch(3, {
+          payTime: base.payTime || now,
+          deliveryTime: base.deliveryTime || now,
+          payType: base.payType || 'wechat',
+          logisticsCompany,
+          logisticsNo,
+          logisticsStatusText,
+          logisticsTracks,
+        }),
+      })
+    }
+    case 4:
+      return normalizeOrder({
+        ...base,
+        ...createOrderStatePatch(4, {
+          payTime: base.payTime || now,
+          deliveryTime: base.deliveryTime || now,
+          finishTime: base.finishTime || now,
+          payType: base.payType || 'wechat',
+          logisticsCompany: base.logisticsCompany || '顺丰速运',
+          logisticsNo: base.logisticsNo || `SF${Date.now().toString().slice(-10)}`,
+          logisticsStatusText: '已签收',
+          logisticsTracks: Array.isArray(base.logisticsTracks) ? base.logisticsTracks : [],
+        }),
+      })
+    case 6:
+      return normalizeOrder({
+        ...base,
+        ...createOrderStatePatch(6, {
+          payTime: base.payTime || '',
+          deliveryTime: base.deliveryTime || '',
+          finishTime: base.finishTime || '',
+          cancelTime: options.cancelTime || base.cancelTime || now,
+          closeReason: options.closeReason || 'cancelled',
+          cancelReason: options.cancelReason || '调试关闭订单',
+          payType: base.payType || '',
+          logisticsCompany: base.logisticsCompany || '',
+          logisticsNo: base.logisticsNo || '',
+          logisticsStatusText: base.logisticsStatusText || '暂无物流信息',
+          logisticsTracks: Array.isArray(base.logisticsTracks) ? base.logisticsTracks : [],
+        }),
+      })
+    default:
+      return normalizeOrder(base)
+  }
+}
+
+function applyAfterSaleState(order, nextStatus, options = {}) {
+  const now = formatDateTime()
+  const base = normalizeOrder(order)
+  const afterSaleApplyTime = base.afterSaleApplyTime || now
+  const afterSaleHandleTime =
+    options.afterSaleHandleTime ||
+    (['reviewing', 'approved', 'refunding', 'completed', 'rejected'].includes(nextStatus)
+      ? base.afterSaleHandleTime || now
+      : '')
+  const afterSaleCompleteTime =
+    options.afterSaleCompleteTime ||
+    (['completed', 'rejected'].includes(nextStatus) ? base.afterSaleCompleteTime || now : '')
+  const refundTime = options.refundTime || (nextStatus === 'completed' ? base.refundTime || now : base.refundTime || '')
+  const afterSaleRejectReason = nextStatus === 'rejected' ? options.afterSaleRejectReason || '模拟退款失败' : ''
+
+  const nextOrder = {
+    ...base,
+    refundTime,
+    afterSaleStatus: nextStatus,
+    afterSaleType: options.afterSaleType || base.afterSaleType || '退款/售后',
+    afterSaleReason: options.afterSaleReason || base.afterSaleReason || '调试发起售后',
+    afterSaleApplyTime,
+    afterSaleHandleTime,
+    afterSaleCompleteTime,
+    afterSaleRejectReason,
+  }
+
+  return normalizeOrder({
+    ...nextOrder,
+    afterSaleTimeline: createAfterSaleTimeline(nextOrder, nextStatus, nextOrder),
+  })
+}
+
+function applyTimelinePatch(order, patch = {}) {
+  const nextOrder = { ...normalizeOrder(order) }
+  const fields = [
+    'createTime',
+    'payTime',
+    'deliveryTime',
+    'finishTime',
+    'cancelTime',
+    'refundTime',
+    'afterSaleApplyTime',
+    'afterSaleHandleTime',
+    'afterSaleCompleteTime',
+  ]
+
+  fields.forEach(field => {
+    if (Object.prototype.hasOwnProperty.call(patch, field)) {
+      nextOrder[field] = toDateTimeInput(patch[field], patch[field] ? String(patch[field]) : '')
+    }
+  })
+
+  if (nextOrder.afterSaleStatus && nextOrder.afterSaleStatus !== 'none') {
+    nextOrder.afterSaleTimeline = createAfterSaleTimeline(nextOrder, nextOrder.afterSaleStatus, nextOrder)
+  }
+
+  return normalizeOrder(nextOrder)
+}
+
+function applyPresetScenario(order, presetKey) {
+  switch (presetKey) {
+    case 'pendingPay':
+      return applyStatusScenario(order, 1)
+    case 'paidPendingShip':
+      return applyStatusScenario(order, 2)
+    case 'shippedPendingReceive':
+      return applyStatusScenario(order, 3)
+    case 'completedPendingComment':
+      return applyStatusScenario(order, 4)
+    case 'closedCancelled':
+      return applyStatusScenario(order, 6, {
+        closeReason: 'cancelled',
+        cancelReason: '预设关闭订单',
+      })
+    case 'refundProcessing':
+      return applyAfterSaleState(applyStatusScenario(order, 3), 'refunding')
+    case 'refundCompleted':
+      return applyAfterSaleState(applyStatusScenario(order, 3), 'completed')
+    case 'afterSaleProcessing':
+      return applyAfterSaleState(order, 'reviewing')
+    case 'afterSaleCompleted':
+      return applyAfterSaleState(order, 'completed')
+    default:
+      return normalizeOrder(order)
+  }
+}
+
+server.get('/orders/:id/debug', (req, res) => {
+  const id = String(req.params.id)
+  const db = getDb()
+  const order = db.get('orders').find({ id }).value()
+
+  if (!order) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  const debugMeta = ensureOrderDebugSnapshot(db, order)
+  const currentOrder = db.get('orders').find({ id }).value()
+  res.status(200).jsonp(ok(buildOrderDebugInfo(attachDebugMeta(currentOrder, debugMeta))))
+})
+
+server.post('/orders/:id/debug', (req, res) => {
+  const id = String(req.params.id)
+  const payload = req.body || {}
+  const db = getDb()
+  const record = db.get('orders').find({ id }).value()
+
+  if (!record) {
+    res.status(200).jsonp(fail('订单不存在'))
+    return
+  }
+
+  const debugMeta = ensureOrderDebugSnapshot(db, record)
+  const order = attachDebugMeta(record, debugMeta)
+  const action = String(payload.action || '')
+  let nextOrder = null
+  let message = '调试操作成功'
+
+  switch (action) {
+    case 'transition': {
+      const targetStatus = Number(payload.targetStatus)
+      if (!getOrderAllowedTransitions(order.status).includes(targetStatus)) {
+        res.status(200).jsonp(fail('当前状态不允许这样推进'))
+        return
+      }
+      nextOrder = applyStatusScenario(order, targetStatus)
+      message = '状态推进成功'
+      break
+    }
+    case 'jump': {
+      const targetStatus = Number(payload.targetStatus)
+      nextOrder = applyStatusScenario(order, targetStatus)
+      message = '已直接跳转状态'
+      break
+    }
+    case 'applyPreset':
+      nextOrder = applyPresetScenario(order, payload.presetKey)
+      message = '预设场景已应用'
+      break
+    case 'reset':
+      if (!debugMeta.initialSnapshot) {
+        res.status(200).jsonp(fail('当前订单还没有可恢复的调试快照'))
+        return
+      }
+      nextOrder = normalizeOrder({
+        ...cloneJson(debugMeta.initialSnapshot),
+        __debugMeta: debugMeta,
+      })
+      message = '已恢复到初始快照'
+      break
+    case 'delete':
+      db.get('orders').remove({ id }).write()
+      res.status(200).jsonp(ok({
+        action,
+        message: '订单已删除',
+        order: null,
+        availableTransitions: [],
+        deleted: true,
+      }))
+      return
+    case 'updateTimeline':
+      nextOrder = applyTimelinePatch(order, payload.timelinePatch || {})
+      nextOrder = attachDebugMeta(nextOrder, debugMeta)
+      message = '时间线已更新'
+      break
+    case 'simulatePaySuccess':
+      nextOrder = applyStatusScenario(order, 2)
+      message = '已模拟支付成功'
+      break
+    case 'simulatePayFailure':
+      nextOrder = normalizeOrder(order)
+      message = '已模拟支付失败，订单状态未变更'
+      break
+    case 'simulatePayClose':
+      nextOrder = applyStatusScenario(order, 6, {
+        closeReason: 'cancelled',
+        cancelReason: '支付超时关闭',
+      })
+      message = '已模拟支付关闭'
+      break
+    case 'simulateDelivery':
+      nextOrder = applyStatusScenario(order, 3, {
+        logisticsCompany: payload.logistics?.company,
+        logisticsNo: payload.logistics?.no,
+        logisticsStatusText: payload.logistics?.statusText,
+        logisticsTracks: appendLogisticsTrack(normalizeOrder(order), {
+          ...payload.logistics,
+          trackTitle: payload.logistics?.trackTitle || '商家已发货',
+          trackDescription: payload.logistics?.trackDescription || '调试发货写入',
+        }),
+      })
+      message = '已模拟发货'
+      break
+    case 'updateLogistics':
+      nextOrder = normalizeOrder({
+        ...normalizeOrder(order),
+        logisticsCompany: payload.logistics?.company || order.logisticsCompany || '',
+        logisticsNo: payload.logistics?.no || order.logisticsNo || '',
+        logisticsStatusText: payload.logistics?.statusText || order.logisticsStatusText || '暂无物流信息',
+        logisticsTracks: appendLogisticsTrack(normalizeOrder(order), payload.logistics || {}),
+      })
+      nextOrder = attachDebugMeta(nextOrder, debugMeta)
+      message = '物流信息已更新'
+      break
+    case 'simulateReceive':
+    case 'simulateComplete':
+      nextOrder = applyStatusScenario(order, 4)
+      message = action === 'simulateReceive' ? '已模拟签收/收货' : '已模拟订单完成'
+      break
+    case 'cancelByUser':
+      nextOrder = applyStatusScenario(order, 6, {
+        closeReason: 'cancelled',
+        cancelReason: '用户取消订单',
+      })
+      message = '已模拟用户取消'
+      break
+    case 'cancelBySystem':
+      nextOrder = applyStatusScenario(order, 6, {
+        closeReason: 'cancelled',
+        cancelReason: '系统关闭订单',
+      })
+      message = '已模拟系统取消'
+      break
+    case 'cancelByTimeout':
+      nextOrder = applyStatusScenario(order, 6, {
+        closeReason: 'cancelled',
+        cancelReason: '支付超时关闭',
+      })
+      message = '已模拟超时关闭'
+      break
+    case 'startRefund':
+      nextOrder = applyAfterSaleState(order, 'applying')
+      message = '已发起退款/售后'
+      break
+    case 'refundProcessing':
+      nextOrder = applyAfterSaleState(order, 'refunding')
+      message = '已进入退款处理中'
+      break
+    case 'refundSuccess':
+      nextOrder = applyAfterSaleState(order, 'completed')
+      message = '已模拟退款成功'
+      break
+    case 'refundFailure':
+      nextOrder = applyAfterSaleState(order, 'rejected', {
+        afterSaleRejectReason: '模拟退款失败',
+      })
+      message = '已模拟退款失败'
+      break
+    case 'afterSaleProcessing':
+      nextOrder = applyAfterSaleState(order, 'reviewing')
+      message = '已进入售后处理中'
+      break
+    case 'afterSaleComplete':
+      nextOrder = applyAfterSaleState(order, 'completed')
+      message = '已模拟售后完成'
+      break
+    default:
+      res.status(200).jsonp(fail('不支持的调试动作'))
+      return
+  }
+
+  nextOrder = normalizeOrder(attachDebugMeta(nextOrder, debugMeta))
+  db.get('orders').find({ id }).assign(nextOrder).write()
+
+  res.status(200).jsonp(ok({
+    action,
+    message,
+    order: nextOrder,
+    availableTransitions: getOrderAllowedTransitions(nextOrder.status),
+  }))
 })
 
 server.use(router)

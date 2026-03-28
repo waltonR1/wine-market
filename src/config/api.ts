@@ -107,6 +107,14 @@ export const API_PATHS = {
       (id: Id) => `/orders/${id}/after-sale/advance`,
       (id: Id) => `/orders/${id}/after-sale/advance`
     ),
+    DEBUG_INFO: pickPath(
+      (id: Id) => `/orders/${id}/debug`,
+      (id: Id) => `/orders/${id}/debug`
+    ),
+    DEBUG_ACTION: pickPath(
+      (id: Id) => `/orders/${id}/debug`,
+      (id: Id) => `/orders/${id}/debug`
+    ),
     // 保持现有接口契约：当前 mock 服务为 /order/:id/detail（单数）
     DETAIL: pickPath(
       (id: Id) => `/order/${id}/detail`,

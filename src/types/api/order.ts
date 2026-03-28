@@ -13,6 +13,11 @@ import type {
   RebuyOrderParams,
   UpdateOrderStatusData,
 } from '@/types/model/order'
+import type {
+  OrderDebugActionPayload,
+  OrderDebugActionResult,
+  OrderDebugInfo,
+} from '@/types/model/order-debug'
 
 export type GetConfirmOrderListResponse = ApiResponse<OrderConfirmItem[]>
 
@@ -54,3 +59,13 @@ export type ApplyAfterSaleResponse = ApiResponse<UpdateOrderStatusData>
 export interface AdvanceAfterSaleRequest extends AdvanceAfterSaleParams {}
 
 export type AdvanceAfterSaleResponse = ApiResponse<UpdateOrderStatusData>
+
+export interface GetOrderDebugInfoRequest {
+  id: string
+}
+
+export type GetOrderDebugInfoResponse = ApiResponse<OrderDebugInfo>
+
+export interface OrderDebugActionRequest extends Omit<OrderDebugActionPayload, 'id'> {}
+
+export type OrderDebugActionResponse = ApiResponse<OrderDebugActionResult>

@@ -6,7 +6,19 @@
 
     <template v-else-if="orderDetail">
       <view class="bg-hero px-4 py-5 text-text-inverse">
-        <view class="text-[20px] font-bold">{{ orderDetail.statusLabel }}</view>
+        <view class="flex items-start justify-between">
+          <view class="text-[20px] font-bold">
+            {{ orderDetail.statusLabel }}
+          </view>
+
+          <view
+            v-if="showDebugEntry"
+            class="ml-3 shrink-0 inline-flex rounded-full border border-overlay-strong bg-overlay-light px-3 py-1 text-[11px]"
+            @click="goOrderDebug"
+          >
+            开发调试
+          </view>
+        </view>
         <view class="mt-2 text-[13px] opacity-90">{{ getOrderStatusDescByOrder(orderDetail) }}</view>
         <view
           v-if="statusExtraText"
@@ -228,6 +240,7 @@
 <script setup lang="ts">
 import {onLoad} from '@dcloudio/uni-app'
 import {computed, ref} from 'vue'
+import { canShowOrderDebugEntry } from '@/config/app'
 import {useOrder} from '@/hooks/useOrder'
 import {formatDateTime} from '@/utils/format'
 import {
@@ -265,6 +278,8 @@ const hasCommentSection = computed(() => {
   if (!orderDetail.value) return false
   return Boolean(orderDetail.value.commentTime || orderDetail.value.commentContent || canAppendCurrentOrder.value)
 })
+
+const showDebugEntry = computed(() => canShowOrderDebugEntry())
 
 const statusExtraText = computed(() => {
   if (!orderDetail.value) return ''
@@ -408,6 +423,13 @@ function goAfterSale() {
   if (!orderDetail.value) return
   uni.navigateTo({
     url: `/pages/order/aftersale?id=${orderDetail.value.id}`,
+  })
+}
+
+function goOrderDebug() {
+  if (!orderDetail.value || !showDebugEntry.value) return
+  uni.navigateTo({
+    url: `/pages/order/debug?id=${orderDetail.value.id}`,
   })
 }
 

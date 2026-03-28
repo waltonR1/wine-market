@@ -39,6 +39,12 @@ export interface AfterSaleTimelineItem {
   status: 'finished' | 'current' | 'pending'
 }
 
+export interface LogisticsTrackItem {
+  time: string
+  title: string
+  description: string
+}
+
 export interface OrderItem {
   id: string
   orderNum: string
@@ -69,6 +75,8 @@ export interface OrderItem {
   afterSaleHandleTime?: string
   afterSaleCompleteTime?: string
   afterSaleRejectReason?: string
+  refundTime?: string
+  cancelReason?: string
   afterSaleTimeline?: AfterSaleTimelineItem[]
 }
 
@@ -80,6 +88,7 @@ export interface OrderDetail extends OrderItem {
   logisticsCompany?: string
   logisticsNo?: string
   logisticsStatusText?: string
+  logisticsTracks?: LogisticsTrackItem[]
 }
 
 export interface OrderConfirmItem {
@@ -130,6 +139,12 @@ export interface UpdateOrderStatusData {
   afterSaleHandleTime?: string
   afterSaleCompleteTime?: string
   afterSaleRejectReason?: string
+  refundTime?: string
+  cancelReason?: string
+  logisticsCompany?: string
+  logisticsNo?: string
+  logisticsStatusText?: string
+  logisticsTracks?: LogisticsTrackItem[]
   afterSaleTimeline?: AfterSaleTimelineItem[]
 }
 
